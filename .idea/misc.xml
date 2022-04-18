@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/drawable/custom_background.xml" value="0.24635416666666668" />
+        <entry key="app/src/main/res/layout/action_bar_simple.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/activity_apk_download.xml" value="0.23020833333333332" />
+        <entry key="app/src/main/res/layout/activity_bank_deposit_grid.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/activity_bank_deposit_register.xml" value="0.23020833333333332" />
+        <entry key="app/src/main/res/layout/activity_default_login_main.xml" value="0.1962962962962963" />
+        <entry key="app/src/main/res/layout/activity_electricity_details.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/activity_expiry_check.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/activity_free_gift_test_register.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/activity_generator_register_list.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/activity_generator_time.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/activity_hht.xml" value="0.1962962962962963" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_master_download.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/activity_mgin2.xml" value="0.1962962962962963" />
+        <entry key="app/src/main/res/layout/activity_pihv.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/activity_pihv_list.xml" value="0.23020833333333332" />
+        <entry key="app/src/main/res/layout/activity_product_expiry.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/activity_product_feedback.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/activity_register_list.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/activity_return_intent.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/activity_shelf_ticketing.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.23020833333333332" />
+        <entry key="app/src/main/res/layout/activity_testers_free_gift_expiry_check.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/activity_transfer.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/activity_transfer_in.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/app_bar_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/app_bar_mgin_upload_invoice.xml" value="0.1962962962962963" />
+        <entry key="app/src/main/res/layout/bank_deposit_register_item_layout.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/expiry_category_list_item.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/generator_register_item.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.1962962962962963" />
+        <entry key="app/src/main/res/layout/pihv_multiplemrp_popup.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/tester_expiry_check_item_layout.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/tester_register_list_data_item.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/unscanned_product_list.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/menu/activity_main_drawer.xml" value="0.23020833333333332" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
