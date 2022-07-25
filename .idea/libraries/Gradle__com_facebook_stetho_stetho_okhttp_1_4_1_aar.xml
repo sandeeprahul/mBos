@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.facebook.stetho:stetho-okhttp:1.4.1@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b8e9393bc64afbe6a19a71f33a3013c7/jetified-stetho-okhttp-1.4.1/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b8e9393bc64afbe6a19a71f33a3013c7/jetified-stetho-okhttp-1.4.1/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b8e9393bc64afbe6a19a71f33a3013c7/jetified-stetho-okhttp-1.4.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3629da127f8944d34dd294effb8dd715/jetified-stetho-okhttp-1.4.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3629da127f8944d34dd294effb8dd715/jetified-stetho-okhttp-1.4.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3629da127f8944d34dd294effb8dd715/jetified-stetho-okhttp-1.4.1/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.stetho/stetho-okhttp/1.4.1/6281b2177ead8df9484d8872fdab2e1402a1de3/stetho-okhttp-1.4.1-javadoc.jar!/" />
