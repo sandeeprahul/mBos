@@ -25,7 +25,7 @@ public class StockActivityTemp extends AppCompatActivity {
         tablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                stock_viewpager.setCurrentItem(tab.getPosition());
+//                stock_viewpager.setCurrentItem(tab.getPosition());
             }
 
             @Override
@@ -40,10 +40,12 @@ public class StockActivityTemp extends AppCompatActivity {
         });
 //        stock_viewpager.setOffscreenPageLimit(1);
         stock_viewpager.setAdapter(stockTabsAdapter);
+//        stock_viewpager.set(false);
+
         stock_viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                tablayout.setScrollPosition(position,0,false);
+//                tablayout.setScrollPosition(position,0,false);
             }
 
             @Override
@@ -61,5 +63,9 @@ public class StockActivityTemp extends AppCompatActivity {
 //        tablayout.setupWithViewPager(stock_viewpager);
 
 
+    }
+
+    public void finishActivity(){
+        finish();
     }
 }

@@ -88,6 +88,6 @@ public class StockTabsAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 1;
     }
 }
