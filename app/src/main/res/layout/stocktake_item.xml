@@ -309,8 +309,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Upload"
-                    android:textSize="16sp"
-                    />
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -332,6 +331,7 @@
 
             </LinearLayout>
         </LinearLayout>
+
         <Button
             android:id="@+id/submit_btn"
             android:layout_width="wrap_content"
@@ -351,5 +351,23 @@
         android:layout_marginBottom="10dp"
         android:background="@android:color/white"
         android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/storedata_popup_ll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ListView
+            android:id="@+id/stockno_lv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:background="@android:color/white"
+            android:padding="15dp" />
+    </LinearLayout>
 
 </RelativeLayout>

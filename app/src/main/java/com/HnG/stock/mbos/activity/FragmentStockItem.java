@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment;
 import com.HnG.stock.mbos.R;
 import com.HnG.stock.mbos.database.UserDB;
 import com.HnG.stock.mbos.gettersetter.SKUMASTER;
+import com.HnG.stock.mbos.gettersetter.StockCheckData;
 import com.HnG.stock.mbos.helper.ApiCall;
 import com.HnG.stock.mbos.helper.AppController;
 import com.HnG.stock.mbos.helper.Log;
@@ -44,6 +45,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,17 +62,18 @@ public class FragmentStockItem extends Fragment {
     ArrayList<SKUMASTER> skumasterArrayList = new ArrayList<SKUMASTER>();
 
 
-    LinearLayout stockcheck_ll, stockdetails_ll;
+    LinearLayout stockcheck_ll, stockdetails_ll, storedata_popup_ll;
     EditText storestockcheck_edt, location_code_edt, device_no_edt;
     EditText eansku_edt, skuname_edt, shelfno_edt, physicalqty_edt;
-    Button submit_btn, save_btn, clear_btn, exit_btn, lastsku_btn;
-    ListView prices_lv;
+    Button submit_btn, save_btn, clear_btn, exit_btn, lastsku_btn, search_btn,upload_btn;
+    ListView prices_lv, stockno_lv;
     String storeip = "";
     ProgressDialog progressDialog;
     Spinner spinner;
     TextView price_tv;
     SharedPreferences sharedPreferences;
     List<String> prices = new ArrayList<String>();
+    List<String> stockData = new ArrayList<String>();
     ArrayAdapter<String> arrayAdapter;
     String SKU_LOC_NO,
             DAMAGED_QTY,
@@ -105,8 +108,10 @@ public class FragmentStockItem extends Fragment {
         View view = inflater.inflate(R.layout.stocktake_item, container, false);
 
         prices_lv = (ListView) view.findViewById(R.id.prices_lv);
+        stockno_lv = (ListView) view.findViewById(R.id.stockno_lv);
         price_tv = (TextView) view.findViewById(R.id.price_tv);
         spinner = (Spinner) view.findViewById(R.id.spinner);
+        storedata_popup_ll = (LinearLayout) view.findViewById(R.id.storedata_popup_ll);
         stockdetails_ll = (LinearLayout) view.findViewById(R.id.stockdetails_ll);
         stockcheck_ll = (LinearLayout) view.findViewById(R.id.stockcheck_ll);
         eansku_edt = (EditText) view.findViewById(R.id.eansku_edt);
@@ -121,14 +126,24 @@ public class FragmentStockItem extends Fragment {
         clear_btn = (Button) view.findViewById(R.id.clear_btn);
         exit_btn = (Button) view.findViewById(R.id.exit_btn);
         lastsku_btn = (Button) view.findViewById(R.id.lastsku_btn);
+        search_btn = (Button) view.findViewById(R.id.search_btn);
+        upload_btn = (Button) view.findViewById(R.id.upload_btn);
 
 
         ArrayAdapter<String> arrayAdapterr = new ArrayAdapter<String>(getActivity(), R.layout.item_pricelistview, R.id.textView, prices);
-
         arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, prices);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 //        spinner.setAdapter(arrayAdapter);
         prices_lv.setAdapter(arrayAdapterr);
+
+
+        ArrayAdapter<String> arrayAdapterrStock = new ArrayAdapter<String>(getActivity(), R.layout.item_pricelistview, R.id.textView, stockData);
+        arrayAdapterrStock = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, stockData);
+        arrayAdapterrStock.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinner.setAdapter(arrayAdapter);
+        stockno_lv.setAdapter(arrayAdapterrStock);
+
+
 //        arrayAdapter.notifyDataSetChanged();
 
 //        prices.add("Price");
@@ -142,6 +157,14 @@ public class FragmentStockItem extends Fragment {
             storeip = dataexist.get("ipaddress");
         }
         userDb.close();
+
+
+        upload_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadDetails(storeip);
+            }
+        });
 
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,6 +227,14 @@ public class FragmentStockItem extends Fragment {
             }
         });
 
+        search_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                findStockNoDetails();
+                searchEan();
+            }
+        });
+
         eansku_edt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -235,6 +266,13 @@ public class FragmentStockItem extends Fragment {
         /* spinner.setOnClickListener(price_tv.performClick());*/
 
 
+        storedata_popup_ll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                storedata_popup_ll.setVisibility(View.GONE);
+            }
+        });
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -259,13 +297,133 @@ public class FragmentStockItem extends Fragment {
             }
         });
 
+        stockno_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                fillStockdata(position);
+            }
+        });
+
 
         return view;
     }
 
+    public void fillStockdata(int position) {
+        String sku = getDetails();
+        try {
+
+            //"damagedQty":"","deviceNo":"1","eanCode":"8908002760439","expiryDate":"","mrp":"125.00",
+            // "physicalQty":"1","refBatch":"","skuCode":"531461",
+            // "skuLOCNo":"54384","skuName":"HG DISPOSABLE RAZOR WOMEN PK 3","stockChkNo":"57"}
+            JSONArray jsonArray = new JSONArray(sku);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                skuname_edt.setText(jsonArray.getJSONObject(position).getString("skuName"));
+                eansku_edt.setText(jsonArray.getJSONObject(position).getString("skuCode"));
+                device_no_edt.setText(jsonArray.getJSONObject(position).getString("deviceNo"));
+                physicalqty_edt.setText(jsonArray.getJSONObject(position).getString("physicalQty"));
+                shelfno_edt.setText(jsonArray.getJSONObject(position).getString("bay_shelf_no"));
+                storestockcheck_edt.setText(jsonArray.getJSONObject(position).getString("stockChkNo"));
+                location_code_edt.setText(jsonArray.getJSONObject(position).getString("location_code"));
+                price_tv.setText(jsonArray.getJSONObject(position).getString("mrp"));
+
+                prices.add(jsonArray.getJSONObject(position).getString("mrp"));
+                SKU_LOC_NO = jsonArray.getJSONObject(position).getString("stockChkNo");
+                DAMAGED_QTY = jsonArray.getJSONObject(position).getString("damagedQty");
+                EXPIRY_DATE = jsonArray.getJSONObject(position).getString("expiryDate");
+                MRP = jsonArray.getJSONObject(position).getString("MRP");
+                SKU_CODE = jsonArray.getJSONObject(position).getString("skuCode");
+                EAN_CODE = jsonArray.getJSONObject(position).getString("ean");
+                REF_BATCH = jsonArray.getJSONObject(position).getString("refBatch");
+                SKU_NAME = jsonArray.getJSONObject(position).getString("skuName");
+
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        storedata_popup_ll.setVisibility(View.GONE);
+
+
+    }
+
+    public void fillSearchData(int position) {
+        String sku = getDetails();
+        try {
+
+            //"damagedQty":"","deviceNo":"1","eanCode":"8908002760439","expiryDate":"","mrp":"125.00",
+            // "physicalQty":"1","refBatch":"","skuCode":"531461",
+            // "skuLOCNo":"54384","skuName":"HG DISPOSABLE RAZOR WOMEN PK 3","stockChkNo":"57"}
+            JSONArray jsonArray = new JSONArray(sku);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                skuname_edt.setText(jsonArray.getJSONObject(position).getString("skuName"));
+                eansku_edt.setText(jsonArray.getJSONObject(position).getString("skuCode"));
+                device_no_edt.setText(jsonArray.getJSONObject(position).getString("deviceNo"));
+                physicalqty_edt.setText(jsonArray.getJSONObject(position).getString("physicalQty"));
+                shelfno_edt.setText(jsonArray.getJSONObject(position).getString("bay_shelf_no"));
+                storestockcheck_edt.setText(jsonArray.getJSONObject(position).getString("stockChkNo"));
+                location_code_edt.setText(jsonArray.getJSONObject(position).getString("location_code"));
+                price_tv.setText(jsonArray.getJSONObject(position).getString("mrp"));
+
+                prices.add(jsonArray.getJSONObject(position).getString("mrp"));
+                SKU_LOC_NO = jsonArray.getJSONObject(position).getString("stockChkNo");
+                DAMAGED_QTY = jsonArray.getJSONObject(position).getString("damagedQty");
+                EXPIRY_DATE = jsonArray.getJSONObject(position).getString("expiryDate");
+                MRP = jsonArray.getJSONObject(position).getString("MRP");
+                SKU_CODE = jsonArray.getJSONObject(position).getString("skuCode");
+                EAN_CODE = jsonArray.getJSONObject(position).getString("ean");
+                REF_BATCH = jsonArray.getJSONObject(position).getString("refBatch");
+                SKU_NAME = jsonArray.getJSONObject(position).getString("skuName");
+
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        storedata_popup_ll.setVisibility(View.GONE);
+
+
+    }
+
     private void getLastsku() {
         String sku = getDetails();
-        Log.e("getLastsku",sku);
+        Log.e("getLastsku", sku);
+        try {
+
+            //"damagedQty":"","deviceNo":"1","eanCode":"8908002760439","expiryDate":"","mrp":"125.00",
+            // "physicalQty":"1","refBatch":"","skuCode":"531461",
+            // "skuLOCNo":"54384","skuName":"HG DISPOSABLE RAZOR WOMEN PK 3","stockChkNo":"57"}
+            JSONArray jsonArray = new JSONArray(sku);
+            Log.e("JALastsku", jsonArray.getJSONObject(0).toString());
+//            for (int i = 0; i < jsonArray.length(); i++) {
+            skuname_edt.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("skuName"));
+            eansku_edt.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("skuCode"));
+            device_no_edt.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("deviceNo"));
+            physicalqty_edt.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("physicalQty"));
+            shelfno_edt.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("bay_shelf_no"));
+            storestockcheck_edt.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("stockChkNo"));
+            location_code_edt.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("location_code"));
+            price_tv.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("mrp"));
+
+            prices.add(jsonArray.getJSONObject(jsonArray.length() - 1).getString("mrp"));
+            SKU_LOC_NO = jsonArray.getJSONObject(jsonArray.length() - 1).getString("stockChkNo");
+            DAMAGED_QTY = jsonArray.getJSONObject(jsonArray.length() - 1).getString("damagedQty");
+            EXPIRY_DATE = jsonArray.getJSONObject(jsonArray.length() - 1).getString("expiryDate");
+            MRP = jsonArray.getJSONObject(jsonArray.length() - 1).getString("MRP");
+            SKU_CODE = jsonArray.getJSONObject(jsonArray.length() - 1).getString("skuCode");
+            EAN_CODE = jsonArray.getJSONObject(jsonArray.length() - 1).getString("ean");
+            REF_BATCH = jsonArray.getJSONObject(jsonArray.length() - 1).getString("refBatch");
+            SKU_NAME = jsonArray.getJSONObject(jsonArray.length() - 1).getString("skuName");
+
+
+//            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         /*SKUMASTER temp = skumasterArrayList.get(skumasterArrayList.size()-1);
         storestockcheck_edt.setText(temp.);*/
@@ -297,7 +455,9 @@ public class FragmentStockItem extends Fragment {
 
     public void saveDetails() {
 
-        skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(), "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(), "", eansku_edt.getText().toString()));
+        skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
+                "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
+                "", eansku_edt.getText().toString(), shelfno_edt.getText().toString(), location_code_edt.getText().toString()));
 
         Gson gson = new Gson();
         String json = gson.toJson(skumasters);
@@ -323,7 +483,7 @@ public class FragmentStockItem extends Fragment {
         }.getType();
         return gson.fromJson(json, type);*/
 
-        return  json;
+        return json;
 
     }
 
@@ -523,6 +683,7 @@ public class FragmentStockItem extends Fragment {
                                 toast.show();
 //                                stockcheck_ll.setVisibility(View.GONE);
                                 stockdetails_ll.setVisibility(View.VISIBLE);
+                                findStockNoDetails();
                             } else {
                                 Toast.makeText(getActivity(), jsonObject.getString("result").toString(), Toast.LENGTH_SHORT).show();
 
@@ -544,6 +705,48 @@ public class FragmentStockItem extends Fragment {
         );
     }
 
+    public void findStockNoDetails() {
+        stockData.clear();
+        stockno_lv.clearChoices();
+        String sku = getDetails();
+
+        try {
+            JSONArray jsonArray = new JSONArray(sku);
+//            Log.e("JALastsku", jsonArray.getJSONObject(0).toString());
+            if (jsonArray.length() != 0) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    if (jsonArray.getJSONObject(i).getString("stockChkNo").equals(storestockcheck_edt.getText().toString())) {
+                        stockData.add("Location code: "+jsonArray.getJSONObject(i).getString("stockChkNo") +" ,SkuCode: "+
+                                jsonArray.getJSONObject(i).getString("skuCode"));
+                    }
+                }
+                storedata_popup_ll.setVisibility(View.VISIBLE);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    public void searchEan() {
+//        stockData.clear();
+//        stockno_lv.clearChoices();
+        String sku = getDetails();
+
+        try {
+            JSONArray jsonArray = new JSONArray(sku);
+//            Log.e("JALastsku", jsonArray.getJSONObject(0).toString());
+            if (jsonArray.length() != 0) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    if (jsonArray.getJSONObject(i).getString("eanCode").equals(eansku_edt.getText().toString())) {
+                        fillSearchData(i);
+                    }
+                }
+                storedata_popup_ll.setVisibility(View.VISIBLE);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void showAlertDialog(final String message) {
         getActivity().runOnUiThread(new Runnable() {
@@ -562,6 +765,7 @@ public class FragmentStockItem extends Fragment {
             }
         });
     }
+
 
     public void fetchSKUData(String eanCode) {
         prices.clear();
@@ -618,7 +822,66 @@ public class FragmentStockItem extends Fragment {
 
     }
 
+    public void saveStockLocDev() {
+        try {
+            String jso = getDetailsStoreCheck();
+            JSONObject jsonObject = new JSONObject(jso);
+            if (jsonObject.length() != 0) {
 
+                ArrayList<StockCheckData> stockCheckDataArrayList = new ArrayList<>();
+                stockCheckDataArrayList.add(new StockCheckData(jsonObject));
+                if (jsonObject.getString("stockNo").equals(storestockcheck_edt.getText().toString())) {
+
+              /*  if (jsonObject.getJSONArray("detailsArray").length()!=0){
+                    ArrayList<SKUMASTER> arrayList = new ArrayList<>();
+                    arrayList.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
+                            "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
+                            "", eansku_edt.getText().toString(),shelfno_edt.getText().toString(),location_code_edt.getText().toString()));
+
+                }*/
+                }
+            }
+
+
+            JSONObject stockJson = new JSONObject();
+            JSONArray detailsArray = new JSONArray();
+
+            stockJson.put("stockNo", storestockcheck_edt.getText().toString());
+            stockJson.put("locationCode", location_code_edt.getText().toString());
+            stockJson.put("deviceNo", device_no_edt.getText().toString());
+            stockJson.put("detailsArray", detailsArray);
+            Gson gson = new Gson();
+            String json = gson.toJson(stockJson);
+            Log.e("saveStockLocDev()", json);
+
+
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.putString("stock", "");
+            editor.putString("saveStockLocDev", json);
+            editor.apply();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+//        ArrayList<SKUMASTER> skumasterArrayList = new ArrayList<SKUMASTER>();
+//        skumasterArrayList = getDetails();
+
+//        getDetails();
+    }
+
+    public String getDetailsStoreCheck() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        Gson gson = new Gson();
+        String json = prefs.getString("saveStockLocDev", null);
+        /*Type type = new TypeToken<ArrayList<SKUMASTER>>() {
+        }.getType();
+        return gson.fromJson(json, type);*/
+
+        return json;
+
+    }
 }
 
 //upload btn/confirm btn
