@@ -210,6 +210,7 @@
                     android:textSize="16sp" />
 
                 <RelativeLayout
+                    android:id="@+id/price_rl"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
@@ -227,7 +228,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_weight="1"
-                        android:spinnerMode="dialog" />
+                        android:spinnerMode="dialog"
+                        android:visibility="visible" />
                 </RelativeLayout>
 
                 <EditText
@@ -356,18 +358,69 @@
         android:id="@+id/storedata_popup_ll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#80000000"
+        android:background="#80ffffff"
         android:gravity="center"
         android:orientation="vertical"
+        android:padding="15dp"
         android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:text="Previous Data"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <ListView
             android:id="@+id/stockno_lv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
             android:background="@android:color/white"
-            android:padding="15dp" />
+            android:padding="5dp" />
+
+        <Button
+            android:id="@+id/closepopup_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/white_blackborder"
+            android:text="Close" />
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:id="@+id/dowloadpopup_ll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progress_Bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateDrawable="@drawable/progress" />
+
+        <TextView
+            android:id="@+id/txtstatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/ActionBarColor"
+            android:textSize="20dp" />
+
+
     </LinearLayout>
 
 </RelativeLayout>

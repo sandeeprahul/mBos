@@ -46,16 +46,16 @@ public class StockTabsAdapter extends FragmentStatePagerAdapter {
 
         case 1:{
 
+            FragmentQuantity fragmentQuantity = FragmentQuantity.newInstance(position);
+            return fragmentQuantity;
 
-            FragmentBatch fragmentBatch = FragmentBatch.newInstance(position);
-            return fragmentBatch;
         }
 
         case 2:{
 
 
-            FragmentQuantity fragmentQuantity = FragmentQuantity.newInstance(position);
-            return fragmentQuantity;
+            FragmentBatch fragmentBatch = FragmentBatch.newInstance(position);
+            return fragmentBatch;
         }
 
        /* case 2:{
@@ -88,6 +88,6 @@ public class StockTabsAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 1;
+        return 2;
     }
 }

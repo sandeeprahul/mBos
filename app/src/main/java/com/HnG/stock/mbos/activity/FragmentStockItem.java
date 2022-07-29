@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,15 +64,18 @@ public class FragmentStockItem extends Fragment {
     ArrayList<SKUMASTER> skumasterArrayList = new ArrayList<SKUMASTER>();
 
 
+    RelativeLayout price_rl;
     LinearLayout stockcheck_ll, stockdetails_ll, storedata_popup_ll;
+    LinearLayout dowloadpopup_ll;
     EditText storestockcheck_edt, location_code_edt, device_no_edt;
     EditText eansku_edt, skuname_edt, shelfno_edt, physicalqty_edt;
-    Button submit_btn, save_btn, clear_btn, exit_btn, lastsku_btn, search_btn,upload_btn;
+    Button submit_btn, save_btn, clear_btn, exit_btn, lastsku_btn, search_btn, upload_btn;
+    Button closepopup_btn;
     ListView prices_lv, stockno_lv;
     String storeip = "";
     ProgressDialog progressDialog;
     Spinner spinner;
-    TextView price_tv;
+    TextView price_tv, txtstatus;
     SharedPreferences sharedPreferences;
     List<String> prices = new ArrayList<String>();
     List<String> stockData = new ArrayList<String>();
@@ -110,10 +115,13 @@ public class FragmentStockItem extends Fragment {
         prices_lv = (ListView) view.findViewById(R.id.prices_lv);
         stockno_lv = (ListView) view.findViewById(R.id.stockno_lv);
         price_tv = (TextView) view.findViewById(R.id.price_tv);
+        txtstatus = (TextView) view.findViewById(R.id.txtstatus);
         spinner = (Spinner) view.findViewById(R.id.spinner);
+        dowloadpopup_ll = (LinearLayout) view.findViewById(R.id.dowloadpopup_ll);
         storedata_popup_ll = (LinearLayout) view.findViewById(R.id.storedata_popup_ll);
         stockdetails_ll = (LinearLayout) view.findViewById(R.id.stockdetails_ll);
         stockcheck_ll = (LinearLayout) view.findViewById(R.id.stockcheck_ll);
+        price_rl = (RelativeLayout) view.findViewById(R.id.price_rl);
         eansku_edt = (EditText) view.findViewById(R.id.eansku_edt);
         shelfno_edt = (EditText) view.findViewById(R.id.shelfno_edt);
         physicalqty_edt = (EditText) view.findViewById(R.id.physicalqty_edt);
@@ -128,6 +136,7 @@ public class FragmentStockItem extends Fragment {
         lastsku_btn = (Button) view.findViewById(R.id.lastsku_btn);
         search_btn = (Button) view.findViewById(R.id.search_btn);
         upload_btn = (Button) view.findViewById(R.id.upload_btn);
+        closepopup_btn = (Button) view.findViewById(R.id.closepopup_btn);
 
 
         ArrayAdapter<String> arrayAdapterr = new ArrayAdapter<String>(getActivity(), R.layout.item_pricelistview, R.id.textView, prices);
@@ -157,6 +166,21 @@ public class FragmentStockItem extends Fragment {
             storeip = dataexist.get("ipaddress");
         }
         userDb.close();
+
+
+        price_rl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                price_tv.performClick();
+            }
+        });
+        closepopup_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                storedata_popup_ll.setVisibility(View.GONE);
+                getStockDetails(storeip);
+            }
+        });
 
 
         upload_btn.setOnClickListener(new View.OnClickListener() {
@@ -214,7 +238,9 @@ public class FragmentStockItem extends Fragment {
                     Toast.makeText(getActivity(), "Enter Device number", Toast.LENGTH_SHORT).show();
 
                 } else {
-                    getStockDetails(storeip);
+                    Toast.makeText(getActivity(), "Please wait..", Toast.LENGTH_SHORT).show();
+
+                    findStockNoDetails();
 
                 }
 
@@ -473,6 +499,8 @@ public class FragmentStockItem extends Fragment {
 //        skumasterArrayList = getDetails();
 
 //        getDetails();
+
+        showAlertDialog("Details saved");
     }
 
     public String getDetails() {
@@ -596,9 +624,11 @@ public class FragmentStockItem extends Fragment {
     private void getStockDetails(String storeip) {
 
 
-        progressDialog = ProgressDialog.show(getContext(), "",
-                "Please wait ..\nDownloading stock details", true);
-        progressDialog.show();
+      /*  progressDialog = ProgressDialog.show(getContext(), "",
+                "Please wait ..\nDownloading EanMaster details", true);
+        progressDialog.show();*/
+        dowloadpopup_ll.setVisibility(View.VISIBLE);
+        txtstatus.setText("Downloading EanMaster details");
 
         String apiUrl = storeip + "/StockCheck/get_eanmaster_for_hht?StockCheckNo=" + storestockcheck_edt.getText().toString() + "&DeviceNo=" + device_no_edt.getText().toString();
         Log.d("getStockDetails: ", apiUrl);
@@ -607,14 +637,13 @@ public class FragmentStockItem extends Fragment {
                     public void onResponse(String response) {
                         Log.d("getStockDetails: ", response);
 
-                        progressDialog.dismiss();
+//                        progressDialog.dismiss();
 
                         try {
 
                             JSONObject jsonObject = new JSONObject(response);
-                            if (jsonObject.getString("result").equalsIgnoreCase("Success")) {
-                                Toast toast = Toast.makeText(getActivity(), "Please wait..\nDownloading stock details", Toast.LENGTH_SHORT);
-
+                            if (jsonObject.getString("result").equals("Success")) {
+                                Toast.makeText(getActivity(), "Please wait..\nDownloading SkuMaster details", Toast.LENGTH_SHORT).show();
                                 //showAlert(jsonObject.getString("Message"));
                                 JSONArray EanData = jsonObject.getJSONArray("eanmaster");
                                /* EAN_MASTER_DB eandb = new EAN_MASTER_DB(getActivity());
@@ -639,9 +668,9 @@ public class FragmentStockItem extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        progressDialog.dismiss();
+                        showAlertDialog(error.getMessage());
+                        dowloadpopup_ll.setVisibility(View.GONE);
                         Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
-//                        showErrorType(error);
                     }
                 }
         );
@@ -649,9 +678,11 @@ public class FragmentStockItem extends Fragment {
 
     private void getSkuMaster(String storeip) {
 
-        progressDialog = ProgressDialog.show(getContext(), "",
-                "Please wait ..\nDownloading stock details", true);
-        progressDialog.show();
+        /*progressDialog = ProgressDialog.show(getContext(), "",
+                "Please wait ..\nDownloading SkuMaster details", true);
+        progressDialog.show();*/
+//        dowloadpopup_ll.setVisibility(View.VISIBLE);
+        txtstatus.setText("Downloading SkuMaster details");
 
         String apiUrl = storeip + "/StockCheck/get_skumaster_for_hht?StockCheckNo=" + storestockcheck_edt.getText().toString() + "&DeviceNo=" + device_no_edt.getText().toString();
         Log.d("getSkuMaster: ", apiUrl);
@@ -660,7 +691,7 @@ public class FragmentStockItem extends Fragment {
                     public void onResponse(String response) {
                         Log.d("getSkuMaster: ", response);
 
-                        progressDialog.dismiss();
+//                        progressDialog.dismiss();
 
                         try {
 
@@ -681,11 +712,14 @@ public class FragmentStockItem extends Fragment {
                                 editor.apply();
                                 Toast toast = Toast.makeText(getActivity(), "Stock details downloaded successfully", Toast.LENGTH_SHORT);
                                 toast.show();
+                                dowloadpopup_ll.setVisibility(View.GONE);
 //                                stockcheck_ll.setVisibility(View.GONE);
                                 stockdetails_ll.setVisibility(View.VISIBLE);
-                                findStockNoDetails();
+//                                findStockNoDetails();
                             } else {
+                                showAlertDialog(jsonObject.getString("result"));
                                 Toast.makeText(getActivity(), jsonObject.getString("result").toString(), Toast.LENGTH_SHORT).show();
+                                dowloadpopup_ll.setVisibility(View.GONE);
 
                             }
                         } catch (JSONException e) {
@@ -697,35 +731,60 @@ public class FragmentStockItem extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        progressDialog.dismiss();
+                        showAlertDialog(error.getMessage());
+                        dowloadpopup_ll.setVisibility(View.GONE);
                         Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
-//                        showErrorType(error);
                     }
                 }
         );
     }
 
     public void findStockNoDetails() {
+
+        Log.e("findStockNoDetails", "");
         stockData.clear();
         stockno_lv.clearChoices();
-        String sku = getDetails();
+        if (getDetails() != null) {
+            Log.e("findStockNoDetails", "getDetails");
 
-        try {
-            JSONArray jsonArray = new JSONArray(sku);
+            String sku = getDetails();
+            try {
+                JSONArray jsonArray = new JSONArray(sku);
 //            Log.e("JALastsku", jsonArray.getJSONObject(0).toString());
-            if (jsonArray.length() != 0) {
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    if (jsonArray.getJSONObject(i).getString("stockChkNo").equals(storestockcheck_edt.getText().toString())) {
-                        stockData.add("Location code: "+jsonArray.getJSONObject(i).getString("stockChkNo") +" ,SkuCode: "+
-                                jsonArray.getJSONObject(i).getString("skuCode"));
+                if (jsonArray.length() != 0) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        if (jsonArray.getJSONObject(i).getString("stockChkNo").equals(storestockcheck_edt.getText().toString())) {
+                            stockData.add("Location code: " + jsonArray.getJSONObject(i).getString("stockChkNo") + " ,SkuCode: " +
+                                    jsonArray.getJSONObject(i).getString("skuCode"));
+                        }
                     }
+                    Log.e("findStockNoDetails", "getDetails!=0");
+
+                } else {
+                    Log.e("findStockNoDetails", "getDetails==0");
+
+                    getStockDetails(storeip);
+
                 }
-                storedata_popup_ll.setVisibility(View.VISIBLE);
+
+                if (stockData.size() > 0) {
+                    storedata_popup_ll.setVisibility(View.VISIBLE);
+                } else {
+                    Log.e("findStockNoDetails", "stockData.size()>0");
+
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } else {
+            getStockDetails(storeip);
+            Log.e("findStockNoDetails", "getStockDetails");
+
         }
+
     }
+
     public void searchEan() {
 //        stockData.clear();
 //        stockno_lv.clearChoices();
@@ -792,6 +851,7 @@ public class FragmentStockItem extends Fragment {
                 if (jsonArray.getJSONObject(i).getString("SKU_CODE").equals(SKU_CODE)) {
                     skuname_edt.setText(jsonArray.getJSONObject(i).getString("SKU_NAME"));
                     prices.add(jsonArray.getJSONObject(i).getString("MRP"));
+                    price_tv.setText(jsonArray.getJSONObject(i).getString("MRP"));
                     SKU_LOC_NO = jsonArray.getJSONObject(i).getString("SKU_LOC_NO");
                     DAMAGED_QTY = jsonArray.getJSONObject(i).getString("DAMAGED_QTY");
                     EXPIRY_DATE = jsonArray.getJSONObject(i).getString("EXPIRY_DATE");
