@@ -20,12 +20,6 @@ import com.HnG.stock.mbos.R;
  */
 
 public class FragmentQuantity extends Fragment {
-//    private ProgressInterface progressInterface;
-//    ArrayList<ServiceProvider> serviceProviders = new ArrayList<>();
-//    ServiceProvidersAdapter serviceProvidersAdapter;
-//    ListView lv_search;
-//    private FusedLocationProviderClient mFusedLocationClient;
-//    Location mlocation;
 
     public static FragmentQuantity newInstance(int someInt) {
         FragmentQuantity myFragment = new FragmentQuantity();

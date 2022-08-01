@@ -52,6 +52,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -88,6 +90,7 @@ public class FragmentStockItem extends Fragment {
             REF_BATCH,
             SKU_NAME,
             EAN_CODE;
+    ArrayAdapter<String> arrayAdapterrStock;
 
     public static FragmentStockItem newInstance(int someInt) {
         FragmentStockItem myFragment = new FragmentStockItem();
@@ -146,7 +149,7 @@ public class FragmentStockItem extends Fragment {
         prices_lv.setAdapter(arrayAdapterr);
 
 
-        ArrayAdapter<String> arrayAdapterrStock = new ArrayAdapter<String>(getActivity(), R.layout.item_pricelistview, R.id.textView, stockData);
+//         = new ArrayAdapter<String>(getActivity(), R.layout.item_pricelistview, R.id.textView, stockData);
         arrayAdapterrStock = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, stockData);
         arrayAdapterrStock.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 //        spinner.setAdapter(arrayAdapter);
@@ -168,6 +171,16 @@ public class FragmentStockItem extends Fragment {
         userDb.close();
 
 
+
+ /*       new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // this code will be executed after 2 seconds
+            }
+        }, 2000);*/
+        findStockNoDetails();
+
+
         price_rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,8 +190,9 @@ public class FragmentStockItem extends Fragment {
         closepopup_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                storedata_popup_ll.setVisibility(View.GONE);
-                getStockDetails(storeip);
+                clearPrevSavedData();
+//                storedata_popup_ll.setVisibility(View.GONE);
+//                getStockDetails(storeip);
             }
         });
 
@@ -219,12 +233,13 @@ public class FragmentStockItem extends Fragment {
         exit_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showAlertDialogExit("Are your sure?");
 //                getActivity().finish();
-                try {
-                    ((StockActivityTemp) getActivity()).finishActivity();
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    ((StockActivityTemp) getActivity()).finishActivity();
+//                } catch (NullPointerException e) {
+//                    e.printStackTrace();
+//                }
             }
         });
 
@@ -234,14 +249,17 @@ public class FragmentStockItem extends Fragment {
                 if (storestockcheck_edt.getText().toString().equals("")) {
                     Toast.makeText(getActivity(), "Enter Stock check number", Toast.LENGTH_SHORT).show();
 
+                } else if (location_code_edt.getText().toString().equals("")) {
+                    Toast.makeText(getActivity(), "Enter Location Code", Toast.LENGTH_SHORT).show();
+
                 } else if (device_no_edt.getText().toString().equals("")) {
                     Toast.makeText(getActivity(), "Enter Device number", Toast.LENGTH_SHORT).show();
 
                 } else {
                     Toast.makeText(getActivity(), "Please wait..", Toast.LENGTH_SHORT).show();
 
-                    findStockNoDetails();
-
+//                    findStockNoDetails();
+                    getStockDetails(storeip);
                 }
 
             }
@@ -292,12 +310,12 @@ public class FragmentStockItem extends Fragment {
         /* spinner.setOnClickListener(price_tv.performClick());*/
 
 
-        storedata_popup_ll.setOnClickListener(new View.OnClickListener() {
+      /*  storedata_popup_ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 storedata_popup_ll.setVisibility(View.GONE);
             }
-        });
+        });*/
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -333,6 +351,17 @@ public class FragmentStockItem extends Fragment {
 
         return view;
     }
+
+    public void clearPrevSavedData() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.putString("stock", "");
+        editor.putString("stock", "");
+        editor.apply();
+        showAlertDialog("Previous data cleared");
+
+    }
+
 
     public void fillStockdata(int position) {
         String sku = getDetails();
@@ -459,12 +488,12 @@ public class FragmentStockItem extends Fragment {
     private void clearFields() {
         prices_lv.clearChoices();
         prices.clear();
-        device_no_edt.getText().clear();
-        storestockcheck_edt.getText().clear();
+//        device_no_edt.getText().clear();
+//        storestockcheck_edt.getText().clear();
         eansku_edt.getText().clear();
         skuname_edt.getText().clear();
         physicalqty_edt.getText().clear();
-        location_code_edt.getText().clear();
+//        location_code_edt.getText().clear();
         price_tv.setText("Price");
         shelfno_edt.getText().clear();
         SKU_CODE = "";
@@ -474,7 +503,6 @@ public class FragmentStockItem extends Fragment {
         EXPIRY_DATE = "";
         MRP = "";
         REF_BATCH = "";
-        MRP = "";
         MRP = "";
 
     }
@@ -500,7 +528,7 @@ public class FragmentStockItem extends Fragment {
 
 //        getDetails();
 
-        showAlertDialog("Details saved");
+        showAlertDialogWithClosebtn("Details saved");
     }
 
     public String getDetails() {
@@ -630,7 +658,9 @@ public class FragmentStockItem extends Fragment {
         dowloadpopup_ll.setVisibility(View.VISIBLE);
         txtstatus.setText("Downloading EanMaster details");
 
-        String apiUrl = storeip + "/StockCheck/get_eanmaster_for_hht?StockCheckNo=" + storestockcheck_edt.getText().toString() + "&DeviceNo=" + device_no_edt.getText().toString();
+        String apiUrl = storeip + "/StockCheck/get_eanmaster_for_hht?StockCheckNo=" + storestockcheck_edt.getText().toString() +
+                "&DeviceNo=" + device_no_edt.getText().toString() +
+                "&LocationCode=" + location_code_edt.getText().toString();
         Log.d("getStockDetails: ", apiUrl);
         ApiCall.make(getActivity(), apiUrl, new Response.Listener<String>() {
                     @Override
@@ -684,7 +714,9 @@ public class FragmentStockItem extends Fragment {
 //        dowloadpopup_ll.setVisibility(View.VISIBLE);
         txtstatus.setText("Downloading SkuMaster details");
 
-        String apiUrl = storeip + "/StockCheck/get_skumaster_for_hht?StockCheckNo=" + storestockcheck_edt.getText().toString() + "&DeviceNo=" + device_no_edt.getText().toString();
+        String apiUrl = storeip + "/StockCheck/get_skumaster_for_hht?StockCheckNo=" + storestockcheck_edt.getText().toString() +
+                "&DeviceNo=" + device_no_edt.getText().toString() +
+                "&LocationCode=" + location_code_edt.getText().toString();
         Log.d("getSkuMaster: ", apiUrl);
         ApiCall.make(getActivity(), apiUrl, new Response.Listener<String>() {
                     @Override
@@ -741,36 +773,34 @@ public class FragmentStockItem extends Fragment {
 
     public void findStockNoDetails() {
 
-        Log.e("findStockNoDetails", "");
         stockData.clear();
         stockno_lv.clearChoices();
         if (getDetails() != null) {
-            Log.e("findStockNoDetails", "getDetails");
 
             String sku = getDetails();
             try {
                 JSONArray jsonArray = new JSONArray(sku);
-//            Log.e("JALastsku", jsonArray.getJSONObject(0).toString());
+                Log.e("JALastsku", jsonArray.getJSONObject(0).toString());
                 if (jsonArray.length() != 0) {
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        if (jsonArray.getJSONObject(i).getString("stockChkNo").equals(storestockcheck_edt.getText().toString())) {
-                            stockData.add("Location code: " + jsonArray.getJSONObject(i).getString("stockChkNo") + " ,SkuCode: " +
-                                    jsonArray.getJSONObject(i).getString("skuCode"));
-                        }
+                        stockData.add("Location code: " + jsonArray.getJSONObject(i).getString("stockChkNo") + " ,SkuCode: " +
+                                jsonArray.getJSONObject(i).getString("skuCode"));
+                       /* if (jsonArray.getJSONObject(i).getString("stockChkNo").equals(storestockcheck_edt.getText().toString())) {
+
+                        }*/
                     }
-                    Log.e("findStockNoDetails", "getDetails!=0");
-
-                } else {
-                    Log.e("findStockNoDetails", "getDetails==0");
-
-                    getStockDetails(storeip);
+                    arrayAdapterrStock.notifyDataSetChanged();
+//                    storedata_popup_ll.setVisibility(View.VISIBLE);
+//                    stockno_lv.setVisibility(View.VISIBLE);
 
                 }
 
                 if (stockData.size() > 0) {
                     storedata_popup_ll.setVisibility(View.VISIBLE);
+
+//                    stockno_lv.setVisibility(View.VISIBLE);
                 } else {
-                    Log.e("findStockNoDetails", "stockData.size()>0");
+                    Log.e("findStockNoDetails", "stockData.size()<0");
 
                 }
 
@@ -778,7 +808,7 @@ public class FragmentStockItem extends Fragment {
                 e.printStackTrace();
             }
         } else {
-            getStockDetails(storeip);
+//            getStockDetails(storeip);
             Log.e("findStockNoDetails", "getStockDetails");
 
         }
@@ -799,7 +829,7 @@ public class FragmentStockItem extends Fragment {
                         fillSearchData(i);
                     }
                 }
-                storedata_popup_ll.setVisibility(View.VISIBLE);
+//                storedata_popup_ll.setVisibility(View.VISIBLE);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -817,6 +847,48 @@ public class FragmentStockItem extends Fragment {
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.dismiss();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
+    }
+
+    public void showAlertDialogWithClosebtn(final String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("HnGmBOS");
+                builder.setMessage(message)
+                        .setCancelable(false)
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                                clearFields();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
+    }
+
+    public void showAlertDialogExit(final String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("HnGmBOS");
+                builder.setMessage(message)
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                                try {
+                                    ((StockActivityTemp) getActivity()).finishActivity();
+                                } catch (NullPointerException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         });
                 AlertDialog alert = builder.create();
@@ -850,6 +922,7 @@ public class FragmentStockItem extends Fragment {
             for (int i = 0; i < jsonArray.length(); i++) {
                 if (jsonArray.getJSONObject(i).getString("SKU_CODE").equals(SKU_CODE)) {
                     skuname_edt.setText(jsonArray.getJSONObject(i).getString("SKU_NAME"));
+                    SKU_NAME = jsonArray.getJSONObject(i).getString("SKU_NAME");
                     prices.add(jsonArray.getJSONObject(i).getString("MRP"));
                     price_tv.setText(jsonArray.getJSONObject(i).getString("MRP"));
                     SKU_LOC_NO = jsonArray.getJSONObject(i).getString("SKU_LOC_NO");
@@ -858,7 +931,6 @@ public class FragmentStockItem extends Fragment {
                     MRP = jsonArray.getJSONObject(i).getString("MRP");
 //                    SKU_CODE = jsonArray.getJSONObject(i).getString("SKU_CODE");
                     REF_BATCH = jsonArray.getJSONObject(i).getString("REF_BATCH");
-                    SKU_NAME = jsonArray.getJSONObject(i).getString("SKU_NAME");
                 }
             }
 
@@ -947,3 +1019,8 @@ public class FragmentStockItem extends Fragment {
 //upload btn/confirm btn
 //remove prev
 //ean -> sku -> batch/price
+//1-Aug
+//new list details
+//clear lst 4 fields on savebtn click
+//exit alert
+//looping issue

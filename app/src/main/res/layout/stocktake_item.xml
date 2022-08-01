@@ -64,7 +64,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/white_blackborder"
 
-                android:inputType="textPersonName"
+                android:inputType="number"
                 android:padding="5dp"
                 tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
         </LinearLayout>
@@ -354,6 +354,8 @@
         android:background="@android:color/white"
         android:visibility="gone" />
 
+
+
     <LinearLayout
         android:id="@+id/storedata_popup_ll"
         android:layout_width="match_parent"
@@ -364,22 +366,18 @@
         android:padding="15dp"
         android:visibility="gone">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            android:text="Previous Data"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+
 
         <ListView
             android:id="@+id/stockno_lv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:layout_weight="1"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@android:color/white"
             android:padding="5dp" />
 
@@ -387,8 +385,9 @@
             android:id="@+id/closepopup_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:background="@drawable/white_blackborder"
-            android:text="Close" />
+            android:text="Clear All" />
 
     </LinearLayout>
 

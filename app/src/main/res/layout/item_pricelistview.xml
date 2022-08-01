@@ -10,5 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="@dimen/activity_horizontal_margin"
+        android:text="0000000"
         android:textColor="@color/black" />
 </LinearLayout>
