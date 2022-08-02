@@ -1,5 +1,6 @@
 package com.HnG.stock.mbos.activity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -178,7 +179,8 @@ public class FragmentStockItem extends Fragment {
                 // this code will be executed after 2 seconds
             }
         }, 2000);*/
-        findStockNoDetails();
+
+        new getpreviousDetails().execute();
 
 
         price_rl.setOnClickListener(new View.OnClickListener() {
@@ -219,7 +221,6 @@ public class FragmentStockItem extends Fragment {
                     Toast.makeText(getActivity(), "Please fill all the details", Toast.LENGTH_LONG).show();
                 } else {
                     saveDetails();
-
                 }
             }
         });
@@ -505,6 +506,78 @@ public class FragmentStockItem extends Fragment {
         REF_BATCH = "";
         MRP = "";
 
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public class getpreviousDetails extends AsyncTask<String, String, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+
+            String hasJson = "0";
+//            findStockNoDetails();
+            stockData.clear();
+            stockno_lv.clearChoices();
+            if (getDetails() != null) {
+
+                String sku = getDetails();
+                try {
+                    JSONArray jsonArray = new JSONArray(sku);
+                    Log.e("JALastsku", jsonArray.getJSONObject(0).toString());
+                    if (jsonArray.length() != 0) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            stockData.add("Location code: " + jsonArray.getJSONObject(i).getString("stockChkNo") + " ,SkuCode: " +
+                                    jsonArray.getJSONObject(i).getString("skuCode"));
+                       /* if (jsonArray.getJSONObject(i).getString("stockChkNo").equals(storestockcheck_edt.getText().toString())) {
+
+                        }*/
+                        }
+                        arrayAdapterrStock.notifyDataSetChanged();
+//                    storedata_popup_ll.setVisibility(View.VISIBLE);
+//                    stockno_lv.setVisibility(View.VISIBLE);
+
+                    }
+
+                    if (stockData.size() > 0) {
+//                        storedata_popup_ll.setVisibility(View.VISIBLE);
+                        hasJson = "1";
+
+//                    stockno_lv.setVisibility(View.VISIBLE);
+                    } else {
+                        Log.e("findStockNoDetails", "stockData.size()<0");
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+//            getStockDetails(storeip);
+                Log.e("findStockNoDetails", "getStockDetails");
+
+            }
+            return hasJson;
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (s.equals("1")) {
+                storedata_popup_ll.setVisibility(View.VISIBLE);
+
+            }
+            super.onPostExecute(s);
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+
+        }
     }
 
     public void saveDetails() {
