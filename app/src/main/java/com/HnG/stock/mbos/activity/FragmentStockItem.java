@@ -91,6 +91,7 @@ public class FragmentStockItem extends Fragment {
             REF_BATCH,
             SKU_NAME,
             EAN_CODE;
+    String localEanData,localSkuData;
     ArrayAdapter<String> arrayAdapterrStock;
 
     public static FragmentStockItem newInstance(int someInt) {
@@ -181,8 +182,16 @@ public class FragmentStockItem extends Fragment {
         }, 2000);*/
 
         new getpreviousDetails().execute();
+        new getLocalEanMaster().execute();
+        new getLocalSkuMaster().execute();
 
 
+        storedata_popup_ll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         price_rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -221,6 +230,7 @@ public class FragmentStockItem extends Fragment {
                     Toast.makeText(getActivity(), "Please fill all the details", Toast.LENGTH_LONG).show();
                 } else {
                     saveDetails();
+
                 }
             }
         });
@@ -276,7 +286,11 @@ public class FragmentStockItem extends Fragment {
             @Override
             public void onClick(View v) {
 //                findStockNoDetails();
-                searchEan();
+                if (!skuname_edt.getText().toString().equals("")) {
+                    searchEan();
+                } else {
+                    Toast.makeText(getActivity(), "Please enter code to search", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -360,6 +374,7 @@ public class FragmentStockItem extends Fragment {
         editor.putString("stock", "");
         editor.apply();
         showAlertDialog("Previous data cleared");
+        storedata_popup_ll.setVisibility(View.GONE);
 
     }
 
@@ -400,6 +415,7 @@ public class FragmentStockItem extends Fragment {
         }
 
         storedata_popup_ll.setVisibility(View.GONE);
+        stockdetails_ll.setVisibility(View.VISIBLE);
 
 
     }
@@ -525,7 +541,7 @@ public class FragmentStockItem extends Fragment {
                     Log.e("JALastsku", jsonArray.getJSONObject(0).toString());
                     if (jsonArray.length() != 0) {
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            stockData.add("Location code: " + jsonArray.getJSONObject(i).getString("stockChkNo") + " ,SkuCode: " +
+                            stockData.add("Location code: " + jsonArray.getJSONObject(i).getString("stockChkNo") + " : SkuCode: " +
                                     jsonArray.getJSONObject(i).getString("skuCode"));
                        /* if (jsonArray.getJSONObject(i).getString("stockChkNo").equals(storestockcheck_edt.getText().toString())) {
 
@@ -580,6 +596,71 @@ public class FragmentStockItem extends Fragment {
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
+    public class getLocalEanMaster extends AsyncTask<String, String, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String value = "0";
+            if (prefs.getString("eanmaster", null) != null || !prefs.getString("eanmaster", null).equals("")) {
+                value = prefs.getString("eanmaster", null);
+            }
+
+            return value;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+           localEanData = s;
+            super.onPostExecute(s);
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public class getLocalSkuMaster extends AsyncTask<String, String, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String value = "0";
+            if (prefs.getString("skumaster", null) != null || !prefs.getString("skumaster", null).equals("")) {
+                value = prefs.getString("skumaster", null);
+            }
+
+            return value;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            localSkuData = s;
+            super.onPostExecute(s);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+    }
+
+
     public void saveDetails() {
 
         skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
@@ -600,6 +681,9 @@ public class FragmentStockItem extends Fragment {
 //        skumasterArrayList = getDetails();
 
 //        getDetails();
+
+        new getLocalEanMaster().execute();
+        new getLocalSkuMaster().execute();
 
         showAlertDialogWithClosebtn("Details saved");
     }
@@ -844,6 +928,7 @@ public class FragmentStockItem extends Fragment {
         );
     }
 
+    //hold
     public void findStockNoDetails() {
 
         stockData.clear();
@@ -977,7 +1062,7 @@ public class FragmentStockItem extends Fragment {
         price_tv.setText("Price");
 //        clear_btn.performClick();
 
-        progressDialog = ProgressDialog.show(getContext(), "",
+        ProgressDialog progressDialog = ProgressDialog.show(getContext(), "",
                 "Please wait ..", true);
         progressDialog.show();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -1087,6 +1172,7 @@ public class FragmentStockItem extends Fragment {
         return json;
 
     }
+
 }
 
 //upload btn/confirm btn

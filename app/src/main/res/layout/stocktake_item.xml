@@ -355,7 +355,6 @@
         android:visibility="gone" />
 
 
-
     <LinearLayout
         android:id="@+id/storedata_popup_ll"
         android:layout_width="match_parent"
@@ -367,17 +366,17 @@
         android:visibility="gone">
 
 
-
         <ListView
             android:id="@+id/stockno_lv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_height="0dp"
             android:layout_centerInParent="true"
+            android:layout_margin="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_weight="1"
             android:background="@android:color/white"
             android:padding="5dp" />
 
@@ -385,9 +384,9 @@
             android:id="@+id/closepopup_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:background="@drawable/white_blackborder"
-            android:text="Clear All" />
+            android:text="Clear All"
+            android:visibility="visible" />
 
     </LinearLayout>
 
