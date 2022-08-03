@@ -588,7 +588,10 @@ public class FragmentStockItem extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            location_code_edt.setEnabled(false);
+           progressDialog =  ProgressDialog.show(getActivity(), "",
+                    "Please wait..", true);
+            progressDialog.show();
+           location_code_edt.setEnabled(false);
             storestockcheck_edt.setEnabled(false);
             device_no_edt.setEnabled(false);
             super.onPreExecute();
@@ -596,6 +599,7 @@ public class FragmentStockItem extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
+
             if (s.equals("1")) {
                 storedata_popup_ll.setVisibility(View.VISIBLE);
             }else {
@@ -603,11 +607,14 @@ public class FragmentStockItem extends Fragment {
                 storestockcheck_edt.setEnabled(true);
                 device_no_edt.setEnabled(true);
             }
+            progressDialog.dismiss();
             super.onPostExecute(s);
         }
 
         @Override
         protected void onProgressUpdate(String... values) {
+            progressDialog.show();
+
             super.onProgressUpdate(values);
 
         }

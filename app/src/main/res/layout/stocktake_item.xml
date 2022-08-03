@@ -358,7 +358,7 @@
         android:id="@+id/storedata_popup_ll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#80ffffff"
+        android:background="#50C878"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="15dp"
@@ -368,9 +368,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Previous data"
+            android:textColor="@color/black"
             android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"/>
+            android:textStyle="bold" />
 
         <ListView
             android:id="@+id/stockno_lv"
