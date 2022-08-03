@@ -932,7 +932,7 @@ public class FragmentStockItem extends Fragment {
 //                                stockcheck_ll.setVisibility(View.GONE);
                                 stockdetails_ll.setVisibility(View.VISIBLE);
                                 location_code_edt.setEnabled(false);
-                                shelfno_edt.setEnabled(false);
+//                                shelfno_edt.setEnabled(false);
                                 storestockcheck_edt.setEnabled(false);
                                 device_no_edt.setEnabled(false);
 //                                findStockNoDetails();
