@@ -603,8 +603,8 @@ public class FragmentStockItem extends Fragment {
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String value = "0";
-            if (prefs.getString("eanmaster", null) != null || !prefs.getString("eanmaster", null).equals("")) {
-                value = prefs.getString("eanmaster", null);
+            if (prefs.getString("eanmaster", "") != null || !prefs.getString("eanmaster", "").equals("")) {
+                value = prefs.getString("eanmaster", "");
             }
 
             return value;
@@ -636,8 +636,8 @@ public class FragmentStockItem extends Fragment {
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String value = "0";
-            if (prefs.getString("skumaster", null) != null || !prefs.getString("skumaster", null).equals("")) {
-                value = prefs.getString("skumaster", null);
+            if (prefs.getString("skumaster", "") != null || !prefs.getString("skumaster", "").equals("")) {
+                value = prefs.getString("skumaster", "");
             }
 
             return value;
