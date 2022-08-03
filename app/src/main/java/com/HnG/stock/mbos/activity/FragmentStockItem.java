@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -237,7 +238,9 @@ public class FragmentStockItem extends Fragment {
         clear_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clearFields();
+
+                showAlertDialogWithClosebtn("Confim to clear data?");
+//                clearFields();
             }
         });
 
@@ -450,6 +453,10 @@ public class FragmentStockItem extends Fragment {
 
 
             }
+            location_code_edt.setEnabled(false);
+            shelfno_edt.setEnabled(false);
+            storestockcheck_edt.setEnabled(false);
+            device_no_edt.setEnabled(false);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -493,6 +500,10 @@ public class FragmentStockItem extends Fragment {
 
 //            }
 
+            location_code_edt.setEnabled(false);
+            shelfno_edt.setEnabled(false);
+            storestockcheck_edt.setEnabled(false);
+            device_no_edt.setEnabled(false);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -512,7 +523,7 @@ public class FragmentStockItem extends Fragment {
         physicalqty_edt.getText().clear();
 //        location_code_edt.getText().clear();
         price_tv.setText("Price");
-        shelfno_edt.getText().clear();
+//        shelfno_edt.getText().clear();
         SKU_CODE = "";
         EAN_CODE = "";
         SKU_LOC_NO = "";
@@ -541,8 +552,8 @@ public class FragmentStockItem extends Fragment {
                     Log.e("JALastsku", jsonArray.getJSONObject(0).toString());
                     if (jsonArray.length() != 0) {
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            stockData.add("Location code: " + jsonArray.getJSONObject(i).getString("stockChkNo") + " : SkuCode: " +
-                                    jsonArray.getJSONObject(i).getString("skuCode"));
+                            stockData.add("Location code: " + jsonArray.getJSONObject(i).getString("stockChkNo") + " , SkuCode: " +
+                                    jsonArray.getJSONObject(i).getString("skuCode")+" ->");
                        /* if (jsonArray.getJSONObject(i).getString("stockChkNo").equals(storestockcheck_edt.getText().toString())) {
 
                         }*/
@@ -577,6 +588,9 @@ public class FragmentStockItem extends Fragment {
 
         @Override
         protected void onPreExecute() {
+            location_code_edt.setEnabled(false);
+            storestockcheck_edt.setEnabled(false);
+            device_no_edt.setEnabled(false);
             super.onPreExecute();
         }
 
@@ -584,7 +598,10 @@ public class FragmentStockItem extends Fragment {
         protected void onPostExecute(String s) {
             if (s.equals("1")) {
                 storedata_popup_ll.setVisibility(View.VISIBLE);
-
+            }else {
+                location_code_edt.setEnabled(true);
+                storestockcheck_edt.setEnabled(true);
+                device_no_edt.setEnabled(true);
             }
             super.onPostExecute(s);
         }
@@ -691,7 +708,7 @@ public class FragmentStockItem extends Fragment {
     public String getDetails() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         Gson gson = new Gson();
-        String json = prefs.getString("stock", null);
+        String json = prefs.getString("stock", "");
         /*Type type = new TypeToken<ArrayList<SKUMASTER>>() {
         }.getType();
         return gson.fromJson(json, type);*/
@@ -904,6 +921,10 @@ public class FragmentStockItem extends Fragment {
                                 dowloadpopup_ll.setVisibility(View.GONE);
 //                                stockcheck_ll.setVisibility(View.GONE);
                                 stockdetails_ll.setVisibility(View.VISIBLE);
+                                location_code_edt.setEnabled(false);
+                                shelfno_edt.setEnabled(false);
+                                storestockcheck_edt.setEnabled(false);
+                                device_no_edt.setEnabled(false);
 //                                findStockNoDetails();
                             } else {
                                 showAlertDialog(jsonObject.getString("result"));
@@ -1065,10 +1086,10 @@ public class FragmentStockItem extends Fragment {
         ProgressDialog progressDialog = ProgressDialog.show(getContext(), "",
                 "Please wait ..", true);
         progressDialog.show();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         try {
-            JSONArray jsonArray = new JSONArray(sharedPreferences.getString("skumaster", "0"));
-            JSONArray jsonArrayEanMaster = new JSONArray(sharedPreferences.getString("eanmaster", "0"));
+            JSONArray jsonArray = new JSONArray(localSkuData);
+            JSONArray jsonArrayEanMaster = new JSONArray(localEanData);
 
             for (int i = 0; i < jsonArrayEanMaster.length(); i++) {
 
@@ -1102,7 +1123,13 @@ public class FragmentStockItem extends Fragment {
                 showAlertDialog("No details found for: "+EAN_CODE);
             }*/
 
+
             progressDialog.dismiss();
+            if (prices.size()>1){
+                prices_lv.setVisibility(View.VISIBLE);
+            }else if(SKU_CODE==null){
+                customToast("No details found!");
+            }
 
 
         } catch (JSONException e) {
@@ -1110,6 +1137,14 @@ public class FragmentStockItem extends Fragment {
             e.printStackTrace();
         }
 
+    }
+
+    public void customToast(String msg){
+        Toast toast = Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        View view = toast.getView();
+        view.setBackgroundResource(R.drawable.custom_background);
+        toast.show();
     }
 
     public void saveStockLocDev() {
