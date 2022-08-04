@@ -1,5 +1,6 @@
 package com.HnG.stock.mbos.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -66,6 +67,8 @@ public class StockActivityTemp extends AppCompatActivity {
     }
 
     public void finishActivity(){
+        Intent intent  = new Intent(StockActivityTemp.this,MGINUploadInvoiceTest.class);
+        startActivity(intent);
         finish();
     }
 }

@@ -149,8 +149,7 @@ public class FragmentStockItem extends Fragment {
         search_btn = (Button) view.findViewById(R.id.search_btn);
         upload_btn = (Button) view.findViewById(R.id.upload_btn);
         closepopup_btn = (Button) view.findViewById(R.id.closepopup_btn);
-        scrollview = (ScrollView)view.findViewById(R.id.scrollview);
-
+        scrollview = (ScrollView) view.findViewById(R.id.scrollview);
 
 
         ArrayAdapter<String> arrayAdapterr = new ArrayAdapter<String>(getActivity(), R.layout.item_pricelistview, R.id.textView, prices);
@@ -293,8 +292,8 @@ public class FragmentStockItem extends Fragment {
         lastsku_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                lastsku_ll.setVisibility(View.VISIBLE);
-
+                getLastsku();
+//                lastsku_ll.setVisibility(View.VISIBLE);
 
             }
         });
@@ -302,7 +301,8 @@ public class FragmentStockItem extends Fragment {
         lastsku_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                getLastsku();
+//                getLastsku();
+                setLastSkuData();
             }
         });
 
@@ -505,7 +505,35 @@ public class FragmentStockItem extends Fragment {
             JSONArray jsonArray = new JSONArray(sku);
             Log.e("JALastsku", jsonArray.getJSONObject(0).toString());
 //            for (int i = 0; i < jsonArray.length(); i++) {
+
+
+//            }
+            lastSkudata.clear();
+            lastSkudata.add("Shelf no: " + jsonArray.getJSONObject(jsonArray.length() - 1).getString("bay_shelf_no") + " , SkuCode: " +
+                    jsonArray.getJSONObject(jsonArray.length() - 1).getString("skuCode") + ", Mrp:" + jsonArray.getJSONObject(jsonArray.length() - 1).getString("mrp") + " , Physical Qty:" + jsonArray.getJSONObject(jsonArray.length() - 1).getString("physicalQty"));
+
+            arrayAdapterLastSku.notifyDataSetChanged();
+
+            location_code_edt.setEnabled(false);
+//            shelfno_edt.setEnabled(false);
+            storestockcheck_edt.setEnabled(false);
+            device_no_edt.setEnabled(false);
+            lastsku_ll.setVisibility(View.VISIBLE);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        /*SKUMASTER temp = skumasterArrayList.get(skumasterArrayList.size()-1);
+        storestockcheck_edt.setText(temp.);*/
+
+    }
+
+    public void setLastSkuData() {
+        String sku = getDetails();
+        try {
+            JSONArray jsonArray = new JSONArray(sku);
             skuname_edt.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("skuName"));
+
             eansku_edt.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("skuCode"));
             device_no_edt.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("deviceNo"));
             physicalqty_edt.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("physicalQty"));
@@ -523,22 +551,11 @@ public class FragmentStockItem extends Fragment {
             EAN_CODE = jsonArray.getJSONObject(jsonArray.length() - 1).getString("ean");
             REF_BATCH = jsonArray.getJSONObject(jsonArray.length() - 1).getString("refBatch");
             SKU_NAME = jsonArray.getJSONObject(jsonArray.length() - 1).getString("skuName");
-
-
-//            }
-
-            location_code_edt.setEnabled(false);
-            shelfno_edt.setEnabled(false);
-            storestockcheck_edt.setEnabled(false);
-            device_no_edt.setEnabled(false);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        /*SKUMASTER temp = skumasterArrayList.get(skumasterArrayList.size()-1);
-        storestockcheck_edt.setText(temp.);*/
-
     }
+
 
     private void clearFields() {
         prices_lv.clearChoices();
@@ -561,6 +578,8 @@ public class FragmentStockItem extends Fragment {
         MRP = "";
         skuname_edt.requestFocus();
 
+        lastsku_ll.setVisibility(View.GONE);
+
 
     }
 
@@ -572,7 +591,7 @@ public class FragmentStockItem extends Fragment {
             String hasJson = "0";
 //            findStockNoDetails();
             stockData.clear();
-            lastSkudata.clear();
+
             stockno_lv.clearChoices();
             if (getDetails() != null) {
 
@@ -587,12 +606,9 @@ public class FragmentStockItem extends Fragment {
                             stockData.add("Location code: " + jsonArray.getJSONObject(i).getString("stockChkNo") + " , SkuCode: " +
                                     jsonArray.getJSONObject(i).getString("skuCode") + " ->");
 
-                            lastSkudata.add("Shelf no: " + jsonArray.getJSONObject(i).getString("bay_shelf_no") + " , SkuCode: " +
-                                    jsonArray.getJSONObject(i).getString("skuCode") + ", Mrp:" + jsonArray.getJSONObject(i).getString("mrp") + " , Physical Qty:" + jsonArray.getJSONObject(i).getString("physicalQty"));
 
                         }
                         arrayAdapterrStock.notifyDataSetChanged();
-                        arrayAdapterLastSku.notifyDataSetChanged();
 //                    storedata_popup_ll.setVisibility(View.VISIBLE);
 //                    stockno_lv.setVisibility(View.VISIBLE);
 
@@ -744,10 +760,11 @@ public class FragmentStockItem extends Fragment {
 
         new getLocalEanMaster().execute();
         new getLocalSkuMaster().execute();
-        new getpreviousDetails().execute();
+//        new getpreviousDetails().execute();
 
         showAlertDialogWithClosebtn("Details saved");
         skuname_edt.requestFocus();
+        lastsku_ll.setVisibility(View.GONE);
 //        lastsku_ll.setVisibility(View.VISIBLE);
 
     }
@@ -894,6 +911,8 @@ public class FragmentStockItem extends Fragment {
 
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.getString("result").equals("Success")) {
+                                submit_btn.setVisibility(View.GONE);
+
                                 Toast.makeText(getActivity(), "Please wait..\nDownloading SkuMaster details", Toast.LENGTH_SHORT).show();
                                 //showAlert(jsonObject.getString("Message"));
                                 JSONArray EanData = jsonObject.getJSONArray("eanmaster");
@@ -997,7 +1016,7 @@ public class FragmentStockItem extends Fragment {
     }
 
     //hold
-    public void findStockNoDetails() {
+   /* public void findStockNoDetails() {
 
         stockData.clear();
         stockno_lv.clearChoices();
@@ -1011,9 +1030,9 @@ public class FragmentStockItem extends Fragment {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         stockData.add("Location code: " + jsonArray.getJSONObject(i).getString("stockChkNo") + " ,SkuCode: " +
                                 jsonArray.getJSONObject(i).getString("skuCode"));
-                       /* if (jsonArray.getJSONObject(i).getString("stockChkNo").equals(storestockcheck_edt.getText().toString())) {
+                       *//* if (jsonArray.getJSONObject(i).getString("stockChkNo").equals(storestockcheck_edt.getText().toString())) {
 
-                        }*/
+                        }*//*
                     }
                     arrayAdapterrStock.notifyDataSetChanged();
 //                    storedata_popup_ll.setVisibility(View.VISIBLE);
@@ -1039,7 +1058,7 @@ public class FragmentStockItem extends Fragment {
 
         }
 
-    }
+    }*/
 
     public void searchEan() {
 //        stockData.clear();
@@ -1143,6 +1162,8 @@ public class FragmentStockItem extends Fragment {
 
                 if (jsonArrayEanMaster.getJSONObject(i).getString("ean_code").equals(eanCode)) {
                     SKU_CODE = jsonArrayEanMaster.getJSONObject(i).getString("sku_code");
+                    eansku_edt.getText().clear();
+                    eansku_edt.setText(SKU_CODE);
                 }
 
             }
@@ -1151,7 +1172,7 @@ public class FragmentStockItem extends Fragment {
                     skuname_edt.setText(jsonArray.getJSONObject(i).getString("SKU_NAME"));
                     SKU_NAME = jsonArray.getJSONObject(i).getString("SKU_NAME");
                     prices.add(jsonArray.getJSONObject(i).getString("MRP"));
-                    price_tv.setText(jsonArray.getJSONObject(i).getString("MRP"));
+//                    price_tv.setText(jsonArray.getJSONObject(i).getString("MRP"));
                     SKU_LOC_NO = jsonArray.getJSONObject(i).getString("SKU_LOC_NO");
                     DAMAGED_QTY = jsonArray.getJSONObject(i).getString("DAMAGED_QTY");
                     EXPIRY_DATE = jsonArray.getJSONObject(i).getString("EXPIRY_DATE");
@@ -1176,8 +1197,10 @@ public class FragmentStockItem extends Fragment {
             if (prices.size() == 0) {
 //                Toast.makeText(getActivity(),"No details found!",Toast.LENGTH_LONG).show();
                 customToast("No details found!");
-            } else {
+            } else if (prices.size() > 1) {
                 prices_lv.setVisibility(View.VISIBLE);
+            } else {
+                price_tv.setText(prices.get(0));
             }
 
 
