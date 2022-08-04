@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,6 +69,7 @@ public class FragmentStockItem extends Fragment {
     ArrayList<SKUMASTER> skumasterArrayList = new ArrayList<SKUMASTER>();
 
 
+    ScrollView scrollview;
     RelativeLayout price_rl;
     LinearLayout stockcheck_ll, stockdetails_ll, storedata_popup_ll;
     LinearLayout dowloadpopup_ll, lastsku_ll;
@@ -147,8 +149,9 @@ public class FragmentStockItem extends Fragment {
         search_btn = (Button) view.findViewById(R.id.search_btn);
         upload_btn = (Button) view.findViewById(R.id.upload_btn);
         closepopup_btn = (Button) view.findViewById(R.id.closepopup_btn);
+        scrollview = (ScrollView)view.findViewById(R.id.scrollview);
 
-        lastsku_btn.setEnabled(false);
+
 
         ArrayAdapter<String> arrayAdapterr = new ArrayAdapter<String>(getActivity(), R.layout.item_pricelistview, R.id.textView, prices);
         arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, prices);
@@ -290,6 +293,15 @@ public class FragmentStockItem extends Fragment {
         lastsku_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                lastsku_ll.setVisibility(View.VISIBLE);
+
+
+            }
+        });
+
+        lastsku_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 getLastsku();
             }
         });
@@ -407,7 +419,7 @@ public class FragmentStockItem extends Fragment {
                 shelfno_edt.setText(jsonArray.getJSONObject(position).getString("bay_shelf_no"));
                 storestockcheck_edt.setText(jsonArray.getJSONObject(position).getString("stockChkNo"));
                 location_code_edt.setText(jsonArray.getJSONObject(position).getString("location_code"));
-//                price_tv.setText(jsonArray.getJSONObject(position).getString("mrp"));
+//                price_tv.setTextsubmit_btn(jsonArray.getJSONObject(position).getString("mrp"));
 
 //                prices.add(jsonArray.getJSONObject(position).getString("mrp"));
 //                SKU_LOC_NO = jsonArray.getJSONObject(position).getString("stockChkNo");
@@ -421,7 +433,6 @@ public class FragmentStockItem extends Fragment {
 
 
             }
-            lastsku_ll.setVisibility(View.VISIBLE);
 
 
         } catch (JSONException e) {
@@ -429,12 +440,13 @@ public class FragmentStockItem extends Fragment {
         }
 
         storedata_popup_ll.setVisibility(View.GONE);
+        submit_btn.setVisibility(View.GONE);
         stockdetails_ll.setVisibility(View.VISIBLE);
 
         location_code_edt.setEnabled(false);
         storestockcheck_edt.setEnabled(false);
         device_no_edt.setEnabled(false);
-        shelfno_edt.setEnabled(false);
+//        shelfno_edt.setEnabled(false);
 
     }
 
@@ -576,7 +588,7 @@ public class FragmentStockItem extends Fragment {
                                     jsonArray.getJSONObject(i).getString("skuCode") + " ->");
 
                             lastSkudata.add("Shelf no: " + jsonArray.getJSONObject(i).getString("bay_shelf_no") + " , SkuCode: " +
-                                    jsonArray.getJSONObject(i).getString("skuCode") + "\nMrp:" + jsonArray.getJSONObject(i).getString("mrp") + " , Physical Qty:" + jsonArray.getJSONObject(i).getString("physicalQty"));
+                                    jsonArray.getJSONObject(i).getString("skuCode") + ", Mrp:" + jsonArray.getJSONObject(i).getString("mrp") + " , Physical Qty:" + jsonArray.getJSONObject(i).getString("physicalQty"));
 
                         }
                         arrayAdapterrStock.notifyDataSetChanged();
@@ -736,7 +748,7 @@ public class FragmentStockItem extends Fragment {
 
         showAlertDialogWithClosebtn("Details saved");
         skuname_edt.requestFocus();
-        lastsku_ll.setVisibility(View.VISIBLE);
+//        lastsku_ll.setVisibility(View.VISIBLE);
 
     }
 
@@ -1255,3 +1267,4 @@ public class FragmentStockItem extends Fragment {
 //clear lst 4 fields on savebtn click
 //exit alert
 //looping issue
+//only last saved sku map in list
