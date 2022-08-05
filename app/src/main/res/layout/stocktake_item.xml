@@ -23,6 +23,417 @@
                 android:layout_height="match_parent">
 
                 <LinearLayout
+                    android:id="@+id/stockdetails_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:background="#50C878"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/previousSkLD_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:background="@android:color/white"
+                        android:gravity="center_horizontal"
+                        android:padding="5dp"
+                        android:text="TextView"
+                        android:textColor="@color/black"
+                        tools:visibility="visible" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:layout_marginBottom="5dp"
+
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Bay/Shelf No:"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                        <EditText
+                            android:id="@+id/shelfno_edt"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/white_blackborder"
+                            android:inputType="textPersonName"
+                            android:padding="5dp"
+                            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Sku/EAN Code:"
+
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                        <EditText
+                            android:id="@+id/eansku_edt"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/white_blackborder"
+                            android:inputType="textPersonName"
+                            android:padding="5dp"
+                            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Sku Name:"
+
+
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                        <EditText
+                            android:id="@+id/skuname_edt"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/white_blackborder"
+                            android:editable="false"
+                            android:enabled="false"
+                            android:inputType="textPersonName"
+                            android:padding="5dp"
+                            android:scrollHorizontally="true"
+                            android:singleLine="true"
+                            android:textSize="16sp"
+                            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Batch/MRP: "
+
+
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                        <RelativeLayout
+                            android:id="@+id/price_rl"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/price_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Price"
+                                android:textColor="@color/black" />
+
+                            <Spinner
+                                android:id="@+id/spinner"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_weight="1"
+                                android:spinnerMode="dialog"
+                                android:visibility="visible" />
+                        </RelativeLayout>
+
+                        <EditText
+                            android:id="@+id/batchmrp_edt"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/white_blackborder"
+                            android:enabled="false"
+
+                            android:inputType="textPersonName"
+                            android:padding="5dp"
+                            android:visibility="gone"
+                            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Physical Qty:"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                        <EditText
+                            android:id="@+id/physicalqty_edt"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/white_blackborder"
+
+                            android:enabled="true"
+                            android:inputType="number"
+                            android:padding="5dp"
+                            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/lastsku_ll"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="Last Sku Data"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/white"
+                            android:divider="@color/black"
+                            android:orientation="vertical"
+                            android:showDividers="middle">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="5dp"
+                                android:background="@drawable/white_blackborder"
+                                android:divider="@color/black"
+                                android:orientation="horizontal"
+                                android:showDividers="middle">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/textView13"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_horizontal"
+                                        android:text="Shelf No"
+                                        android:textColor="@color/black"
+                                        android:textStyle="bold" />
+
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="1dp"
+                                        android:background="@color/black"
+                                        android:orientation="vertical"></LinearLayout>
+
+                                    <TextView
+                                        android:id="@+id/lastShelf_tv"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_horizontal"
+                                        android:text="TextView" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_horizontal"
+                                        android:text="SkuCode"
+                                        android:textColor="@color/black"
+                                        android:textStyle="bold" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="1dp"
+                                        android:background="@color/black"
+                                        android:orientation="vertical"></LinearLayout>
+
+                                    <TextView
+                                        android:id="@+id/lastSku_tv"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_horizontal"
+                                        android:text="TextView" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_horizontal"
+                                        android:text="Mrp"
+                                        android:textColor="@color/black"
+                                        android:textStyle="bold" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="1dp"
+                                        android:background="@color/black"
+                                        android:orientation="vertical"></LinearLayout>
+
+                                    <TextView
+                                        android:id="@+id/lastMrp_tv"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_horizontal"
+                                        android:text="TextView" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_horizontal"
+                                        android:text="Phy Qty"
+                                        android:textColor="@color/black"
+                                        android:textStyle="bold" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="1dp"
+                                        android:background="@color/black"
+                                        android:orientation="vertical"></LinearLayout>
+
+                                    <TextView
+                                        android:id="@+id/lastPhysicalQ_tv"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_horizontal"
+                                        android:text="TextView" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <ListView
+                            android:id="@+id/lastsku_lv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/white"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:gravity="center|center_vertical"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <Button
+                                android:id="@+id/clear_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Clear" />
+
+                            <Button
+                                android:id="@+id/exit_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Exit" />
+                        </LinearLayout>
+
+                        <Button
+                            android:id="@+id/save_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Save"
+                            android:textSize="16sp" />
+
+                        <Button
+                            android:id="@+id/upload_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Upload"
+                            android:textSize="16sp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <Button
+                                android:id="@+id/lastsku_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Last Sku" />
+
+                            <Button
+                                android:id="@+id/search_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Search" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/stockcheck_ll"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -31,6 +442,7 @@
                     android:visibility="visible">
 
                     <LinearLayout
+                        android:id="@+id/stockcheck_edt_ll"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -58,6 +470,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/location_edt_ll"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -85,6 +498,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/deviceno_edt_ll"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -111,271 +525,6 @@
                             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
                     </LinearLayout>
 
-
-                    <LinearLayout
-                        android:id="@+id/stockdetails_ll"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-
-                        android:background="#50C878"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:layout_marginBottom="5dp"
-
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="Bay/Shelf No:"
-                                android:textColor="@color/black"
-                                android:textSize="16sp" />
-
-                            <EditText
-                                android:id="@+id/shelfno_edt"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/white_blackborder"
-                                android:inputType="textPersonName"
-                                android:padding="5dp"
-                                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="Sku/EAN Code:"
-
-                                android:textColor="@color/black"
-                                android:textSize="16sp" />
-
-                            <EditText
-                                android:id="@+id/eansku_edt"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/white_blackborder"
-                                android:inputType="textPersonName"
-                                android:padding="5dp"
-                                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="Sku Name:"
-
-
-                                android:textColor="@color/black"
-                                android:textSize="16sp" />
-
-                            <EditText
-                                android:id="@+id/skuname_edt"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/white_blackborder"
-                                android:editable="false"
-                                android:enabled="false"
-                                android:inputType="textPersonName"
-                                android:padding="5dp"
-                                android:scrollHorizontally="true"
-                                android:singleLine="true"
-                                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="Batch/MRP: "
-
-
-                                android:textColor="@color/black"
-                                android:textSize="16sp" />
-
-                            <RelativeLayout
-                                android:id="@+id/price_rl"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1">
-
-                                <TextView
-                                    android:id="@+id/price_tv"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Price"
-                                    android:textColor="@color/black" />
-
-                                <Spinner
-                                    android:id="@+id/spinner"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_weight="1"
-                                    android:spinnerMode="dialog"
-                                    android:visibility="visible" />
-                            </RelativeLayout>
-
-                            <EditText
-                                android:id="@+id/batchmrp_edt"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/white_blackborder"
-                                android:enabled="false"
-
-                                android:inputType="textPersonName"
-                                android:padding="5dp"
-                                android:visibility="gone"
-                                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="Physical Qty:"
-                                android:textColor="@color/black"
-                                android:textSize="16sp" />
-
-                            <EditText
-                                android:id="@+id/physicalqty_edt"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/white_blackborder"
-
-                                android:enabled="true"
-                                android:inputType="number"
-                                android:padding="5dp"
-                                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:gravity="center|center_vertical"
-                            android:orientation="horizontal">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
-
-                                <Button
-                                    android:id="@+id/clear_btn"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Clear" />
-
-                                <Button
-                                    android:id="@+id/exit_btn"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Exit" />
-                            </LinearLayout>
-
-                            <Button
-                                android:id="@+id/save_btn"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Save"
-                                android:textSize="16sp" />
-
-                            <Button
-                                android:id="@+id/upload_btn"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Upload"
-                                android:textSize="16sp" />
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
-
-                                <Button
-                                    android:id="@+id/lastsku_btn"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Last Sku" />
-
-                                <Button
-                                    android:id="@+id/search_btn"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Search" />
-                            </LinearLayout>
-
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/lastsku_ll"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginBottom="10dp"
-                            android:text="Last Sku Data"
-                            android:textColor="@color/black"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <ListView
-                            android:id="@+id/lastsku_lv"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@android:color/white"
-                            android:paddingTop="10dp"
-                            android:paddingBottom="10dp" />
-                    </LinearLayout>
 
                     <Button
                         android:id="@+id/submit_btn"
@@ -458,22 +607,38 @@
             android:layout_height="0dp"
             android:layout_centerInParent="true"
             android:layout_margin="10dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="5dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
-            android:background="@android:color/white"
-            android:padding="5dp" />
+            android:background="@android:color/white" />
 
 
-        <Button
-            android:id="@+id/closepopup_btn"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/white_blackborder"
-            android:text="Clear All"
-            android:visibility="visible" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/closepopup_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/white_blackborder"
+                android:text="Clear All"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/contin_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/white_blackborder"
+                android:text="Continue" />
+        </LinearLayout>
 
     </LinearLayout>
 

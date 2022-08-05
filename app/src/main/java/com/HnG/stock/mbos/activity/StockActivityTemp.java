@@ -66,8 +66,15 @@ public class StockActivityTemp extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        finishActivity();
+        super.onBackPressed();
+    }
+
     public void finishActivity(){
         Intent intent  = new Intent(StockActivityTemp.this,MGINUploadInvoiceTest.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }
