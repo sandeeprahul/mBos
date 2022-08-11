@@ -72,6 +72,8 @@ public class FragmentStockItem extends Fragment {
     ArrayList<SKUMASTER> skumasterArrayList = new ArrayList<SKUMASTER>();
 
 
+    String json = "";
+
     ScrollView scrollview;
     RelativeLayout price_rl;
     LinearLayout stockcheck_ll, stockdetails_ll, storedata_popup_ll;
@@ -79,13 +81,13 @@ public class FragmentStockItem extends Fragment {
     EditText storestockcheck_edt, location_code_edt, device_no_edt;
     EditText eansku_edt, skuname_edt, shelfno_edt, physicalqty_edt;
     Button submit_btn, save_btn, clear_btn, exit_btn, lastsku_btn, search_btn, upload_btn;
-    Button closepopup_btn,contin_btn;
-    ListView prices_lv, stockno_lv, lastsku_lv;
+    Button closepopup_btn, contin_btn;
+    ListView prices_lv, stockno_lv, lastsku_lv, search_lv;
     String storeip = "";
     ProgressDialog progressDialog;
     Spinner spinner;
     TextView lastShelf_tv, lastSku_tv, lastMrp_tv, lastPhysicalQ_tv, previousSkLD_tv;
-    TextView price_tv, txtstatus;
+    TextView price_tv, txtstatus, tv_skuname;
     SharedPreferences sharedPreferences;
     List<String> prices = new ArrayList<String>();
     List<String> stockData = new ArrayList<String>();
@@ -100,7 +102,8 @@ public class FragmentStockItem extends Fragment {
             SKU_NAME,
             EAN_CODE;
     String localEanData, localSkuData;
-    ArrayAdapter<String> arrayAdapterrStock ;
+    JSONArray eanArray,skuArray;
+    ArrayAdapter<String> arrayAdapterrStock;
     ArrayAdapter<String> arrayAdapterLastSku;
 
     public static FragmentStockItem newInstance(int someInt) {
@@ -146,6 +149,7 @@ public class FragmentStockItem extends Fragment {
         shelfno_edt = (EditText) view.findViewById(R.id.shelfno_edt);
         physicalqty_edt = (EditText) view.findViewById(R.id.physicalqty_edt);
         skuname_edt = (EditText) view.findViewById(R.id.skuname_edt);
+        tv_skuname = (TextView) view.findViewById(R.id.tv_skuname);
         device_no_edt = (EditText) view.findViewById(R.id.device_no_edt);
         location_code_edt = (EditText) view.findViewById(R.id.location_code_edt);
         storestockcheck_edt = (EditText) view.findViewById(R.id.storestockcheck_edt);
@@ -170,7 +174,7 @@ public class FragmentStockItem extends Fragment {
 
 
 //
-        arrayAdapterrStock   = new ArrayAdapter<String>(getActivity(), R.layout.item_pricelistview, R.id.textView, stockData);
+        arrayAdapterrStock = new ArrayAdapter<String>(getActivity(), R.layout.item_pricelistview, R.id.textView, stockData);
 //        arrayAdapterrStock = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, stockData);
 //        arrayAdapterrStock.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 //        spinner.setAdapter(arrayAdapter);
@@ -343,11 +347,11 @@ public class FragmentStockItem extends Fragment {
             @Override
             public void onClick(View v) {
 //                findStockNoDetails();
-                if (!skuname_edt.getText().toString().equals("")) {
+                /*if (!skuname_edt.getText().toString().equals("")) {
                     searchEan();
                 } else {
                     Toast.makeText(getActivity(), "Please enter code to search", Toast.LENGTH_LONG).show();
-                }
+                }*/
             }
         });
 
@@ -376,7 +380,7 @@ public class FragmentStockItem extends Fragment {
                 prices_lv.setVisibility(View.GONE);
                 physicalqty_edt.requestFocus();
                 InputMethodManager inputMethodManager =
-                        (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.toggleSoftInputFromWindow(scrollview.getApplicationWindowToken(),
                         InputMethodManager.SHOW_FORCED, 0);
 
@@ -507,6 +511,7 @@ public class FragmentStockItem extends Fragment {
             JSONArray jsonArray = new JSONArray(sku);
             for (int i = 0; i < jsonArray.length(); i++) {
                 skuname_edt.setText(jsonArray.getJSONObject(position).getString("skuName"));
+                tv_skuname.setText(jsonArray.getJSONObject(position).getString("skuName"));
                 eansku_edt.setText(jsonArray.getJSONObject(position).getString("skuCode"));
                 device_no_edt.setText(jsonArray.getJSONObject(position).getString("deviceNo"));
                 physicalqty_edt.setText(jsonArray.getJSONObject(position).getString("physicalQty"));
@@ -582,6 +587,7 @@ public class FragmentStockItem extends Fragment {
         try {
             JSONArray jsonArray = new JSONArray(sku);
             skuname_edt.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("skuName"));
+            tv_skuname.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("skuName"));
 
             eansku_edt.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("skuCode"));
             device_no_edt.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("deviceNo"));
@@ -613,6 +619,7 @@ public class FragmentStockItem extends Fragment {
 //        storestockcheck_edt.getText().clear();
         eansku_edt.getText().clear();
         skuname_edt.getText().clear();
+        tv_skuname.setText("");
         physicalqty_edt.getText().clear();
 //        location_code_edt.getText().clear();
         price_tv.setText("Price");
@@ -625,7 +632,7 @@ public class FragmentStockItem extends Fragment {
         MRP = "";
         REF_BATCH = "";
         MRP = "";
-        skuname_edt.requestFocus();
+//        skuname_edt.requestFocus();
 
         lastsku_ll.setVisibility(View.GONE);
 
@@ -650,7 +657,7 @@ public class FragmentStockItem extends Fragment {
                     Log.e("JALastsku", jsonArray.getJSONObject(0).toString());
                     if (jsonArray.length() != 0) {
                         stockData.add("StockCheck no: " +
-                                jsonArray.getJSONObject(0).getString("stockChkNo") + ",Loc code: " + jsonArray.getJSONObject(0).getString("location_code") + ",DeviceId: " + jsonArray.getJSONObject(0).getString("deviceNo"));
+                                jsonArray.getJSONObject(0).getString("stockChkNo") + ",Loc: " + jsonArray.getJSONObject(0).getString("location_code") + ",DeviceId: " + jsonArray.getJSONObject(0).getString("deviceNo"));
 
                         /*for (int i = 0; i < jsonArray.length(); i++) {
                             stockData.add("StockCheck no: " +
@@ -731,6 +738,12 @@ public class FragmentStockItem extends Fragment {
                 value = prefs.getString("eanmaster", "");
             }
 
+            try {
+                eanArray = new JSONArray(value);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
             return value;
         }
 
@@ -742,6 +755,7 @@ public class FragmentStockItem extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             localEanData = s;
+
             super.onPostExecute(s);
         }
 
@@ -763,6 +777,11 @@ public class FragmentStockItem extends Fragment {
             if (prefs.getString("skumaster", "") != null || !prefs.getString("skumaster", "").equals("")) {
                 value = prefs.getString("skumaster", "");
             }
+            try {
+                skuArray  =  new JSONArray(value);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
             return value;
         }
@@ -775,6 +794,7 @@ public class FragmentStockItem extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             localSkuData = s;
+
             super.onPostExecute(s);
         }
 
@@ -789,7 +809,7 @@ public class FragmentStockItem extends Fragment {
 
         skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
                 "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
-                "",EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString()));
+                "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString()));
 
         Gson gson = new Gson();
         String json = gson.toJson(skumasters);
@@ -810,17 +830,22 @@ public class FragmentStockItem extends Fragment {
         new getLocalSkuMaster().execute();
 //        new getpreviousDetails().execute();
 
-        showAlertDialogWithClosebtn("Details saved");
-        skuname_edt.requestFocus();
-        lastsku_ll.setVisibility(View.GONE);
+//        showAlertDialogWithClosebtn("Details saved");
+
+
+        showAlertDialog("Details saved");
+//        skuname_edt.requestFocus();
+        clearFields();
+        lastsku_btn.performClick();
+//        lastsku_ll.setVisibility(View.VISIBLE);
 //        lastsku_ll.setVisibility(View.VISIBLE);
 
     }
 
+
     public String getDetails() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        Gson gson = new Gson();
-        String json = prefs.getString("stock", "");
+        json = prefs.getString("stock", "");
         /*Type type = new TypeToken<ArrayList<SKUMASTER>>() {
         }.getType();
         return gson.fromJson(json, type);*/
@@ -855,7 +880,7 @@ public class FragmentStockItem extends Fragment {
                 jsonObject1.put("StkTakeNo", jsonArray.getJSONObject(i).getString("stockChkNo"));//
                 jsonObject1.put("Skulocstockno", jsonArray.getJSONObject(i).getString("skuLOCNo"));
                 jsonObject1.put("Product_Code", jsonArray.getJSONObject(i).getString("skuCode"));
-                jsonObject1.put("Product_Name", jsonArray.getJSONObject(i).getString("skuName"));
+                jsonObject1.put("Product_Name", jsonArray.getJSONObject(i).getString("skuName").replaceAll("\u0026G", "&"));
                 jsonObject1.put("Active", "1");
                 jsonObject1.put("MRP", jsonArray.getJSONObject(i).getString("mrp"));
                 jsonObject1.put("Expiry_Date", "");
@@ -944,8 +969,7 @@ public class FragmentStockItem extends Fragment {
 
             requestQueue.add(stringRequest);
 
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             if (progressDialog != null && progressDialog.isShowing())
                 progressDialog.dismiss();
             ex.printStackTrace();
@@ -1270,35 +1294,37 @@ public class FragmentStockItem extends Fragment {
         price_tv.setText("Price");
 //        clear_btn.performClick();
 
-        ProgressDialog progressDialog = ProgressDialog.show(getContext(), "",
+
+        progressDialog = ProgressDialog.show(getActivity(), "",
                 "Please wait ..", true);
         progressDialog.show();
 //        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         try {
-            JSONArray jsonArray = new JSONArray(localSkuData);
-            JSONArray jsonArrayEanMaster = new JSONArray(localEanData);
+//            JSONArray jsonArray = new JSONArray(localSkuData);
+//            JSONArray jsonArrayEanMaster = new JSONArray(localEanData);
 
-            for (int i = 0; i < jsonArrayEanMaster.length(); i++) {
+            for (int i = 0; i < eanArray.length(); i++) {
 
-                if (jsonArrayEanMaster.getJSONObject(i).getString("ean_code").equals(eanCode)) {
-                    SKU_CODE = jsonArrayEanMaster.getJSONObject(i).getString("sku_code");
+                if (eanArray.getJSONObject(i).getString("ean_code").equals(eanCode)) {
+                    SKU_CODE = eanArray.getJSONObject(i).getString("sku_code");
                     eansku_edt.getText().clear();
                     eansku_edt.setText(SKU_CODE);
                 }
 
             }
-            for (int i = 0; i < jsonArray.length(); i++) {
-                if (jsonArray.getJSONObject(i).getString("SKU_CODE").equals(SKU_CODE)) {
-                    skuname_edt.setText(jsonArray.getJSONObject(i).getString("SKU_NAME"));
-                    SKU_NAME = jsonArray.getJSONObject(i).getString("SKU_NAME");
-                    prices.add(jsonArray.getJSONObject(i).getString("MRP"));
+            for (int i = 0; i < skuArray.length(); i++) {
+                if (skuArray.getJSONObject(i).getString("SKU_CODE").equals(SKU_CODE)) {
+                    skuname_edt.setText(skuArray.getJSONObject(i).getString("SKU_NAME"));
+                    tv_skuname.setText(skuArray.getJSONObject(i).getString("SKU_NAME"));
+                    SKU_NAME = skuArray.getJSONObject(i).getString("SKU_NAME");
+                    prices.add(skuArray.getJSONObject(i).getString("MRP"));
 //                    price_tv.setText(jsonArray.getJSONObject(i).getString("MRP"));
-                    SKU_LOC_NO = jsonArray.getJSONObject(i).getString("SKU_LOC_NO");
-                    DAMAGED_QTY = jsonArray.getJSONObject(i).getString("DAMAGED_QTY");
-                    EXPIRY_DATE = jsonArray.getJSONObject(i).getString("EXPIRY_DATE");
-                    MRP = jsonArray.getJSONObject(i).getString("MRP");
+                    SKU_LOC_NO = skuArray.getJSONObject(i).getString("SKU_LOC_NO");
+                    DAMAGED_QTY = skuArray.getJSONObject(i).getString("DAMAGED_QTY");
+                    EXPIRY_DATE = skuArray.getJSONObject(i).getString("EXPIRY_DATE");
+                    MRP = skuArray.getJSONObject(i).getString("MRP");
 //                    SKU_CODE = jsonArray.getJSONObject(i).getString("SKU_CODE");
-                    REF_BATCH = jsonArray.getJSONObject(i).getString("REF_BATCH");
+                    REF_BATCH = skuArray.getJSONObject(i).getString("REF_BATCH");
                 }
             }
 
@@ -1320,10 +1346,10 @@ public class FragmentStockItem extends Fragment {
             } else if (prices.size() > 1) {
              /*   getActivity().getWindow().setSoftInputMode(
                         WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);*/
-                try{
+                try {
                     final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
                 prices_lv.setVisibility(View.VISIBLE);

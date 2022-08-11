@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:background="#50C878">
+    android:background="#ffffff">
 
 
     <ScrollView
@@ -27,7 +26,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
 
-                    android:background="#50C878"
+                    android:background="#ffffff"
                     android:orientation="vertical"
                     android:visibility="gone">
 
@@ -36,7 +35,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:background="@android:color/white"
+                        android:background="@drawable/text_box_style"
                         android:gravity="center_horizontal"
                         android:padding="5dp"
                         android:text="TextView"
@@ -55,7 +54,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="center"
+                            android:gravity="start"
                             android:text="Bay/Shelf No:"
                             android:textColor="@color/black"
                             android:textSize="16sp" />
@@ -65,7 +64,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@drawable/white_blackborder"
+                            android:background="@drawable/text_box_style"
                             android:inputType="textPersonName"
                             android:padding="5dp"
                             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -81,9 +80,9 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="Sku/EAN Code:"
+                            android:gravity="start"
 
+                            android:text="Sku/EAN Code:"
                             android:textColor="@color/black"
                             android:textSize="16sp" />
 
@@ -92,7 +91,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@drawable/white_blackborder"
+                            android:background="@drawable/text_box_style"
                             android:inputType="textPersonName"
                             android:padding="5dp"
                             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -102,31 +101,45 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
+                        android:background="@drawable/text_box_style"
                         android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="Sku Name:"
+                        <HorizontalScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
 
-                            android:textColor="@color/black"
-                            android:textSize="16sp" />
+                                <TextView
+                                    android:id="@+id/tv_skuname"
+
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="5dp"
+                                    android:gravity="start"
+                                    android:textColor="@color/gray"
+                                    android:textSize="16sp"
+                                    android:visibility="visible" />
+                            </LinearLayout>
+                        </HorizontalScrollView>
 
                         <EditText
                             android:id="@+id/skuname_edt"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@drawable/white_blackborder"
+                            android:background="@drawable/text_box_style"
                             android:editable="false"
                             android:enabled="false"
                             android:inputType="textPersonName"
                             android:padding="5dp"
                             android:scrollHorizontally="true"
                             android:singleLine="true"
-                            android:textSize="16sp"
+                            android:textSize="14sp"
+                            android:visibility="gone"
                             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
                     </LinearLayout>
 
@@ -139,10 +152,10 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="center"
+                            android:gravity="start"
+
+
                             android:text="Batch/MRP: "
-
-
                             android:textColor="@color/black"
                             android:textSize="16sp" />
 
@@ -157,7 +170,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Price"
-                                android:textColor="@color/black" />
+                                android:textColor="@color/black"
+                                android:textSize="16sp" />
 
                             <Spinner
                                 android:id="@+id/spinner"
@@ -174,7 +188,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@drawable/white_blackborder"
+                            android:background="@drawable/text_box_style"
                             android:enabled="false"
 
                             android:inputType="textPersonName"
@@ -193,7 +207,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="center"
+                            android:gravity="start"
                             android:text="Physical Qty:"
                             android:textColor="@color/black"
                             android:textSize="16sp" />
@@ -203,7 +217,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@drawable/white_blackborder"
+                            android:background="@drawable/text_box_style"
 
                             android:enabled="true"
                             android:inputType="number"
@@ -389,12 +403,18 @@
                                 android:id="@+id/clear_btn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_margin="3dp"
+
+                                android:background="#FA8C01"
                                 android:text="Clear" />
 
                             <Button
                                 android:id="@+id/exit_btn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_margin="3dp"
+
+                                android:background="#FA8C01"
                                 android:text="Exit" />
                         </LinearLayout>
 
@@ -402,6 +422,9 @@
                             android:id="@+id/save_btn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_margin="3dp"
+                            android:background="#FA8C01"
+
                             android:text="Save"
                             android:textSize="16sp" />
 
@@ -409,6 +432,9 @@
                             android:id="@+id/upload_btn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_margin="3dp"
+                            android:background="#FA8C01"
+
                             android:text="Upload"
                             android:textSize="16sp" />
 
@@ -421,12 +447,18 @@
                                 android:id="@+id/lastsku_btn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_margin="3dp"
+
+                                android:background="#FA8C01"
                                 android:text="Last Sku" />
 
                             <Button
                                 android:id="@+id/search_btn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_margin="3dp"
+
+                                android:background="#FA8C01"
                                 android:text="Search" />
                         </LinearLayout>
 
@@ -437,7 +469,7 @@
                     android:id="@+id/stockcheck_ll"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#50C878"
+                    android:background="#ffffff"
                     android:orientation="vertical"
                     android:visibility="visible">
 
@@ -462,7 +494,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@drawable/white_blackborder"
+                            android:background="@drawable/text_box_style"
 
                             android:inputType="number"
                             android:padding="5dp"
@@ -490,7 +522,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@drawable/white_blackborder"
+                            android:background="@drawable/text_box_style"
 
                             android:inputType="number"
                             android:padding="5dp"
@@ -518,7 +550,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@drawable/white_blackborder"
+                            android:background="@drawable/text_box_style"
 
                             android:inputType="number"
                             android:padding="5dp"
@@ -530,12 +562,20 @@
                         android:id="@+id/submit_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:background="#FA8C01"
                         android:layout_gravity="center_horizontal"
                         android:text="Submit" />
                 </LinearLayout>
 
 
             </RelativeLayout>
+
+            <ListView
+                android:id="@+id/search_lv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
         </LinearLayout>
 
     </ScrollView>
@@ -587,7 +627,7 @@
         android:id="@+id/storedata_popup_ll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#50C878"
+        android:background="#ffffff"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="15dp"
@@ -607,12 +647,10 @@
             android:layout_height="0dp"
             android:layout_centerInParent="true"
             android:layout_margin="10dp"
-            android:layout_marginStart="5dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="5dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
-            android:background="@android:color/white" />
+            android:background="@drawable/text_box_style" />
 
 
         <LinearLayout
@@ -626,7 +664,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/white_blackborder"
+                android:background="#FA8C01"
+
                 android:text="Clear All"
                 android:visibility="visible" />
 
@@ -636,7 +675,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/white_blackborder"
+                android:background="#FA8C01"
                 android:text="Continue" />
         </LinearLayout>
 
