@@ -7,8 +7,8 @@
 
 
     <ScrollView
-        android:layout_width="match_parent"
         android:id="@+id/scrollview"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
@@ -92,7 +92,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:background="@drawable/text_box_style"
-                            android:inputType="textPersonName"
+                            android:inputType="number"
                             android:padding="5dp"
                             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
                     </LinearLayout>
@@ -163,7 +163,9 @@
                             android:id="@+id/price_rl"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1">
+                            android:layout_weight="1"
+                            android:background="@drawable/text_box_style"
+                            android:paddingLeft="5dp">
 
                             <TextView
                                 android:id="@+id/price_tv"
@@ -230,8 +232,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
+                        android:background="@drawable/text_box_style"
                         android:gravity="center_horizontal"
                         android:orientation="vertical"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        android:paddingBottom="5dp"
                         android:visibility="gone">
 
                         <TextView
@@ -391,12 +397,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:gravity="center|center_vertical"
                         android:orientation="horizontal">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:orientation="vertical">
 
                             <Button
@@ -406,7 +412,8 @@
                                 android:layout_margin="3dp"
 
                                 android:background="#FA8C01"
-                                android:text="Clear" />
+                                android:text="Clear"
+                                android:textSize="13sp" />
 
                             <Button
                                 android:id="@+id/exit_btn"
@@ -415,32 +422,43 @@
                                 android:layout_margin="3dp"
 
                                 android:background="#FA8C01"
-                                android:text="Exit" />
+                                android:text="Exit"
+                                android:textSize="13sp" />
                         </LinearLayout>
 
-                        <Button
-                            android:id="@+id/save_btn"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_margin="3dp"
-                            android:background="#FA8C01"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
 
-                            android:text="Save"
-                            android:textSize="16sp" />
+                            <Button
+                                android:id="@+id/save_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="3dp"
+                                android:background="#FA8C01"
 
-                        <Button
-                            android:id="@+id/upload_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="3dp"
-                            android:background="#FA8C01"
+                                android:text="Save"
+                                android:textSize="13sp" />
 
-                            android:text="Upload"
-                            android:textSize="16sp" />
+                            <Button
+                                android:id="@+id/upload_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="3dp"
+                                android:background="#FA8C01"
+
+                                android:text="Upload"
+                                android:textSize="13sp" />
+                        </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
                             android:orientation="vertical">
 
                             <Button
@@ -450,7 +468,8 @@
                                 android:layout_margin="3dp"
 
                                 android:background="#FA8C01"
-                                android:text="Last Sku" />
+                                android:text="Last Sku"
+                                android:textSize="13sp" />
 
                             <Button
                                 android:id="@+id/search_btn"
@@ -459,7 +478,8 @@
                                 android:layout_margin="3dp"
 
                                 android:background="#FA8C01"
-                                android:text="Search" />
+                                android:text="Search"
+                                android:textSize="13sp" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -487,7 +507,7 @@
                             android:gravity="center"
                             android:text="Store Stock Check no:"
                             android:textColor="@color/black"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
 
                         <EditText
                             android:id="@+id/storestockcheck_edt"
@@ -498,6 +518,7 @@
 
                             android:inputType="number"
                             android:padding="5dp"
+                            android:textSize="16sp"
                             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
                     </LinearLayout>
 
@@ -515,7 +536,7 @@
                             android:gravity="center"
                             android:text="Location code:"
                             android:textColor="@color/black"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
 
                         <EditText
                             android:id="@+id/location_code_edt"
@@ -526,6 +547,7 @@
 
                             android:inputType="number"
                             android:padding="5dp"
+                            android:textSize="16sp"
                             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
                     </LinearLayout>
 
@@ -543,7 +565,7 @@
                             android:gravity="center"
                             android:text="Device no:"
                             android:textColor="@color/black"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
 
                         <EditText
                             android:id="@+id/device_no_edt"
@@ -554,6 +576,7 @@
 
                             android:inputType="number"
                             android:padding="5dp"
+                            android:textSize="16sp"
                             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
                     </LinearLayout>
 
@@ -562,8 +585,8 @@
                         android:id="@+id/submit_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#FA8C01"
                         android:layout_gravity="center_horizontal"
+                        android:background="#FA8C01"
                         android:text="Submit" />
                 </LinearLayout>
 
@@ -589,7 +612,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
-        android:background="@android:color/white"
+        android:background="@drawable/text_box_style_gray"
         android:visibility="gone" />
 
     <LinearLayout
