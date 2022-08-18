@@ -122,25 +122,11 @@
                                     android:gravity="start"
                                     android:textColor="@color/gray"
                                     android:textSize="16sp"
+                                    android:focusable="false"
                                     android:visibility="visible" />
                             </LinearLayout>
                         </HorizontalScrollView>
 
-                        <EditText
-                            android:id="@+id/skuname_edt"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="@drawable/text_box_style"
-                            android:editable="false"
-                            android:enabled="false"
-                            android:inputType="textPersonName"
-                            android:padding="5dp"
-                            android:scrollHorizontally="true"
-                            android:singleLine="true"
-                            android:textSize="14sp"
-                            android:visibility="gone"
-                            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
                     </LinearLayout>
 
                     <LinearLayout
