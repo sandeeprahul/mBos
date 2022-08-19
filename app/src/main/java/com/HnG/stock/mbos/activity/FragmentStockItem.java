@@ -93,7 +93,6 @@ public class FragmentStockItem extends Fragment {
     List<String> prices = new ArrayList<String>();
     List<String> stockData = new ArrayList<String>();
     List<String> lastSkudata = new ArrayList<String>();
-    ArrayAdapter<String> arrayAdapter;
     String SKU_LOC_NO,
             DAMAGED_QTY,
             EXPIRY_DATE,
@@ -106,6 +105,8 @@ public class FragmentStockItem extends Fragment {
     JSONArray eanArray, skuArray;
     ArrayAdapter<String> arrayAdapterrStock;
     ArrayAdapter<String> arrayAdapterLastSku;
+    ArrayAdapter<String> arrayAdapter;
+
 
     public static FragmentStockItem newInstance(int someInt) {
         FragmentStockItem myFragment = new FragmentStockItem();
@@ -168,11 +169,11 @@ public class FragmentStockItem extends Fragment {
         previousSkLD_tv = (TextView) view.findViewById(R.id.previousSkLD_tv);
 
 
-        ArrayAdapter<String> arrayAdapterr = new ArrayAdapter<String>(getActivity(), R.layout.item_pricelistview, R.id.textView, prices);
-        arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, prices);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.item_pricelistview, R.id.textView, prices);
+//        arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, prices);
+//        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 //        spinner.setAdapter(arrayAdapter);
-        prices_lv.setAdapter(arrayAdapterr);
+        prices_lv.setAdapter(arrayAdapter);
 
 
 //
@@ -278,7 +279,7 @@ public class FragmentStockItem extends Fragment {
             @Override
             public void onClick(View v) {
 
-                showAlertDialogWithClosebtn("Confim to clear data?");
+                showAlertDgClearfields("Confim to clear data?");
 //                clearFields();
             }
         });
@@ -539,6 +540,7 @@ public class FragmentStockItem extends Fragment {
             shelfno_edt.setEnabled(false);
             storestockcheck_edt.setEnabled(false);
             device_no_edt.setEnabled(false);
+            arrayAdapter.notifyDataSetChanged();
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -612,6 +614,7 @@ public class FragmentStockItem extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        arrayAdapter.notifyDataSetChanged();
     }
 
 
@@ -1227,6 +1230,32 @@ public class FragmentStockItem extends Fragment {
         });
     }
 
+    public void showAlertDgClearfields(final String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("HnGmBOS");
+                builder.setMessage(message)
+                        .setCancelable(false)
+                        .setNegativeButton("Cancel ", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .setPositiveButton("Clear", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                                clearFields();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
+    }
+
+
     public void showAlertClearData(final String message) {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
@@ -1372,6 +1401,7 @@ public class FragmentStockItem extends Fragment {
                 }
                 prices_lv.setVisibility(View.VISIBLE);
             }
+            arrayAdapter.notifyDataSetChanged();
 
 
         } catch (JSONException e) {

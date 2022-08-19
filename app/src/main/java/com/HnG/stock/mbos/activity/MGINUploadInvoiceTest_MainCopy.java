@@ -1135,6 +1135,7 @@ public class MGINUploadInvoiceTest_MainCopy extends BaseActivity implements View
 
                 } else {
                     String AUTHORITY = BuildConfig.APPLICATION_ID + ".fileprovider";
+
                     Uri imageUri = FileProvider.getUriForFile(this, AUTHORITY, imageFile);
                     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                     startActivityForResult(cameraIntent, IMAGE_REQUEST);
