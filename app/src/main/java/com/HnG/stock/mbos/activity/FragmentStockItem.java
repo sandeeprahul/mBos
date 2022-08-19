@@ -257,19 +257,33 @@ public class FragmentStockItem extends Fragment {
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+//                int qty =  Integer.parseInt()physicalqty_edt.getText().toString();
                 if (shelfno_edt.getText().length() == 0) {
                     Toast.makeText(getActivity(), "Please fill all the details", Toast.LENGTH_LONG).show();
                 } else if (eansku_edt.getText().length() == 0) {
                     Toast.makeText(getActivity(), "Please fill all the details", Toast.LENGTH_LONG).show();
                 } else if (tv_skuname.getText().length() == 0) {
                     Toast.makeText(getActivity(), "Please fill all the details", Toast.LENGTH_LONG).show();
-                } else if (physicalqty_edt.getText().length() == 0 && physicalqty_edt.getText().toString().equals("0") && physicalqty_edt.getText().toString().equals("1000")) {
+                } else if (physicalqty_edt.getText().length() == 0) {
 //                    Toast.makeText(getActivity(), "Please fill all the details", Toast.LENGTH_LONG).show();
                     customToast("Please enter valid quantity");
                 } else if (prices.size() == 0) {
                     Toast.makeText(getActivity(), "Please fill all the details", Toast.LENGTH_LONG).show();
                 } else {
-                    saveDetails();
+                    if (physicalqty_edt.getText().length() != 0) {
+                        if (physicalqty_edt.getText().toString().equals("0")) {
+                            customToast("Please enter valid quantity");
+
+                        } else if (Integer.parseInt(physicalqty_edt.getText().toString())>999) {
+                            customToast("Please enter valid quantity");
+
+                        } else {
+                            saveDetails();
+
+                        }
+
+                    }
 
                 }
             }
@@ -363,11 +377,25 @@ public class FragmentStockItem extends Fragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(eansku_edt.getWindowToken(), 0);
                     EAN_CODE = eansku_edt.getText().toString();
                     fetchSKUData(eansku_edt.getText().toString());
                 }
             }
         });
+
+        physicalqty_edt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b){
+                    InputMethodManager imm = (InputMethodManager)getActivity(). getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                }
+            }
+        });
+
+
 
         price_tv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -820,6 +848,7 @@ public class FragmentStockItem extends Fragment {
 
 
     public void saveDetails() {
+
 
         skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
                 "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
@@ -1387,9 +1416,16 @@ public class FragmentStockItem extends Fragment {
             progressDialog.dismiss();
             if (prices.size() == 0) {
                 customToast("No details found!");
+                try {
+                    final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
 
             } else if (prices.size() == 1) {
                 price_tv.setText(prices.get(0));
+//                physicalqty_edt.requestFocus();
 //                physicalqty_edt.requestFocus();
             } else {
                 prices.size();
