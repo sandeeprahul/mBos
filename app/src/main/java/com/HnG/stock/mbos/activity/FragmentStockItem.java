@@ -882,7 +882,7 @@ public class FragmentStockItem extends Fragment {
 
         }
 
-
+        
     }
 
     public void saveDetails() {

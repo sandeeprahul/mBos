@@ -38,7 +38,7 @@
         <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.23020833333333332" />
         <entry key="app/src/main/res/layout/activity_stockcheck.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_testers_free_gift_expiry_check.xml" value="0.22666666666666666" />
-        <entry key="app/src/main/res/layout/activity_transfer.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/activity_transfer.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_transfer_in.xml" value="0.25" />
         <entry key="app/src/main/res/layout/app_bar_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/app_bar_mgin_upload_invoice.xml" value="0.25" />
@@ -46,7 +46,9 @@
         <entry key="app/src/main/res/layout/batchstock_item.xml" value="0.20462962962962963" />
         <entry key="app/src/main/res/layout/expiry_category_list_item.xml" value="0.22666666666666666" />
         <entry key="app/src/main/res/layout/generator_register_item.xml" value="0.22666666666666666" />
+        <entry key="app/src/main/res/layout/item_lastsku.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/item_pricelistview.xml" value="0.20462962962962963" />
+        <entry key="app/src/main/res/layout/item_searchsku.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/list_group_child.xml" value="0.20462962962962963" />
         <entry key="app/src/main/res/layout/list_group_header.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.1962962962962963" />
@@ -55,7 +57,7 @@
         <entry key="app/src/main/res/layout/quantity_item.xml" value="0.20462962962962963" />
         <entry key="app/src/main/res/layout/stock_list.xml" value="0.20462962962962963" />
         <entry key="app/src/main/res/layout/stockchecknumber_item.xml" value="0.20462962962962963" />
-        <entry key="app/src/main/res/layout/stocktake_item.xml" value="0.20677703857421875" />
+        <entry key="app/src/main/res/layout/stocktake_item.xml" value="0.22" />
         <entry key="app/src/main/res/layout/tester_expiry_check_item_layout.xml" value="0.22666666666666666" />
         <entry key="app/src/main/res/layout/tester_register_list_data_item.xml" value="0.22666666666666666" />
         <entry key="app/src/main/res/layout/unscanned_product_list.xml" value="0.22666666666666666" />
