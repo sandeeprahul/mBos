@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:background="#0047AB"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical">
 
 
     <TextView
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Batch wise quantity correction"
-        android:textColor="@color/color_primary"
+        android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -30,7 +30,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Sku/EAN"
-            android:textColor="@color/color_primary"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -39,7 +39,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/white_blackborder"
+            android:background="@drawable/text_box_style"
             android:inputType="textPersonName"
             android:padding="5dp"
             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -59,7 +59,7 @@
             android:text="Batch/MRP"
 
 
-            android:textColor="@color/color_primary"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -74,7 +74,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/white_blackborder"
+                android:background="@drawable/text_box_style"
                 android:enabled="true"
                 android:inputType="textPersonName"
                 android:padding="5dp"
@@ -84,13 +84,27 @@
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
+                android:background="#FA8C01"
                 android:text="Search"
+                android:textColor="@color/black"
                 tools:ignore="TouchTargetSizeCheck" />
 
         </LinearLayout>
 
     </LinearLayout>
-
+    <TextView
+        android:id="@+id/tv_skuname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:focusable="false"
+        android:maxLines="3"
+        android:padding="5dp"
+        android:gravity="start"
+        android:background="@drawable/text_box_style"
+        android:textColor="@color/gray"
+        android:textSize="16sp"
+        android:visibility="visible" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -103,7 +117,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Physical Qty (-Ve)"
-            android:textColor="@color/color_primary"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -112,19 +126,21 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/white_blackborder"
+            android:background="@drawable/text_box_style"
 
             android:enabled="false"
             android:inputType="textPersonName"
             android:padding="5dp"
             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
     </LinearLayout>
-<LinearLayout
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -136,6 +152,7 @@
             android:id="@+id/save_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#FA8C01"
             android:text="Update"
             android:textSize="14sp" />
 
@@ -143,6 +160,7 @@
             android:id="@+id/clear_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#FA8C01"
             android:text="Clear" />
 
     </LinearLayout>

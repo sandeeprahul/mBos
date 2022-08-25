@@ -1420,6 +1420,8 @@ public class FragmentStockItem extends Fragment {
             for (int i = 0; i < eanArray.length(); i++) {
 
                 if (eanArray.getJSONObject(i).getString("ean_code").equals(eanCode)) {
+                    EAN_CODE = eanArray.getJSONObject(i).getString("ean_code");
+
                     SKU_CODE = eanArray.getJSONObject(i).getString("sku_code");
 //                    eansku_edt.getText().clear();
                     eansku_edt.setText(SKU_CODE);
