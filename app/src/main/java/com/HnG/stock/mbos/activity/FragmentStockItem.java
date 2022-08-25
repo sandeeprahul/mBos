@@ -857,10 +857,13 @@ public class FragmentStockItem extends Fragment {
 
     public void getTotalphyqty() {
 
-        if (localStockData != null) {
+        String skuLocalData = getDetails();
+
+        if (skuLocalData != null) {
             try {
-                JSONArray jsonArray = new JSONArray(localStockData);
+                JSONArray jsonArray = new JSONArray(skuLocalData);
                 totalsku_tv.setText("Total SKU's: " + jsonArray.length());
+                Log.e("totalsku_tv", "" + jsonArray);
 
                 int totphyqty = 0;
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -882,26 +885,65 @@ public class FragmentStockItem extends Fragment {
 
         }
 
-        
+
     }
 
     public void saveDetails() {
 
+        progressDialog = ProgressDialog.show(getActivity(), "",
+                "Please wait.. Saving details", true);
+        progressDialog.show();
 
-        skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
-                "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
-                "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString()));
+        String lastSavedSku = getDetails();
 
-        Gson gson = new Gson();
-        String json = gson.toJson(skumasters);
-        Log.e("saveDetails()", json);
+        if (lastSavedSku.equals("")) {
 
+            skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
+                    "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
+                    "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString()));
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(skumasters);
+            Log.e("saveDetails()", json);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences.Editor editor = sharedPreferences.edit();
 //        editor.putString("stock", "");
-        editor.putString("stock", json);
-        editor.apply();
+            editor.putString("stock", json);
+            editor.apply();
+            progressDialog.dismiss();
+        } else {
+
+            skumasters.clear();
+            try {
+
+                JSONArray jsonArray = new JSONArray(lastSavedSku);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    skumasters.add(new SKUMASTER(jsonArray.getJSONObject(i)));
+                }
+
+
+            } catch (JSONException e) {
+                progressDialog.dismiss();
+
+                e.printStackTrace();
+            }
+            skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
+                    "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
+                    "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString()));
+
+            Log.e("SavedDataLength",""+skumasters.size());
+
+            Gson gson = new Gson();
+            String json = gson.toJson(skumasters);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("stock", "");
+            editor.apply();
+            editor.putString("stock", json);
+            editor.apply();
+            progressDialog.dismiss();
+
+        }
 
 
         new getLocalEanMaster().execute();
@@ -923,7 +965,6 @@ public class FragmentStockItem extends Fragment {
     public String getDetails() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         json = prefs.getString("stock", "");
-        localStockData = json;
         /*Type type = new TypeToken<ArrayList<SKUMASTER>>() {
         }.getType();
         return gson.fromJson(json, type);*/
@@ -1103,6 +1144,7 @@ public class FragmentStockItem extends Fragment {
                             }
                         } catch (JSONException e) {
                             dowloadpopup_ll.setVisibility(View.GONE);
+                            showAlertDialog(e.getMessage());
 
                             e.printStackTrace();
                         }
