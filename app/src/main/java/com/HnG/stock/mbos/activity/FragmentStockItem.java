@@ -939,6 +939,10 @@ public class FragmentStockItem extends Fragment {
 
                     skumasters.clear();
 
+                    for (int k = 0; k < jsonArray.length(); k++) {
+                        skumasters.add(new SKUMASTER(jsonArray.getJSONObject(k)));
+                    }
+
                     int position = Integer.parseInt(hasSku);
 
 //                    for (int i = 0; i < jsonArray.length(); i++) {
@@ -948,10 +952,16 @@ public class FragmentStockItem extends Fragment {
 
                     String sPhyqty = String.valueOf(phyqty);
 
-                    skumasters.add(new SKUMASTER(temp.get(position).stockChkNo, temp.get(position).skuLOCNo, temp.get(position).skuCode, temp.get(position).skuName, temp.get(position).deviceNo,
+
+                    skumasters.set(position, new SKUMASTER(temp.get(position).stockChkNo, temp.get(position).skuLOCNo, temp.get(position).skuCode, temp.get(position).skuName, temp.get(position).deviceNo,
                             "", temp.get(position).mrp, "", sPhyqty,
                             "", temp.get(position).eanCode, temp.get(position).bay_shelf_no, temp.get(position).location_code));
 
+
+                    /*skumasters.add(new SKUMASTER(temp.get(position).stockChkNo, temp.get(position).skuLOCNo, temp.get(position).skuCode, temp.get(position).skuName, temp.get(position).deviceNo,
+                            "", temp.get(position).mrp, "", sPhyqty,
+                            "", temp.get(position).eanCode, temp.get(position).bay_shelf_no, temp.get(position).location_code));
+*/
                     Gson gson = new Gson();
                     String json = gson.toJson(skumasters);
                     Log.e("SKUMASTERjson", json);
