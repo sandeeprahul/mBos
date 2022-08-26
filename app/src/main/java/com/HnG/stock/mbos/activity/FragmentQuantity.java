@@ -22,10 +22,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.HnG.stock.mbos.R;
+import com.HnG.stock.mbos.gettersetter.SKUMASTER;
 import com.HnG.stock.mbos.helper.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.util.ArrayList;
 
 
 /**
@@ -39,6 +42,7 @@ public class FragmentQuantity extends Fragment {
     ListView lv_data;
     TextView tv_skuname;
     ProgressDialog progressDialog;
+    ArrayList<SKUMASTER> skumasterArrayList = new ArrayList<>();
 
 
     public static FragmentQuantity newInstance(int someInt) {
@@ -97,11 +101,18 @@ public class FragmentQuantity extends Fragment {
 
         try {
             JSONArray jsonArray = new JSONArray(json);
+            ArrayList<SKUMASTER> temp = new ArrayList<>();
+
             for (int i = 0; i < jsonArray.length(); i++) {
+                temp.add(new SKUMASTER(jsonArray.getJSONObject(i)));
+
                 if (skucode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("skuCode")) && batchcode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("mrp"))) {
-                    tv_skuname.setText(jsonArray.getJSONObject(i).getString(""));
+                    tv_skuname.setText(jsonArray.getJSONObject(i).getString("skuName"));
+                    qty_edt.setText(jsonArray.getJSONObject(i).getString("physicalQty"));
                 }
             }
+            skumasterArrayList = temp;
+
         } catch (JSONException e) {
             e.printStackTrace();
 
