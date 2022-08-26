@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -274,8 +275,13 @@ public class FragmentStockItem extends Fragment {
                 } else if (physicalqty_edt.getText().length() == 0) {
 //                    Toast.makeText(getActivity(), "Please fill all the details", Toast.LENGTH_LONG).show();
                     customToast("Please enter valid quantity");
+                } else if (price_tv.getText().toString().equals("Price")) {
+//                    Toast.makeText(getActivity(), "Please fill all the details", Toast.LENGTH_LONG).show();
+                    customToast("Please select price");
                 } else if (prices.size() == 0) {
-                    Toast.makeText(getActivity(), "Please fill all the details", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getActivity(), "Please fill all the details", Toast.LENGTH_LONG).show();
+                    customToast("Please select price");
+
                 } else {
                     if (physicalqty_edt.getText().length() != 0) {
                         if (physicalqty_edt.getText().toString().equals("0")) {
@@ -482,7 +488,7 @@ public class FragmentStockItem extends Fragment {
         storestockcheck_edt.setEnabled(true);
         device_no_edt.setEnabled(true);
 
-
+        new getpreviousDetails().execute();
     }
 
 
@@ -698,7 +704,7 @@ public class FragmentStockItem extends Fragment {
             stockData.clear();
 
             stockno_lv.clearChoices();
-            if (getDetails() != null) {
+            if (getDetails() != null && !getDetails().equals("")) {
 
                 String sku = getDetails();
                 try {
@@ -785,7 +791,7 @@ public class FragmentStockItem extends Fragment {
         protected String doInBackground(String... strings) {
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String value = "0";
+            String value = "";
             if (prefs.getString("eanmaster", "") != null || !prefs.getString("eanmaster", "").equals("")) {
                 value = prefs.getString("eanmaster", "");
             }
@@ -828,7 +834,7 @@ public class FragmentStockItem extends Fragment {
 
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String value = "0";
+            String value = "";
             if (prefs.getString("skumaster", "") != null || !prefs.getString("skumaster", "").equals("")) {
                 value = prefs.getString("skumaster", "");
             }
@@ -863,6 +869,10 @@ public class FragmentStockItem extends Fragment {
     public void saveDetails_temp() {
 
 
+        ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "",
+                "Please wait..", true);
+        progressDialog.show();
+
         String lastSavedSku = getDetails();
 
         if (lastSavedSku.equals("")) {
@@ -879,18 +889,81 @@ public class FragmentStockItem extends Fragment {
 //        editor.putString("stock", "");
 
 
-
-            ArrayList<String> objStrings = new ArrayList<String>();
-            for(Object obj : skumasters){
+           /* ArrayList<String> objStrings = new ArrayList<String>();
+            for (Object obj : skumasters) {
                 objStrings.add(gson.toJson(obj));
             }
+            String[] myStringList = objStrings.toArray(new String[objStrings.size()]);*/
+
+//            editor.putString("stock", TextUtils.join("‚‗‚", myStringList));
             editor.putString("stock", json);
             editor.apply();
+            progressDialog.dismiss();
 
         } else {
 
-            skumasters.clear();
             try {
+                JSONArray jsonArray = new JSONArray(lastSavedSku);
+                ArrayList<SKUMASTER> temp = new ArrayList<>();
+                int phyqty = 0;
+                Log.e("SKUMASTER",jsonArray.toString());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    temp.add(new SKUMASTER(jsonArray.getJSONObject(i)));
+
+                    //checking postion
+                    if (temp.get(i).skuCode.equals(eansku_edt.getText().toString()) && temp.get(i).mrp.equals(price_tv.getText().toString())) {
+                        skumasters.clear();
+                        phyqty = Integer.parseInt(temp.get(i).physicalQty) + Integer.parseInt(physicalqty_edt.getText().toString());
+//                        phyqty += Integer.parseInt(physicalqty_edt.getText().toString());
+
+                        String sPhyqty = String.valueOf(phyqty);
+
+                        skumasters.add(new SKUMASTER(temp.get(i).stockChkNo, temp.get(i).skuLOCNo, temp.get(i).skuCode, temp.get(i).skuName, temp.get(i).deviceNo,
+                                "", temp.get(i).mrp, "", sPhyqty,
+                                "", temp.get(i).eanCode, temp.get(i).bay_shelf_no, temp.get(i).location_code));
+
+                        Gson gson = new Gson();
+                        String json = gson.toJson(skumasters);
+                        Log.e("SKUMASTERjson",json);
+
+                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("stock", "");
+                        editor.apply();
+                        editor.putString("stock", json);
+                        editor.apply();
+
+                    }
+                    else if(!temp.get(i).skuCode.equals(eansku_edt.getText().toString()) &&! temp.get(i).mrp.equals(price_tv.getText().toString())) {
+                        skumasters.clear();
+
+                        JSONArray jsonArrays = new JSONArray(lastSavedSku);
+                        for (int j = 0; j < jsonArrays.length(); j++) {
+                            skumasters.add(new SKUMASTER(jsonArrays.getJSONObject(j)));
+                        }
+                        skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
+                                "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
+                                "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString()));
+                    }
+                    Gson gson = new Gson();
+                    String json = gson.toJson(skumasters);
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("stock", "");
+                    editor.apply();
+                    editor.putString("stock", json);
+                    editor.apply();
+
+                }
+                Log.e("SavedDataLength", "" + skumasters.size());
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+     /*       try {
 
                 JSONArray jsonArray = new JSONArray(lastSavedSku);
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -905,8 +978,8 @@ public class FragmentStockItem extends Fragment {
             skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
                     "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
                     "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString()));
-
-            Log.e("SavedDataLength", "" + skumasters.size());
+*/
+       /*     Log.e("SavedDataLength", "" + skumasters.size());
 
             Gson gson = new Gson();
             String json = gson.toJson(skumasters);
@@ -916,16 +989,18 @@ public class FragmentStockItem extends Fragment {
             editor.apply();
 
 
-            ArrayList<String> objStrings = new ArrayList<String>();
-            for(Object obj : skumasters){
+     *//*       ArrayList<String> objStrings = new ArrayList<String>();
+            for (Object obj : skumasters) {
                 objStrings.add(gson.toJson(obj));
             }
+            String[] myStringList = objStrings.toArray(new String[objStrings.size()]);*//*
+
             editor.putString("stock", json);
-            editor.apply();
+            editor.apply();*/
 
-
-
-
+            if (progressDialog.isShowing() || progressDialog != null) {
+                progressDialog.dismiss();
+            }
         }
 
 
@@ -966,7 +1041,7 @@ public class FragmentStockItem extends Fragment {
     public void getTotalphyqty_temp() {
 
         String skuLocalData = getDetails();
-        if (skuLocalData != null) {
+        if (skuLocalData != null && !skuLocalData.equals("")) {
             try {
                 JSONArray jsonArray = new JSONArray(skuLocalData);
                 totalsku_tv.setText("Total SKU's: " + jsonArray.length());
@@ -1031,6 +1106,7 @@ public class FragmentStockItem extends Fragment {
 
     public String getDetails() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
         json = prefs.getString("stock", "");
         /*Type type = new TypeToken<ArrayList<SKUMASTER>>() {
         }.getType();
@@ -1577,7 +1653,6 @@ public class FragmentStockItem extends Fragment {
         view.setBackgroundResource(R.drawable.custom_background);
         toast.show();
     }
-
 
 
 }
