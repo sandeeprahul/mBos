@@ -923,7 +923,16 @@ public class FragmentStockItem extends Fragment {
                             "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString()));
 
 //                    }
+                    Gson gson = new Gson();
+                    String json = gson.toJson(skumasters);
+                    Log.e("SKUMASTERjson", json);
 
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("stock", "");
+                    editor.apply();
+                    editor.putString("stock", json);
+                    editor.apply();
 
                 } else {
 
@@ -943,18 +952,19 @@ public class FragmentStockItem extends Fragment {
                             "", temp.get(position).mrp, "", sPhyqty,
                             "", temp.get(position).eanCode, temp.get(position).bay_shelf_no, temp.get(position).location_code));
 
+                    Gson gson = new Gson();
+                    String json = gson.toJson(skumasters);
+                    Log.e("SKUMASTERjson", json);
+
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("stock", "");
+                    editor.apply();
+                    editor.putString("stock", json);
+                    editor.apply();
                 }
 
-                Gson gson = new Gson();
-                String json = gson.toJson(skumasters);
-                Log.e("SKUMASTERjson", json);
 
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("stock", "");
-                editor.apply();
-                editor.putString("stock", json);
-                editor.apply();
                 Log.e("SavedDataLength", "" + skumasters.size());
 
 
@@ -1032,9 +1042,9 @@ public class FragmentStockItem extends Fragment {
             editor.putString("stock", json);
             editor.apply();*/
 
-            if (progressDialog.isShowing() || progressDialog != null) {
-                progressDialog.dismiss();
-            }
+
+            progressDialog.dismiss();
+
         }
 
 
