@@ -66,6 +66,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <EditText
@@ -81,10 +82,11 @@
 
             <Button
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_weight="1"
                 android:background="#FA8C01"
                 android:text="Search"
+                android:id="@+id/search_btn"
                 android:textColor="@color/black"
                 tools:ignore="TouchTargetSizeCheck" />
 
@@ -173,6 +175,7 @@
     </LinearLayout>
 
     <ListView
+        android:id="@+id/lv_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1">
@@ -184,11 +187,12 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/save_btn"
+            android:id="@+id/update_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#FA8C01"
             android:text="Update"
+
             android:textSize="14sp" />
 
         <Button
@@ -210,7 +214,8 @@
             android:layout_marginRight="2dp"
             android:layout_marginBottom="2dp"
             android:background="@drawable/text_box_style"
-
+            android:textColor="@color/black"
+            android:enabled="false"
             android:layout_height="match_parent"/>
 
     </LinearLayout>
