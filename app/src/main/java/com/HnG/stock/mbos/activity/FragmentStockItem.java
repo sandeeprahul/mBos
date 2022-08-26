@@ -908,9 +908,10 @@ public class FragmentStockItem extends Fragment {
 //                Log.e("SKUMASTER", jsonArray.toString());
                 ArrayList<SKUMASTER> temp = new ArrayList<>();
 
-                int hasSku = getI(jsonArray);
+                String hasSku = getPos(jsonArray);
 
-                if (hasSku == 0) {
+                if (hasSku.equals("")) {
+
                     skumasters.clear();
 
                     JSONArray jsonArrays = new JSONArray(lastSavedSku);
@@ -921,23 +922,26 @@ public class FragmentStockItem extends Fragment {
                             "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
                             "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString()));
 
+//                    }
 
-                } else if (hasSku == 1) {
+
+                } else {
+
+
                     skumasters.clear();
 
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        temp.add(new SKUMASTER(jsonArray.getJSONObject(i)));
-                        phyqty = Integer.parseInt(temp.get(i).physicalQty) + Integer.parseInt(physicalqty_edt.getText().toString());
+                    int position = Integer.parseInt(hasSku);
+
+//                    for (int i = 0; i < jsonArray.length(); i++) {
+                    temp.add(new SKUMASTER(jsonArray.getJSONObject(position)));
+                    phyqty = Integer.parseInt(temp.get(position).physicalQty) + Integer.parseInt(physicalqty_edt.getText().toString());
 //                        phyqty += Integer.parseInt(physicalqty_edt.getText().toString());
 
-                        String sPhyqty = String.valueOf(phyqty);
+                    String sPhyqty = String.valueOf(phyqty);
 
-                        skumasters.add(new SKUMASTER(temp.get(i).stockChkNo, temp.get(i).skuLOCNo, temp.get(i).skuCode, temp.get(i).skuName, temp.get(i).deviceNo,
-                                "", temp.get(i).mrp, "", sPhyqty,
-                                "", temp.get(i).eanCode, temp.get(i).bay_shelf_no, temp.get(i).location_code));
-
-                    }
-
+                    skumasters.add(new SKUMASTER(temp.get(position).stockChkNo, temp.get(position).skuLOCNo, temp.get(position).skuCode, temp.get(position).skuName, temp.get(position).deviceNo,
+                            "", temp.get(position).mrp, "", sPhyqty,
+                            "", temp.get(position).eanCode, temp.get(position).bay_shelf_no, temp.get(position).location_code));
 
                 }
 
@@ -1044,8 +1048,8 @@ public class FragmentStockItem extends Fragment {
 
     }
 
-    public int getI(JSONArray jsonArray) {
-        int hasSku = 0;
+    public String getPos(JSONArray jsonArray) {
+        String hasSku = "";
         ArrayList<SKUMASTER> temp = new ArrayList<>();
 
         try {
@@ -1053,12 +1057,14 @@ public class FragmentStockItem extends Fragment {
                 temp.add(new SKUMASTER(jsonArray.getJSONObject(j)));
 
                 if (temp.get(j).skuCode.equals(eansku_edt.getText().toString()) && temp.get(j).mrp.equals(price_tv.getText().toString())) {
-                    hasSku = 1;
+                    hasSku = String.valueOf(j);
                 }
             }
         } catch (JSONException j) {
             j.printStackTrace();
         }
+
+        Log.e("hasSku", String.valueOf(hasSku));
 
         return hasSku;
     }
