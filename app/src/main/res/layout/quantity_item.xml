@@ -128,7 +128,6 @@
             android:layout_weight="1"
             android:background="@drawable/text_box_style"
 
-            android:enabled="false"
             android:inputType="textPersonName"
             android:padding="5dp"
             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -209,7 +208,7 @@
         <EditText
             android:layout_width="100dp"
             android:id="@+id/qty_edt"
-
+            android:paddingLeft="5dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="2dp"
             android:layout_marginBottom="2dp"

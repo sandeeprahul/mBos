@@ -1025,41 +1025,6 @@ public class FragmentStockItem extends Fragment {
             }
 
 
-     /*       try {
-
-                JSONArray jsonArray = new JSONArray(lastSavedSku);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    skumasters.add(new SKUMASTER(jsonArray.getJSONObject(i)));
-                }
-
-            } catch (JSONException e) {
-                progressDialog.dismiss();
-
-                e.printStackTrace();
-            }
-            skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
-                    "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
-                    "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString()));
-*/
-       /*     Log.e("SavedDataLength", "" + skumasters.size());
-
-            Gson gson = new Gson();
-            String json = gson.toJson(skumasters);
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("stock", "");
-            editor.apply();
-
-
-     */
-            /*       ArrayList<String> objStrings = new ArrayList<String>();
-            for (Object obj : skumasters) {
-                objStrings.add(gson.toJson(obj));
-            }
-            String[] myStringList = objStrings.toArray(new String[objStrings.size()]);*//*
-
-            editor.putString("stock", json);
-            editor.apply();*/
 
 
             progressDialog.dismiss();
@@ -1788,3 +1753,39 @@ public class FragmentStockItem extends Fragment {
 //all st data in this de -> popup alert deletion
 //upload tab
 //compress
+
+   /*       try {
+
+                JSONArray jsonArray = new JSONArray(lastSavedSku);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    skumasters.add(new SKUMASTER(jsonArray.getJSONObject(i)));
+                }
+
+            } catch (JSONException e) {
+                progressDialog.dismiss();
+
+                e.printStackTrace();
+            }
+            skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
+                    "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
+                    "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString()));
+*/
+       /*     Log.e("SavedDataLength", "" + skumasters.size());
+
+            Gson gson = new Gson();
+            String json = gson.toJson(skumasters);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("stock", "");
+            editor.apply();
+
+
+     */
+            /*       ArrayList<String> objStrings = new ArrayList<String>();
+            for (Object obj : skumasters) {
+                objStrings.add(gson.toJson(obj));
+            }
+            String[] myStringList = objStrings.toArray(new String[objStrings.size()]);*//*
+
+            editor.putString("stock", json);
+            editor.apply();*/

@@ -85,9 +85,23 @@ public class FragmentQuantity extends Fragment {
                     customToast("Please enter Sku Code");
                 } else if (batchcode_edt.getText().toString().equals("")) {
                     customToast("Please enter MRP");
-
                 } else {
                     findDetails();
+                }
+            }
+        });
+
+        update_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (skucode_edt.getText().toString().equals("")) {
+                    customToast("Please enter Sku Code");
+                } else if (batchcode_edt.getText().toString().equals("")) {
+                    customToast("Please enter MRP");
+                } else if (physicalqty_edt.getText().toString().equals("")) {
+                    customToast("Please enter Quantity");
+                } else {
+                    updateqty();
                 }
             }
         });
@@ -96,7 +110,12 @@ public class FragmentQuantity extends Fragment {
         return view;
     }
 
+    public void updateqty() {
+
+    }
+
     public void findDetails() {
+        Log.e("findDetails", skucode_edt.getText().toString() + ", " + batchcode_edt.getText().toString());
         String json = getDetails();
 
         try {
