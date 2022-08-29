@@ -115,8 +115,12 @@ public class FragmentQuantity extends Fragment {
         if (Integer.parseInt(physicalqty_edt.getText().toString()) > Integer.parseInt(qty_edt.getText().toString())) {
             showAlertDialog("-Ve Quanity should not be less than actual Quantity");
         } else {
-
+            updatePhyQty();
         }
+
+    }
+
+    public void updatePhyQty() {
 
     }
 
@@ -225,9 +229,21 @@ public class FragmentQuantity extends Fragment {
                 String sPhyqty = String.valueOf(phyqty);
 
 
+                ArrayList<String> listdata = new ArrayList<String>();
+                JSONArray jArray =  jsonArray.getJSONObject(position).getJSONArray("jsonArrayQty");
+                if (jArray != null) {
+                    for (int i=0;i<jArray.length();i++){
+                        listdata.add(jArray.getString(i));
+                    }
+                }
+
                 skumasters.set(position, new SKUMASTER(jsonArray.getJSONObject(position).getString("stockChkNo"), jsonArray.getJSONObject(position).getString("skuLOCNo"), jsonArray.getJSONObject(position).getString("skuCode"), jsonArray.getJSONObject(position).getString("skuName"), jsonArray.getJSONObject(position).getString("deviceNo"),
                         "", jsonArray.getJSONObject(position).getString("mrp"), "", sPhyqty,
-                        "", jsonArray.getJSONObject(position).getString("eanCode"), jsonArray.getJSONObject(position).getString("bay_shelf_no"), jsonArray.getJSONObject(position).getString("location_code")));
+                        "", jsonArray.getJSONObject(position).getString("eanCode"), jsonArray.getJSONObject(position).getString("bay_shelf_no"), jsonArray.getJSONObject(position).getString("location_code"),listdata));
+              /*  skumasters.set(position, new SKUMASTER(temp.get(position).stockChkNo, temp.get(position).skuLOCNo,temp.get(position).skuCode,temp.get(position).skuName,temp.get(position).deviceNo,
+                        "",temp.get(position).mrp, "", sPhyqty,
+                        "",temp.get(position).eanCode,temp.get(position).bay_shelf_no,temp.get(position).location_code,temp.get(position).jsonArrayQty));
+*/
 
 
                 Gson gson = new Gson();

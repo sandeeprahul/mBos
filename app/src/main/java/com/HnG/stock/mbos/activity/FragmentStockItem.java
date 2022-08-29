@@ -281,7 +281,6 @@ public class FragmentStockItem extends Fragment {
                             customToast("Please enter valid quantity");
 
                         } else {
-//                            savedetails_temp();
                             saveDetails_temp();
 //                            saveDetails();
 
@@ -870,9 +869,14 @@ public class FragmentStockItem extends Fragment {
             ArrayList<String> qtyList = new ArrayList<>();
             qtyList.add(physicalqty_edt.getText().toString());
 
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.put(qtyList);
+
+
+
             skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
                     "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
-                    "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString()));
+                    "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString(),qtyList));
 
             Gson gson = new Gson();
             String json = gson.toJson(skumasters);
@@ -911,9 +915,16 @@ public class FragmentStockItem extends Fragment {
                     for (int j = 0; j < jsonArrays.length(); j++) {
                         skumasters.add(new SKUMASTER(jsonArrays.getJSONObject(j)));
                     }
+
+                    ArrayList<String> qtyList = new ArrayList<>();
+                    qtyList.add(physicalqty_edt.getText().toString());
+
+                    JSONArray jsonArrayQTY = new JSONArray();
+                    jsonArrayQTY.put(qtyList);
+
                     skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
                             "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
-                            "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString()));
+                            "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString(),qtyList));
 
 //                    }
                     Gson gson = new Gson();
@@ -948,10 +959,22 @@ public class FragmentStockItem extends Fragment {
                     String sPhyqty = String.valueOf(phyqty);
 
 
+
+                    ArrayList<String> listdata = new ArrayList<String>();
+                    JSONArray jArray =  jsonArray.getJSONObject(position).getJSONArray("jsonArrayQty");
+                    if (jArray != null) {
+                        for (int i=0;i<jArray.length();i++){
+                            listdata.add(jArray.getString(i));
+                        }
+                    }
+
+
                     skumasters.set(position, new SKUMASTER(jsonArray.getJSONObject(position).getString("stockChkNo"), jsonArray.getJSONObject(position).getString("skuLOCNo"),jsonArray.getJSONObject(position).getString("skuCode"), jsonArray.getJSONObject(position).getString("skuName"), jsonArray.getJSONObject(position).getString("deviceNo"),
                             "", jsonArray.getJSONObject(position).getString("mrp"), "", sPhyqty,
-                            "",jsonArray.getJSONObject(position).getString("eanCode"), jsonArray.getJSONObject(position).getString("bay_shelf_no"),jsonArray.getJSONObject(position).getString("location_code")));
-
+                            "",jsonArray.getJSONObject(position).getString("eanCode"), jsonArray.getJSONObject(position).getString("bay_shelf_no"),jsonArray.getJSONObject(position).getString("location_code"),listdata));
+              /*      skumasters.set(position, new SKUMASTER(temp.get(position).stockChkNo, temp.get(position).skuLOCNo,temp.get(position).skuCode,temp.get(position).skuName,temp.get(position).deviceNo,
+                            "",temp.get(position).mrp, "", sPhyqty,
+                            "",temp.get(position).eanCode,temp.get(position).bay_shelf_no,temp.get(position).location_code,temp.get(position).jsonArrayQty));*/
 
 
 
@@ -1052,29 +1075,6 @@ public class FragmentStockItem extends Fragment {
         return hasSku;
     }
 
-    public void savedetails() {
-        skumasters.clear();
-//        ArrayList<SKUMASTER> skumasters1 = new ArrayList<SKUMASTER>();
-        skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
-                "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
-                "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString()));
-
-        ArrayList<Object> Objects = new ArrayList<Object>();
-
-        for (SKUMASTER p : skumasters) {
-            Objects.add((Object) p); // casting to raw objects
-        }
-        tinyDB.putListObject("stockList", Objects);
-
-        new getLocalEanMaster().execute();
-        new getLocalSkuMaster().execute();
-
-
-        showAlertDialog("Details saved");
-        clearFields();
-        lastsku_btn.performClick();
-
-    }
 
     public void getTotalphyqty_temp() {
 
