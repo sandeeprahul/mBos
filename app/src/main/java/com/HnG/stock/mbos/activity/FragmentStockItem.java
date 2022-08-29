@@ -1,7 +1,6 @@
 package com.HnG.stock.mbos.activity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -10,12 +9,10 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -33,9 +30,7 @@ import androidx.fragment.app.Fragment;
 
 import com.HnG.stock.mbos.R;
 import com.HnG.stock.mbos.database.UserDB;
-import com.HnG.stock.mbos.gettersetter.SKU;
 import com.HnG.stock.mbos.gettersetter.SKUMASTER;
-import com.HnG.stock.mbos.gettersetter.StockCheckData;
 import com.HnG.stock.mbos.helper.ApiCall;
 import com.HnG.stock.mbos.helper.AppController;
 import com.HnG.stock.mbos.helper.Log;
@@ -48,21 +43,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 /**
@@ -878,6 +867,9 @@ public class FragmentStockItem extends Fragment {
 
         if (lastSavedSku.equals("")) {
 
+            ArrayList<String> qtyList = new ArrayList<>();
+            qtyList.add(physicalqty_edt.getText().toString());
+
             skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
                     "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
                     "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString()));
@@ -934,7 +926,6 @@ public class FragmentStockItem extends Fragment {
                     editor.apply();
                     editor.putString("stock", json);
                     editor.apply();
-//                    setLastSKu(shelfno_edt.getText().toString(),SKU_CODE,price_tv.getText().toString(),physicalqty_edt.getText().toString());
 
                     setLastSKu(shelfno_edt.getText().toString(),eansku_edt.getText().toString(),price_tv.getText().toString(),physicalqty_edt.getText().toString());
 
@@ -962,10 +953,7 @@ public class FragmentStockItem extends Fragment {
                             "",jsonArray.getJSONObject(position).getString("eanCode"), jsonArray.getJSONObject(position).getString("bay_shelf_no"),jsonArray.getJSONObject(position).getString("location_code")));
 
 
-                    /*skumasters.add(new SKUMASTER(temp.get(position).stockChkNo, temp.get(position).skuLOCNo, temp.get(position).skuCode, temp.get(position).skuName, temp.get(position).deviceNo,
-                            "", temp.get(position).mrp, "", sPhyqty,
-                            "", temp.get(position).eanCode, temp.get(position).bay_shelf_no, temp.get(position).location_code));
-*/
+
 
                     Gson gson = new Gson();
                     String json = gson.toJson(skumasters);
@@ -986,38 +974,6 @@ public class FragmentStockItem extends Fragment {
 
                 Log.e("SavedDataLength", "" + skumasters.size());
 
-
-               /* for (int i = 0; i < jsonArray.length(); i++) {
-//                    temp.add(new SKUMASTER(jsonArray.getJSONObject(i)));
-
-                    //checking postion
-                    if (hasSku==1) {
-                        skumasters.clear();
-
-                        JSONArray jsonArrays = new JSONArray(lastSavedSku);
-                        for (int j = 0; j < jsonArrays.length(); j++) {
-                            skumasters.add(new SKUMASTER(jsonArrays.getJSONObject(j)));
-                        }
-                        skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
-                                "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
-                                "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString()));
-
-                    } else if (temp.get(i).skuCode.equals(eansku_edt.getText().toString()) && temp.get(i).mrp.equals(price_tv.getText().toString())) {
-                        skumasters.clear();
-                        phyqty = Integer.parseInt(temp.get(i).physicalQty) + Integer.parseInt(physicalqty_edt.getText().toString());
-//                        phyqty += Integer.parseInt(physicalqty_edt.getText().toString());
-
-                        String sPhyqty = String.valueOf(phyqty);
-
-                        skumasters.add(new SKUMASTER(temp.get(i).stockChkNo, temp.get(i).skuLOCNo, temp.get(i).skuCode, temp.get(i).skuName, temp.get(i).deviceNo,
-                                "", temp.get(i).mrp, "", sPhyqty,
-                                "", temp.get(i).eanCode, temp.get(i).bay_shelf_no, temp.get(i).location_code));
-
-
-                    }
-
-
-                }*/
 
 
             } catch (JSONException e) {

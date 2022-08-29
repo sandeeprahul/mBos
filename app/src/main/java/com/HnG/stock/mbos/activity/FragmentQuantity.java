@@ -1,11 +1,10 @@
 package com.HnG.stock.mbos.activity;
 
-import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
@@ -18,12 +17,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.HnG.stock.mbos.R;
 import com.HnG.stock.mbos.gettersetter.SKUMASTER;
 import com.HnG.stock.mbos.helper.Log;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +39,8 @@ public class FragmentQuantity extends Fragment {
     EditText skucode_edt, batchcode_edt, physicalqty_edt, qty_edt;
     Button search_btn, update_btn, clear_btn;
     ListView lv_data;
+    String hasSku = "";
+    ArrayList<SKUMASTER> skumasters = new ArrayList<SKUMASTER>();
     TextView tv_skuname;
     ProgressDialog progressDialog;
     ArrayList<SKUMASTER> skumasterArrayList = new ArrayList<>();
@@ -111,10 +112,35 @@ public class FragmentQuantity extends Fragment {
     }
 
     public void updateqty() {
+        if (Integer.parseInt(physicalqty_edt.getText().toString()) > Integer.parseInt(qty_edt.getText().toString())) {
+            showAlertDialog("-Ve Quanity should not be less than actual Quantity");
+        } else {
+
+        }
 
     }
 
+    public void showAlertDialog(final String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("HnGmBOS");
+                builder.setMessage(message)
+                        .setCancelable(false)
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
+    }
+
     public void findDetails() {
+
+
         Log.e("findDetails", skucode_edt.getText().toString() + ", " + batchcode_edt.getText().toString());
         String json = getDetails();
 
@@ -126,6 +152,7 @@ public class FragmentQuantity extends Fragment {
                 temp.add(new SKUMASTER(jsonArray.getJSONObject(i)));
 
                 if (skucode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("skuCode")) && batchcode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("mrp"))) {
+                    hasSku = String.valueOf(i);
                     tv_skuname.setText(jsonArray.getJSONObject(i).getString("skuName"));
                     qty_edt.setText(jsonArray.getJSONObject(i).getString("physicalQty"));
                 }
@@ -159,6 +186,84 @@ public class FragmentQuantity extends Fragment {
         View view = toast.getView();
         view.setBackgroundResource(R.drawable.custom_background);
         toast.show();
+    }
+
+    public void saveDetails_temp() {
+
+
+        ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "",
+                "Please wait..", true);
+        progressDialog.show();
+
+        String lastSavedSku = getDetails();
+
+
+        try {
+            JSONArray jsonArray = new JSONArray(lastSavedSku);
+            int phyqty = 0;
+//                Log.e("SKUMASTER", jsonArray.toString());
+            ArrayList<SKUMASTER> temp = new ArrayList<>();
+
+//                String hasSku = getPos(jsonArray);
+
+            if (!hasSku.equals("")) {
+
+
+                skumasters.clear();
+
+                for (int k = 0; k < jsonArray.length(); k++) {
+                    skumasters.add(new SKUMASTER(jsonArray.getJSONObject(k)));
+                }
+
+                int position = Integer.parseInt(hasSku);
+
+//                    for (int i = 0; i < jsonArray.length(); i++) {
+                temp.add(new SKUMASTER(jsonArray.getJSONObject(position)));
+                phyqty = Integer.parseInt(jsonArray.getJSONObject(position).getString("physicalQty")) + Integer.parseInt(physicalqty_edt.getText().toString());
+//                        phyqty += Integer.parseInt(physicalqty_edt.getText().toString());
+
+                String sPhyqty = String.valueOf(phyqty);
+
+
+                skumasters.set(position, new SKUMASTER(jsonArray.getJSONObject(position).getString("stockChkNo"), jsonArray.getJSONObject(position).getString("skuLOCNo"), jsonArray.getJSONObject(position).getString("skuCode"), jsonArray.getJSONObject(position).getString("skuName"), jsonArray.getJSONObject(position).getString("deviceNo"),
+                        "", jsonArray.getJSONObject(position).getString("mrp"), "", sPhyqty,
+                        "", jsonArray.getJSONObject(position).getString("eanCode"), jsonArray.getJSONObject(position).getString("bay_shelf_no"), jsonArray.getJSONObject(position).getString("location_code")));
+
+
+                Gson gson = new Gson();
+                String json = gson.toJson(skumasters);
+
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("stock", "");
+                editor.apply();
+                editor.putString("stock", json);
+                editor.apply();
+
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        progressDialog.dismiss();
+
+
+        showAlertDialog("Details saved");
+        clearFields();
+//        lastsku_btn.performClick();
+
+    }
+
+    private void clearFields() {
+        skucode_edt.getText().clear();
+        batchcode_edt.getText().clear();
+        tv_skuname.setText("");
+        physicalqty_edt.getText().clear();
+        qty_edt.getText().clear();
+        skucode_edt.requestFocus();
     }
 
 

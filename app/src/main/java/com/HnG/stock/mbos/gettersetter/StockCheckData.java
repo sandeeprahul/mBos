@@ -3,7 +3,6 @@ package com.HnG.stock.mbos.gettersetter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class StockCheckData {
@@ -33,8 +32,7 @@ public class StockCheckData {
                         jsonObject.getJSONArray("detailsArray").getJSONObject(i).getString("damagedQty"),
                         jsonObject.getJSONArray("detailsArray").getJSONObject(i).getString("eanCode"),
                         jsonObject.getJSONArray("detailsArray").getJSONObject(i).getString("bay_shelf_no"),
-                        jsonObject.getJSONArray("detailsArray").getJSONObject(i).getString("location_code")
-                ));
+                        jsonObject.getJSONArray("detailsArray").getJSONObject(i).getString("location_code")));
             }
         } catch (JSONException e) {
             e.printStackTrace();
