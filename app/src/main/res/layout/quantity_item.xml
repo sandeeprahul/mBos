@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/text_box_style"
-            android:inputType="textPersonName"
+            android:inputType="number"
             android:padding="5dp"
             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
     </LinearLayout>
@@ -73,12 +73,12 @@
                 android:id="@+id/batchcode_edt"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/text_box_style"
                 android:enabled="true"
-                android:inputType="textPersonName"
+                android:inputType="numberDecimal"
                 android:padding="5dp"
-                android:layout_marginRight="5dp"
                 tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
             <Button
@@ -130,7 +130,7 @@
             android:layout_weight="1"
             android:background="@drawable/text_box_style"
 
-            android:inputType="textPersonName"
+            android:inputType="number"
             android:padding="5dp"
             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
     </LinearLayout>
@@ -144,9 +144,8 @@
 
         <TextView
             android:id="@+id/skucode_tv"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:paddingLeft="3dp"
             android:textColor="@color/black"
             android:background="@drawable/text_box_style"
@@ -175,12 +174,12 @@
             android:text="QTY" />
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/lv_data"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1">
-    </ListView>
+    </androidx.recyclerview.widget.RecyclerView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

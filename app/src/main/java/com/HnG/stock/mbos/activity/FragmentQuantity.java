@@ -304,9 +304,9 @@ public class FragmentQuantity extends Fragment {
 */
 
 
-                Gson gson = new Gson();
+              /*  Gson gson = new Gson();
                 String json = gson.toJson(skumasters);
-                Log.e("updatePhyQty", json);
+                Log.e("updatePhyQty", json);*/
 
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = sharedPreferences.edit();

@@ -590,7 +590,7 @@ public class FragmentStockItem extends Fragment {
             // "physicalQty":"1","refBatch":"","skuCode":"531461",
             // "skuLOCNo":"54384","skuName":"HG DISPOSABLE RAZOR WOMEN PK 3","stockChkNo":"57"}
             JSONArray jsonArray = new JSONArray(sku);
-            Log.e("JALastsku", jsonArray.getJSONObject(0).toString());
+//            Log.e("JALastsku", jsonArray.getJSONObject(0).toString());
 
             lastSku_tv.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("skuCode"));
             lastPhysicalQ_tv.setText(jsonArray.getJSONObject(jsonArray.length() - 1).getString("physicalQty"));
@@ -803,7 +803,7 @@ public class FragmentStockItem extends Fragment {
         protected void onPostExecute(String s) {
             localEanData = s;
 
-            getTotalphyqty_temp();
+//            getTotalphyqty_temp();
 //            getTotalphyqty();
 
             super.onPostExecute(s);
@@ -858,9 +858,9 @@ public class FragmentStockItem extends Fragment {
     public void saveDetails_temp() {
 
 
-        ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "",
-                "Please wait..", true);
-        progressDialog.show();
+//        ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "",
+//                "Please wait..", true);
+//        progressDialog.show();
 
         String lastSavedSku = getDetails();
 
@@ -883,21 +883,15 @@ public class FragmentStockItem extends Fragment {
             Log.e("saveDetails()", json);
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putString("stock", "");
-
-
-           /* ArrayList<String> objStrings = new ArrayList<String>();
-            for (Object obj : skumasters) {
-                objStrings.add(gson.toJson(obj));
-            }
-            String[] myStringList = objStrings.toArray(new String[objStrings.size()]);*/
-
-//            editor.putString("stock", TextUtils.join("‚‗‚", myStringList));
+            editor.putString("stock", "");
+            editor.apply();
             editor.putString("stock", json);
             editor.apply();
-            progressDialog.dismiss();
+//            progressDialog.dismiss();
+            setLastSKu(shelfno_edt.getText().toString(),eansku_edt.getText().toString(),price_tv.getText().toString(),physicalqty_edt.getText().toString());
 
-        } else {
+        }
+        else {
 
             try {
                 JSONArray jsonArray = new JSONArray(lastSavedSku);
@@ -919,8 +913,7 @@ public class FragmentStockItem extends Fragment {
                     ArrayList<String> qtyList = new ArrayList<>();
                     qtyList.add(physicalqty_edt.getText().toString());
 
-                    JSONArray jsonArrayQTY = new JSONArray();
-                    jsonArrayQTY.put(qtyList);
+
 
                     skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
                             "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
@@ -1006,10 +999,12 @@ public class FragmentStockItem extends Fragment {
 
 
 
-            progressDialog.dismiss();
+//            progressDialog.dismiss();
 
         }
 
+
+        getTotalphyqty_temp();
 
         new getLocalEanMaster().execute();
         new getLocalSkuMaster().execute();
@@ -1062,7 +1057,7 @@ public class FragmentStockItem extends Fragment {
             for (int j = 0; j < jsonArray.length(); j++) {
                 temp.add(new SKUMASTER(jsonArray.getJSONObject(j)));
 
-                if (temp.get(j).skuCode.equals(eansku_edt.getText().toString()) && temp.get(j).mrp.equals(price_tv.getText().toString())) {
+                if (temp.get(j).skuCode.equals(eansku_edt.getText().toString()) &&temp.get(j).bay_shelf_no.equals(shelfno_edt.getText().toString()) &&temp.get(j).mrp.equals(price_tv.getText().toString())) {
                     hasSku = String.valueOf(j);
                 }
             }
@@ -1079,7 +1074,7 @@ public class FragmentStockItem extends Fragment {
     public void getTotalphyqty_temp() {
 
         String skuLocalData = getDetails();
-        if (skuLocalData != null && !skuLocalData.equals("")) {
+        if (!skuLocalData.equals("")&& skuLocalData != null ) {
             try {
                 JSONArray jsonArray = new JSONArray(skuLocalData);
                 totalsku_tv.setText("Total SKU's: " + jsonArray.length());
@@ -1226,7 +1221,7 @@ public class FragmentStockItem extends Fragment {
                 public void onResponse(final String response) {
 
                     try {
-                        Log.i("saveDetails", "Api Call response: " + response);
+                        Log.i("uploadDetails", "Api Call response: " + response);
                         JSONObject Jsonobj = new JSONObject(response);
 
                         if (Jsonobj.getString("result").equalsIgnoreCase("Success")) {
