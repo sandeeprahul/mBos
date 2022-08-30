@@ -48,6 +48,8 @@
         <entry key="app/src/main/res/layout/generator_register_item.xml" value="0.22666666666666666" />
         <entry key="app/src/main/res/layout/item_lastsku.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/item_pricelistview.xml" value="0.20462962962962963" />
+        <entry key="app/src/main/res/layout/item_qtyhistory.xml" value="0.20833333333333334" />
+        <entry key="app/src/main/res/layout/item_quantityhistory.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/item_searchsku.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/list_group_child.xml" value="0.20462962962962963" />
         <entry key="app/src/main/res/layout/list_group_header.xml" value="0.20833333333333334" />

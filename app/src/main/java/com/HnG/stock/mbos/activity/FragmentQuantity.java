@@ -18,7 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.HnG.stock.mbos.Adapter.QuantityHisAdapter;
 import com.HnG.stock.mbos.R;
 import com.HnG.stock.mbos.gettersetter.SKUMASTER;
 import com.HnG.stock.mbos.helper.Log;
@@ -38,10 +41,13 @@ public class FragmentQuantity extends Fragment {
 
     EditText skucode_edt, batchcode_edt, physicalqty_edt, qty_edt;
     Button search_btn, update_btn, clear_btn;
-    ListView lv_data;
+    RecyclerView rv_data;
     String hasSku = "";
     ArrayList<SKUMASTER> skumasters = new ArrayList<SKUMASTER>();
     TextView tv_skuname;
+    QuantityHisAdapter quantityHisAdapter;
+    ArrayList<SKUMASTER> skumasterArrayList_ = new ArrayList<SKUMASTER>();
+
     ProgressDialog progressDialog;
     ArrayList<SKUMASTER> skumasterArrayList = new ArrayList<>();
 
@@ -76,8 +82,14 @@ public class FragmentQuantity extends Fragment {
         search_btn = (Button) view.findViewById(R.id.search_btn);
         update_btn = (Button) view.findViewById(R.id.update_btn);
         clear_btn = (Button) view.findViewById(R.id.clear_btn);
-        lv_data = (ListView) view.findViewById(R.id.lv_data);
+        rv_data = (RecyclerView) view.findViewById(R.id.rv_data);
         tv_skuname = (TextView) view.findViewById(R.id.tv_skuname);
+
+        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getActivity());
+        linearLayoutManager1.setOrientation(RecyclerView.VERTICAL);
+        rv_data.setLayoutManager(linearLayoutManager1);
+        quantityHisAdapter = new QuantityHisAdapter(getActivity(), skumasterArrayList_);
+        rv_data.setAdapter(quantityHisAdapter);
 
         search_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +101,13 @@ public class FragmentQuantity extends Fragment {
                 } else {
                     findDetails();
                 }
+            }
+        });
+
+        clear_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearFields();
             }
         });
 
@@ -114,15 +133,14 @@ public class FragmentQuantity extends Fragment {
     public void updateqty() {
         if (Integer.parseInt(physicalqty_edt.getText().toString()) > Integer.parseInt(qty_edt.getText().toString())) {
             showAlertDialog("-Ve Quanity should not be less than actual Quantity");
+        } else if (Integer.parseInt(physicalqty_edt.getText().toString()) == Integer.parseInt(qty_edt.getText().toString())) {
+            showAlertDialog("-Ve Quanity should not be equal than actual Quantity");
         } else {
             updatePhyQty();
         }
 
     }
 
-    public void updatePhyQty() {
-
-    }
 
     public void showAlertDialog(final String message) {
         getActivity().runOnUiThread(new Runnable() {
@@ -144,6 +162,7 @@ public class FragmentQuantity extends Fragment {
 
     public void findDetails() {
 
+        skumasterArrayList_.clear();
 
         Log.e("findDetails", skucode_edt.getText().toString() + ", " + batchcode_edt.getText().toString());
         String json = getDetails();
@@ -151,17 +170,57 @@ public class FragmentQuantity extends Fragment {
         try {
             JSONArray jsonArray = new JSONArray(json);
             ArrayList<SKUMASTER> temp = new ArrayList<>();
+            String price = "";
+            if (batchcode_edt.getText().toString().contains(".")) {
+                price = batchcode_edt.getText().toString();
+            } else {
+                price = batchcode_edt.getText().toString() + ".00";
+            }
 
             for (int i = 0; i < jsonArray.length(); i++) {
+
+
                 temp.add(new SKUMASTER(jsonArray.getJSONObject(i)));
 
-                if (skucode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("skuCode")) && batchcode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("mrp"))) {
+                if (skucode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("skuCode")) && price.equals(jsonArray.getJSONObject(i).getString("mrp"))) {
                     hasSku = String.valueOf(i);
+
+
+                    if (jsonArray.getJSONObject(i).getJSONArray("jsonArrayQty").length() > 1) {
+                        ArrayList<String> listdata = new ArrayList<String>();
+                        JSONArray jArray_ = jsonArray.getJSONObject(i).getJSONArray("jsonArrayQty");
+                        if (jArray_ != null) {
+                            for (int j = 0; j < jArray_.length(); j++) {
+                                listdata.add(jArray_.getString(i));
+
+                                SKUMASTER tempSku = new SKUMASTER(temp.get(i).stockChkNo,temp.get(i).skuLOCNo,temp.get(i).skuCode, temp.get(i).skuName, temp.get(i).deviceNo,
+                                        "",temp.get(i).mrp, "",temp.get(i).jsonArrayQty.get(j).toString(),
+                                        "", temp.get(i).eanCode,temp.get(i).bay_shelf_no, temp.get(i).location_code, temp.get(i).jsonArrayQty);
+/*                                SKUMASTER tempSku = new SKUMASTER(jsonArray.getJSONObject(i).getString("stockChkNo"), jsonArray.getJSONObject(i).getString("skuLOCNo"), jsonArray.getJSONObject(i).getString("skuCode"), jsonArray.getJSONObject(i).getString("skuName"), jsonArray.getJSONObject(i).getString("deviceNo"),
+                                        "", jsonArray.getJSONObject(i).getString("mrp"), "", jsonArray.getJSONObject(i).getString("physicalQty"),
+                                        "", jsonArray.getJSONObject(i).getString("eanCode"), jsonArray.getJSONObject(i).getString("bay_shelf_no"), jsonArray.getJSONObject(i).getString("location_code"), listdata);*/
+                                skumasterArrayList_.add(tempSku);
+                                Gson gson = new Gson();
+                                String jsonss = gson.toJson(skumasterArrayList_);
+                                Log.e("jsonss",jsonss);
+                            }
+                        }
+                    }
+
+
                     tv_skuname.setText(jsonArray.getJSONObject(i).getString("skuName"));
                     qty_edt.setText(jsonArray.getJSONObject(i).getString("physicalQty"));
                 }
+                else {
+                    customToast("No details found");
+                }
             }
             skumasterArrayList = temp;
+
+            quantityHisAdapter = new QuantityHisAdapter(getActivity(), skumasterArrayList_);
+            quantityHisAdapter.notifyDataSetChanged();
+            rv_data.setAdapter(quantityHisAdapter);
+
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -192,7 +251,7 @@ public class FragmentQuantity extends Fragment {
         toast.show();
     }
 
-    public void saveDetails_temp() {
+    public void updatePhyQty() {
 
 
         ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "",
@@ -204,11 +263,10 @@ public class FragmentQuantity extends Fragment {
 
         try {
             JSONArray jsonArray = new JSONArray(lastSavedSku);
-            int phyqty = 0;
-//                Log.e("SKUMASTER", jsonArray.toString());
             ArrayList<SKUMASTER> temp = new ArrayList<>();
 
-//                String hasSku = getPos(jsonArray);
+//String hasSku = getPos(jsonArray);
+            int upDatedPhy = 0;
 
             if (!hasSku.equals("")) {
 
@@ -223,23 +281,23 @@ public class FragmentQuantity extends Fragment {
 
 //                    for (int i = 0; i < jsonArray.length(); i++) {
                 temp.add(new SKUMASTER(jsonArray.getJSONObject(position)));
-                phyqty = Integer.parseInt(jsonArray.getJSONObject(position).getString("physicalQty")) + Integer.parseInt(physicalqty_edt.getText().toString());
+                upDatedPhy = Integer.parseInt(jsonArray.getJSONObject(position).getString("physicalQty")) - Integer.parseInt(physicalqty_edt.getText().toString());
 //                        phyqty += Integer.parseInt(physicalqty_edt.getText().toString());
 
-                String sPhyqty = String.valueOf(phyqty);
-
+                String sPhyqty = String.valueOf(upDatedPhy);
 
                 ArrayList<String> listdata = new ArrayList<String>();
-                JSONArray jArray =  jsonArray.getJSONObject(position).getJSONArray("jsonArrayQty");
+                JSONArray jArray = jsonArray.getJSONObject(position).getJSONArray("jsonArrayQty");
                 if (jArray != null) {
-                    for (int i=0;i<jArray.length();i++){
+                    for (int i = 0; i < jArray.length(); i++) {
                         listdata.add(jArray.getString(i));
                     }
                 }
+                listdata.add("-" + physicalqty_edt.getText().toString());
 
                 skumasters.set(position, new SKUMASTER(jsonArray.getJSONObject(position).getString("stockChkNo"), jsonArray.getJSONObject(position).getString("skuLOCNo"), jsonArray.getJSONObject(position).getString("skuCode"), jsonArray.getJSONObject(position).getString("skuName"), jsonArray.getJSONObject(position).getString("deviceNo"),
                         "", jsonArray.getJSONObject(position).getString("mrp"), "", sPhyqty,
-                        "", jsonArray.getJSONObject(position).getString("eanCode"), jsonArray.getJSONObject(position).getString("bay_shelf_no"), jsonArray.getJSONObject(position).getString("location_code"),listdata));
+                        "", jsonArray.getJSONObject(position).getString("eanCode"), jsonArray.getJSONObject(position).getString("bay_shelf_no"), jsonArray.getJSONObject(position).getString("location_code"), listdata));
               /*  skumasters.set(position, new SKUMASTER(temp.get(position).stockChkNo, temp.get(position).skuLOCNo,temp.get(position).skuCode,temp.get(position).skuName,temp.get(position).deviceNo,
                         "",temp.get(position).mrp, "", sPhyqty,
                         "",temp.get(position).eanCode,temp.get(position).bay_shelf_no,temp.get(position).location_code,temp.get(position).jsonArrayQty));
@@ -248,6 +306,7 @@ public class FragmentQuantity extends Fragment {
 
                 Gson gson = new Gson();
                 String json = gson.toJson(skumasters);
+                Log.e("updatePhyQty", json);
 
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -257,6 +316,9 @@ public class FragmentQuantity extends Fragment {
                 editor.apply();
 
             }
+
+            skumasterArrayList_.clear();
+            quantityHisAdapter.notifyDataSetChanged();
 
 
         } catch (JSONException e) {
