@@ -113,7 +113,7 @@ public class FragmentQuantity extends Fragment {
                     customToast("Please enter Sku Code");
                 } else if (batchcode_edt.getText().toString().equals("")) {
                     customToast("Please enter MRP");
-                } else {
+                }else {
                     findDetails();
                 }
             }
@@ -133,8 +133,13 @@ public class FragmentQuantity extends Fragment {
                     customToast("Please enter Sku Code");
                 } else if (batchcode_edt.getText().toString().equals("")) {
                     customToast("Please enter MRP");
+                }else if(shelfno_edt.getText().toString().equals("Bay/Shelf No")){
+                    customToast("Please select Bay/Shelf No");
                 } else if (physicalqty_edt.getText().toString().equals("")) {
-                    customToast("Please enter Quantity");
+                    customToast("Please enter Updated Quantity");
+                } else if(physicalqty_edt.getText().toString().equals("0")){
+                    customToast("Please enter Updated qty");
+
                 } else {
                     updateqty();
                 }
@@ -272,9 +277,9 @@ public class FragmentQuantity extends Fragment {
 
                     tv_skuname.setText(jsonArray.getJSONObject(i).getString("skuName"));
                     qty_edt.setText(jsonArray.getJSONObject(i).getString("physicalQty"));
-                } else {
+                } /*else {
                     customToast("No details found");
-                }
+                }*/
 
 
             }

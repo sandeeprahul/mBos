@@ -182,7 +182,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:focusable="false"
-                    android:text="Bay/Shelf no"
+                    android:text="Bay/Shelf No"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
@@ -203,6 +203,38 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="Physical Qty: "
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/qty_edt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/text_box_style"
+                android:focusable="false"
+                android:inputType="none"
+                android:padding="5dp"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:orientation="horizontal">
 
@@ -211,7 +243,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Physical Qty (-Ve)"
+                android:text="Updated Qty: "
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
@@ -221,7 +253,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/text_box_style"
-
+                android:maxLength="3"
                 android:inputType="number"
                 android:padding="5dp"
                 tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -232,7 +264,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:padding="5dp"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/skucode_tv"
@@ -270,12 +303,14 @@
             android:id="@+id/rv_data"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"></androidx.recyclerview.widget.RecyclerView>
+            android:layout_weight="1"
+            android:visibility="gone"></androidx.recyclerview.widget.RecyclerView>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:gravity="center_horizontal"
             android:orientation="horizontal">
 
             <Button
@@ -294,23 +329,6 @@
                 android:layout_marginLeft="10dp"
                 android:background="#FA8C01"
                 android:text="Clear" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <EditText
-                android:id="@+id/qty_edt"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginBottom="2dp"
-                android:background="@drawable/text_box_style"
-                android:enabled="false"
-                android:paddingLeft="5dp"
-                android:textColor="@color/black" />
 
         </LinearLayout>
     </LinearLayout>
