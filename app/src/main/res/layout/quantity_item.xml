@@ -1,222 +1,331 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    android:orientation="vertical">
-
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Batch wise quantity correction"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+   >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_marginBottom="5dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
 
         <TextView
-            android:layout_width="0dp"
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="left"
-            android:text="Sku/EAN"
+            android:gravity="center"
+            android:text="Batch wise quantity correction"
             android:textColor="@color/black"
-            android:textSize="16sp" />
-
-        <EditText
-            android:id="@+id/skucode_edt"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/text_box_style"
-            android:inputType="number"
-            android:padding="5dp"
-            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_margin="5dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="left"
-            android:text="Batch/MRP"
-
-
-            android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="Sku/EAN"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/skucode_edt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/text_box_style"
+                android:inputType="number"
+                android:padding="5dp"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/batchcode_edt"
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/text_box_style"
-                android:enabled="true"
-                android:inputType="numberDecimal"
-                android:padding="5dp"
-                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+                android:gravity="left"
+                android:text="Batch/MRP"
 
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:layout_marginLeft="5dp"
-                android:background="#FA8C01"
-                android:text="Search"
-                android:id="@+id/search_btn"
+
                 android:textColor="@color/black"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/batchcode_edt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/text_box_style"
+                    android:enabled="true"
+                    android:inputType="numberDecimal"
+                    android:padding="5dp"
+                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+                <Button
+                    android:id="@+id/search_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:background="#FA8C01"
+                    android:text="Search"
+                    android:textColor="@color/black"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
-    <TextView
-        android:id="@+id/tv_skuname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:focusable="false"
-        android:maxLines="3"
-        android:padding="5dp"
-        android:gravity="start"
-        android:background="@drawable/text_box_style"
-        android:textColor="@color/gray"
-        android:textSize="16sp"
-        android:visibility="visible" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal"
+
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:text="Bay/Shelf No:"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/shelfno_edt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/text_box_style"
+                android:inputType="textPersonName"
+                android:padding="5dp"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+        </LinearLayout>
 
         <TextView
-            android:layout_width="0dp"
+            android:id="@+id/tv_skuname"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="left"
-            android:text="Physical Qty (-Ve)"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
-
-        <EditText
-            android:id="@+id/physicalqty_edt"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_margin="5dp"
             android:background="@drawable/text_box_style"
-
-            android:inputType="number"
+            android:focusable="false"
+            android:gravity="start"
+            android:maxLines="3"
             android:padding="5dp"
-            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+            android:textColor="@color/gray"
+            android:textSize="16sp"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="10dp"
+            android:focusable="false"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:focusable="false"
+
+
+                android:focusableInTouchMode="false"
+                android:gravity="start"
+                android:text="Bay/Shelf No:"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:id="@+id/shelf_no_rl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/text_box_style"
+                android:focusable="false"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/shelf_no_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:text="Bay/Shelf no"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_weight="1"
+                    android:focusable="false"
+                    android:spinnerMode="dialog"
+                    android:visibility="visible" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="Physical Qty (-Ve)"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/physicalqty_edt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/text_box_style"
+
+                android:inputType="number"
+                android:padding="5dp"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/skucode_tv"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/text_box_style"
+                android:paddingLeft="3dp"
+                android:text="Sku Code"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/bayno_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/text_box_style"
+
+                android:paddingLeft="3dp"
+                android:text="BayNo"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/qty_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/text_box_style"
+
+                android:paddingLeft="3dp"
+                android:text="QTY"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></androidx.recyclerview.widget.RecyclerView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/update_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#FA8C01"
+                android:text="Update"
+
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/clear_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:background="#FA8C01"
+                android:text="Clear" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <EditText
+                android:id="@+id/qty_edt"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/text_box_style"
+                android:enabled="false"
+                android:paddingLeft="5dp"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <ListView
+        android:id="@+id/shelf_no_lv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
-        android:padding="5dp"
-        android:orientation="horizontal">
+        android:layout_centerInParent="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/text_box_style_gray"
+        android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/skucode_tv"
-            android:layout_width="200dp"
-            android:layout_height="match_parent"
-            android:paddingLeft="3dp"
-            android:textColor="@color/black"
-            android:background="@drawable/text_box_style"
-            android:text="Sku Code" />
 
-        <TextView
-            android:id="@+id/bayno_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingLeft="3dp"
-
-            android:textColor="@color/black"
-            android:background="@drawable/text_box_style"
-            android:text="BayNo" />
-
-        <TextView
-            android:id="@+id/qty_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingLeft="3dp"
-
-            android:textColor="@color/black"
-            android:background="@drawable/text_box_style"
-            android:text="QTY" />
-    </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
-    </androidx.recyclerview.widget.RecyclerView>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/update_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#FA8C01"
-            android:text="Update"
-
-            android:textSize="14sp" />
-
-        <Button
-            android:id="@+id/clear_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:background="#FA8C01"
-            android:text="Clear" />
-      <LinearLayout
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"/>
-        <EditText
-            android:layout_width="100dp"
-            android:id="@+id/qty_edt"
-            android:paddingLeft="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="2dp"
-            android:layout_marginBottom="2dp"
-            android:background="@drawable/text_box_style"
-            android:textColor="@color/black"
-            android:enabled="false"
-            android:layout_height="match_parent"/>
-
-    </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

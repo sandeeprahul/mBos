@@ -11,9 +11,13 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +35,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -39,10 +44,16 @@ import java.util.ArrayList;
 
 public class FragmentQuantity extends Fragment {
 
-    EditText skucode_edt, batchcode_edt, physicalqty_edt, qty_edt;
+    EditText skucode_edt, batchcode_edt, physicalqty_edt, qty_edt, shelfno_edt;
     Button search_btn, update_btn, clear_btn;
     RecyclerView rv_data;
+    RelativeLayout shelf_no_rl;
+    ListView shelf_no_lv;
+    ArrayAdapter<String> arrayAdapter;
+    List<String> shelf_no_list = new ArrayList<String>();
+
     String hasSku = "";
+    TextView shelf_no_tv;
     ArrayList<SKUMASTER> skumasters = new ArrayList<SKUMASTER>();
     TextView tv_skuname;
     QuantityHisAdapter quantityHisAdapter;
@@ -79,8 +90,12 @@ public class FragmentQuantity extends Fragment {
         batchcode_edt = (EditText) view.findViewById(R.id.batchcode_edt);
         physicalqty_edt = (EditText) view.findViewById(R.id.physicalqty_edt);
         qty_edt = (EditText) view.findViewById(R.id.qty_edt);
+        shelfno_edt = (EditText) view.findViewById(R.id.shelfno_edt);
         search_btn = (Button) view.findViewById(R.id.search_btn);
+        shelf_no_lv = (ListView) view.findViewById(R.id.shelf_no_lv);
+        shelf_no_rl = (RelativeLayout) view.findViewById(R.id.shelf_no_rl);
         update_btn = (Button) view.findViewById(R.id.update_btn);
+        shelf_no_tv = (TextView) view.findViewById(R.id.shelf_no_tv);
         clear_btn = (Button) view.findViewById(R.id.clear_btn);
         rv_data = (RecyclerView) view.findViewById(R.id.rv_data);
         tv_skuname = (TextView) view.findViewById(R.id.tv_skuname);
@@ -126,6 +141,27 @@ public class FragmentQuantity extends Fragment {
             }
         });
 
+        shelf_no_rl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (shelf_no_list.size()!=0){
+                    shelf_no_lv.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        shelf_no_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getContext(), shelf_no_list.get(position), Toast.LENGTH_SHORT).show();
+                shelf_no_tv.setText(shelf_no_list.get(position));
+                shelf_no_lv.setVisibility(View.GONE);
+            }
+        });
+
+        arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.item_pricelistview, R.id.textView, shelf_no_list);
+        shelf_no_lv.setAdapter(arrayAdapter);
+
 
         return view;
     }
@@ -136,6 +172,7 @@ public class FragmentQuantity extends Fragment {
         } else if (Integer.parseInt(physicalqty_edt.getText().toString()) == Integer.parseInt(qty_edt.getText().toString())) {
             showAlertDialog("-Ve Quanity should not be equal than actual Quantity");
         } else {
+//            showUpdateAlertDialog("");
             updatePhyQty();
         }
 
@@ -159,6 +196,29 @@ public class FragmentQuantity extends Fragment {
             }
         });
     }
+
+    public void showUpdateAlertDialog(final String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("HnGmBOS");
+                builder.setMessage(message)
+                        .setCancelable(false).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                })
+                        .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
+    }
+
 
     public void findDetails() {
 
@@ -184,7 +244,9 @@ public class FragmentQuantity extends Fragment {
 
                 if (skucode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("skuCode")) && price.equals(jsonArray.getJSONObject(i).getString("mrp"))) {
                     hasSku = String.valueOf(i);
+//                    Integer.parseInt(jsonArray.getJSONObject(i).getString("bay_shelf_no"))>1
 
+                    shelf_no_list.add(jsonArray.getJSONObject(i).getString("bay_shelf_no"));
 
                     if (jsonArray.getJSONObject(i).getJSONArray("jsonArrayQty").length() > 1) {
                         ArrayList<String> listdata = new ArrayList<String>();
@@ -193,16 +255,16 @@ public class FragmentQuantity extends Fragment {
                             for (int j = 0; j < jArray_.length(); j++) {
                                 listdata.add(jArray_.getString(i));
 
-                                SKUMASTER tempSku = new SKUMASTER(temp.get(i).stockChkNo,temp.get(i).skuLOCNo,temp.get(i).skuCode, temp.get(i).skuName, temp.get(i).deviceNo,
-                                        "",temp.get(i).mrp, "",temp.get(i).jsonArrayQty.get(j).toString(),
-                                        "", temp.get(i).eanCode,temp.get(i).bay_shelf_no, temp.get(i).location_code, temp.get(i).jsonArrayQty);
+                                SKUMASTER tempSku = new SKUMASTER(temp.get(i).stockChkNo, temp.get(i).skuLOCNo, temp.get(i).skuCode, temp.get(i).skuName, temp.get(i).deviceNo,
+                                        "", temp.get(i).mrp, "", temp.get(i).jsonArrayQty.get(j).toString(),
+                                        "", temp.get(i).eanCode, temp.get(i).bay_shelf_no, temp.get(i).location_code, temp.get(i).jsonArrayQty);
 /*                                SKUMASTER tempSku = new SKUMASTER(jsonArray.getJSONObject(i).getString("stockChkNo"), jsonArray.getJSONObject(i).getString("skuLOCNo"), jsonArray.getJSONObject(i).getString("skuCode"), jsonArray.getJSONObject(i).getString("skuName"), jsonArray.getJSONObject(i).getString("deviceNo"),
                                         "", jsonArray.getJSONObject(i).getString("mrp"), "", jsonArray.getJSONObject(i).getString("physicalQty"),
                                         "", jsonArray.getJSONObject(i).getString("eanCode"), jsonArray.getJSONObject(i).getString("bay_shelf_no"), jsonArray.getJSONObject(i).getString("location_code"), listdata);*/
                                 skumasterArrayList_.add(tempSku);
                                 Gson gson = new Gson();
                                 String jsonss = gson.toJson(skumasterArrayList_);
-                                Log.e("jsonss",jsonss);
+                                Log.e("jsonss", jsonss);
                             }
                         }
                     }
@@ -210,11 +272,40 @@ public class FragmentQuantity extends Fragment {
 
                     tv_skuname.setText(jsonArray.getJSONObject(i).getString("skuName"));
                     qty_edt.setText(jsonArray.getJSONObject(i).getString("physicalQty"));
-                }
-                else {
+                } else {
                     customToast("No details found");
                 }
+
+
             }
+
+
+         /*   if (shelf_no_list.size() == 0) {
+                customToast("No details found!");
+                try {
+                    final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+
+            } else*/
+
+            if (shelf_no_list.size() == 1) {
+                shelf_no_tv.setText(shelf_no_list.get(0));
+            } else if (shelf_no_list.size() > 1) {
+//                shelf_no_list.size();
+                try {
+                    final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+                shelf_no_lv.setVisibility(View.VISIBLE);
+            }
+
+
+            arrayAdapter.notifyDataSetChanged();
             skumasterArrayList = temp;
 
             quantityHisAdapter = new QuantityHisAdapter(getActivity(), skumasterArrayList_);
