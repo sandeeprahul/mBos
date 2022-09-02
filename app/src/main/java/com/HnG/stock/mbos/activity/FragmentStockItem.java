@@ -116,6 +116,13 @@ public class FragmentStockItem extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+//        new getpreviousDetails().execute();
+//        new getLocalEanMaster().execute();
+//        new getLocalSkuMaster().execute();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -707,7 +714,7 @@ public class FragmentStockItem extends Fragment {
                             stockData.add("StockCheck no: " +
                                     jsonArray.getJSONObject(i).getString("stockChkNo") + ",Loc code: " + jsonArray.getJSONObject(i).getString("location_code") + ",DeviceId: " + jsonArray.getJSONObject(i).getString("deviceNo"));
                         }*/
-                        arrayAdapterrStock.notifyDataSetChanged();
+
 //                    storedata_popup_ll.setVisibility(View.VISIBLE);
 //                    stockno_lv.setVisibility(View.VISIBLE);
 
@@ -740,6 +747,7 @@ public class FragmentStockItem extends Fragment {
             progressDialog = ProgressDialog.show(getActivity(), "",
                     "Please wait..", true);
             progressDialog.show();
+            arrayAdapterrStock.notifyDataSetChanged();
             location_code_edt.setEnabled(false);
             storestockcheck_edt.setEnabled(false);
             device_no_edt.setEnabled(false);
@@ -767,7 +775,7 @@ public class FragmentStockItem extends Fragment {
 
         @Override
         protected void onProgressUpdate(String... values) {
-            progressDialog.show();
+//            progressDialog.show();
 
             super.onProgressUpdate(values);
 

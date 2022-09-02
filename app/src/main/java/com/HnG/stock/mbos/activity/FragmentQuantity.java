@@ -106,6 +106,15 @@ public class FragmentQuantity extends Fragment {
         quantityHisAdapter = new QuantityHisAdapter(getActivity(), skumasterArrayList_);
         rv_data.setAdapter(quantityHisAdapter);
 
+        skucode_edt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (!b){
+                    findSkucode();
+                }
+            }
+        });
+
         search_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,7 +122,7 @@ public class FragmentQuantity extends Fragment {
                     customToast("Please enter Sku Code");
                 } else if (batchcode_edt.getText().toString().equals("")) {
                     customToast("Please enter MRP");
-                }else {
+                } else {
                     findDetails();
                 }
             }
@@ -133,11 +142,11 @@ public class FragmentQuantity extends Fragment {
                     customToast("Please enter Sku Code");
                 } else if (batchcode_edt.getText().toString().equals("")) {
                     customToast("Please enter MRP");
-                }else if(shelfno_edt.getText().toString().equals("Bay/Shelf No")){
+                } else if (shelfno_edt.getText().toString().equals("Bay/Shelf No")) {
                     customToast("Please select Bay/Shelf No");
                 } else if (physicalqty_edt.getText().toString().equals("")) {
                     customToast("Please enter Updated Quantity");
-                } else if(physicalqty_edt.getText().toString().equals("0")){
+                } else if (physicalqty_edt.getText().toString().equals("0")) {
                     customToast("Please enter Updated qty");
 
                 } else {
@@ -149,7 +158,7 @@ public class FragmentQuantity extends Fragment {
         shelf_no_rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (shelf_no_list.size()!=0){
+                if (shelf_no_list.size() != 0) {
                     shelf_no_lv.setVisibility(View.VISIBLE);
                 }
             }
@@ -172,14 +181,16 @@ public class FragmentQuantity extends Fragment {
     }
 
     public void updateqty() {
-        if (Integer.parseInt(physicalqty_edt.getText().toString()) > Integer.parseInt(qty_edt.getText().toString())) {
+        updatePhyQty();
+
+        /*if (Integer.parseInt(physicalqty_edt.getText().toString()) > Integer.parseInt(qty_edt.getText().toString())) {
             showAlertDialog("-Ve Quanity should not be less than actual Quantity");
         } else if (Integer.parseInt(physicalqty_edt.getText().toString()) == Integer.parseInt(qty_edt.getText().toString())) {
             showAlertDialog("-Ve Quanity should not be equal than actual Quantity");
         } else {
 //            showUpdateAlertDialog("");
             updatePhyQty();
-        }
+        }*/
 
     }
 
@@ -225,9 +236,36 @@ public class FragmentQuantity extends Fragment {
     }
 
 
+    public void findSkucode() {
+        try {
+            JSONArray jsonArray = new JSONArray(json);
+            ArrayList<SKUMASTER> temp = new ArrayList<>();
+
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+
+
+                temp.add(new SKUMASTER(jsonArray.getJSONObject(i)));
+
+                if (skucode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("skuCode"))) {
+                    skucode_edt.setText(jsonArray.getJSONObject(i).getString("eanCode"));
+                } /*else {
+                    customToast("No details found");
+                }*/
+
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+
+        }
+    }
+
     public void findDetails() {
 
         skumasterArrayList_.clear();
+        shelf_no_list.clear();
 
         Log.e("findDetails", skucode_edt.getText().toString() + ", " + batchcode_edt.getText().toString());
         String json = getDetails();
@@ -350,6 +388,7 @@ public class FragmentQuantity extends Fragment {
     public void updatePhyQty() {
 
 
+
         ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "",
                 "Please wait..", true);
         progressDialog.show();
@@ -377,10 +416,12 @@ public class FragmentQuantity extends Fragment {
 
 //                    for (int i = 0; i < jsonArray.length(); i++) {
                 temp.add(new SKUMASTER(jsonArray.getJSONObject(position)));
-                upDatedPhy = Integer.parseInt(jsonArray.getJSONObject(position).getString("physicalQty")) - Integer.parseInt(physicalqty_edt.getText().toString());
+//                upDatedPhy = physicalqty_edt.getText().toString();
+//                upDatedPhy = Integer.parseInt(jsonArray.getJSONObject(position).getString("physicalQty")) - Integer.parseInt(physicalqty_edt.getText().toString());
 //                        phyqty += Integer.parseInt(physicalqty_edt.getText().toString());
 
-                String sPhyqty = String.valueOf(upDatedPhy);
+                String sPhyqty = physicalqty_edt.getText().toString();
+//                String sPhyqty = String.valueOf(upDatedPhy);
 
                 ArrayList<String> listdata = new ArrayList<String>();
                 JSONArray jArray = jsonArray.getJSONObject(position).getJSONArray("jsonArrayQty");
@@ -400,9 +441,9 @@ public class FragmentQuantity extends Fragment {
 */
 
 
-              /*  Gson gson = new Gson();
+                Gson gson = new Gson();
                 String json = gson.toJson(skumasters);
-                Log.e("updatePhyQty", json);*/
+                Log.e("updatePhyQty", json);
 
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -438,6 +479,8 @@ public class FragmentQuantity extends Fragment {
         physicalqty_edt.getText().clear();
         qty_edt.getText().clear();
         skucode_edt.requestFocus();
+        shelf_no_tv.setText("Bay/Shelf No: ");
+
     }
 
 
