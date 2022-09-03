@@ -241,18 +241,25 @@ public class FragmentQuantity extends Fragment {
             JSONArray jsonArray = new JSONArray(json);
             ArrayList<SKUMASTER> temp = new ArrayList<>();
 
-
+            boolean sku = true;
             for (int i = 0; i < jsonArray.length(); i++) {
 
 
                 temp.add(new SKUMASTER(jsonArray.getJSONObject(i)));
 
-                if (skucode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("skuCode"))) {
-                    skucode_edt.setText(jsonArray.getJSONObject(i).getString("eanCode"));
+                if (skucode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("eanCode"))) {
+                    skucode_edt.setText(jsonArray.getJSONObject(i).getString("skuCode"));
+                    sku = false;
                 } /*else {
                     customToast("No details found");
                 }*/
 
+                if (!sku){
+                    if (skucode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("skuCode"))){
+                        skucode_edt.setText(jsonArray.getJSONObject(i).getString("eanCode"));
+
+                    }
+                }
 
             }
 
@@ -291,26 +298,26 @@ public class FragmentQuantity extends Fragment {
 
                     shelf_no_list.add(jsonArray.getJSONObject(i).getString("bay_shelf_no"));
 
-                    if (jsonArray.getJSONObject(i).getJSONArray("jsonArrayQty").length() > 1) {
+                    /*if (jsonArray.getJSONObject(i).getJSONArray("jsonArrayQty").length() > 1) {
                         ArrayList<String> listdata = new ArrayList<String>();
                         JSONArray jArray_ = jsonArray.getJSONObject(i).getJSONArray("jsonArrayQty");
                         if (jArray_ != null) {
                             for (int j = 0; j < jArray_.length(); j++) {
-                                listdata.add(jArray_.getString(i));
+//                                listdata.add(jArray_.getString(i));
 
                                 SKUMASTER tempSku = new SKUMASTER(temp.get(i).stockChkNo, temp.get(i).skuLOCNo, temp.get(i).skuCode, temp.get(i).skuName, temp.get(i).deviceNo,
                                         "", temp.get(i).mrp, "", temp.get(i).jsonArrayQty.get(j).toString(),
                                         "", temp.get(i).eanCode, temp.get(i).bay_shelf_no, temp.get(i).location_code, temp.get(i).jsonArrayQty);
-/*                                SKUMASTER tempSku = new SKUMASTER(jsonArray.getJSONObject(i).getString("stockChkNo"), jsonArray.getJSONObject(i).getString("skuLOCNo"), jsonArray.getJSONObject(i).getString("skuCode"), jsonArray.getJSONObject(i).getString("skuName"), jsonArray.getJSONObject(i).getString("deviceNo"),
+*//*                                SKUMASTER tempSku = new SKUMASTER(jsonArray.getJSONObject(i).getString("stockChkNo"), jsonArray.getJSONObject(i).getString("skuLOCNo"), jsonArray.getJSONObject(i).getString("skuCode"), jsonArray.getJSONObject(i).getString("skuName"), jsonArray.getJSONObject(i).getString("deviceNo"),
                                         "", jsonArray.getJSONObject(i).getString("mrp"), "", jsonArray.getJSONObject(i).getString("physicalQty"),
-                                        "", jsonArray.getJSONObject(i).getString("eanCode"), jsonArray.getJSONObject(i).getString("bay_shelf_no"), jsonArray.getJSONObject(i).getString("location_code"), listdata);*/
+                                        "", jsonArray.getJSONObject(i).getString("eanCode"), jsonArray.getJSONObject(i).getString("bay_shelf_no"), jsonArray.getJSONObject(i).getString("location_code"), listdata);*//*
                                 skumasterArrayList_.add(tempSku);
                                 Gson gson = new Gson();
                                 String jsonss = gson.toJson(skumasterArrayList_);
                                 Log.e("jsonss", jsonss);
                             }
                         }
-                    }
+                    }*/
 
 
                     tv_skuname.setText(jsonArray.getJSONObject(i).getString("skuName"));
