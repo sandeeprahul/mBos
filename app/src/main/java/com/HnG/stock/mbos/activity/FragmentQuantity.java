@@ -49,6 +49,7 @@ public class FragmentQuantity extends Fragment {
     RecyclerView rv_data;
     RelativeLayout shelf_no_rl;
     ListView shelf_no_lv;
+    String code ="";
     ArrayAdapter<String> arrayAdapter;
     List<String> shelf_no_list = new ArrayList<String>();
 
@@ -86,7 +87,7 @@ public class FragmentQuantity extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.quantity_item, container, false);
 
-        skucode_edt = (EditText) view.findViewById(R.id.skucode_edt);
+        skucode_edt = (EditText) view.findViewById(R.id.skueancode_edt);
         batchcode_edt = (EditText) view.findViewById(R.id.batchcode_edt);
         physicalqty_edt = (EditText) view.findViewById(R.id.physicalqty_edt);
         qty_edt = (EditText) view.findViewById(R.id.qty_edt);
@@ -110,6 +111,8 @@ public class FragmentQuantity extends Fragment {
             @Override
             public void onFocusChange(View view, boolean b) {
                 if (!b){
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(skucode_edt.getWindowToken(), 0);
                     findSkucode();
                 }
             }
@@ -123,7 +126,10 @@ public class FragmentQuantity extends Fragment {
                 } else if (batchcode_edt.getText().toString().equals("")) {
                     customToast("Please enter MRP");
                 } else {
-                    findDetails();
+                    if (!code.equals("")){
+                        Log.e("customToast",code);
+                        findDetails();
+                    }
                 }
             }
         });
@@ -237,29 +243,37 @@ public class FragmentQuantity extends Fragment {
 
 
     public void findSkucode() {
+        Log.e("findSkucode","findSkucode");
         try {
+            String json = getDetails();
             JSONArray jsonArray = new JSONArray(json);
-            ArrayList<SKUMASTER> temp = new ArrayList<>();
+//            ArrayList<SKUMASTER> temp = new ArrayList<>();
 
             boolean sku = true;
             for (int i = 0; i < jsonArray.length(); i++) {
 
 
-                temp.add(new SKUMASTER(jsonArray.getJSONObject(i)));
+//                temp.add(new SKUMASTER(jsonArray.getJSONObject(i)));
 
                 if (skucode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("eanCode"))) {
+
+
                     skucode_edt.setText(jsonArray.getJSONObject(i).getString("skuCode"));
+                    code = jsonArray.getJSONObject(i).getString("skuCode");
                     sku = false;
+                    Log.e("findSkucode",code);
                 } /*else {
                     customToast("No details found");
                 }*/
-
+/*
                 if (!sku){
                     if (skucode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("skuCode"))){
                         skucode_edt.setText(jsonArray.getJSONObject(i).getString("eanCode"));
+                        code = jsonArray.getJSONObject(i).getString("skuCode");
+                        Log.e("findSkucode",code);
 
                     }
-                }
+                }*/
 
             }
 

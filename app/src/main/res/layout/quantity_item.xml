@@ -39,7 +39,7 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/skucode_edt"
+                android:id="@+id/skueancode_edt"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
