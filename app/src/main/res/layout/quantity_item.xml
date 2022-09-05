@@ -192,6 +192,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_weight="1"
                     android:focusable="false"
+                    android:clickable="false"
                     android:spinnerMode="dialog"
                     android:visibility="visible" />
             </RelativeLayout>

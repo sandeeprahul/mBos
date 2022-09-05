@@ -128,7 +128,7 @@ public class FragmentQuantity extends Fragment {
                 } else {
                     if (!code.equals("")){
                         Log.e("customToast",code);
-                        findDetails();
+                        findDetails(0);
                     }
                 }
             }
@@ -164,7 +164,7 @@ public class FragmentQuantity extends Fragment {
         shelf_no_rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (shelf_no_list.size() != 0) {
+                if (shelf_no_list.size() > 1) {
                     shelf_no_lv.setVisibility(View.VISIBLE);
                 }
             }
@@ -176,6 +176,7 @@ public class FragmentQuantity extends Fragment {
                 Toast.makeText(getContext(), shelf_no_list.get(position), Toast.LENGTH_SHORT).show();
                 shelf_no_tv.setText(shelf_no_list.get(position));
                 shelf_no_lv.setVisibility(View.GONE);
+                findDetails(1);
             }
         });
 
@@ -283,7 +284,7 @@ public class FragmentQuantity extends Fragment {
         }
     }
 
-    public void findDetails() {
+    public void findDetails(int type) {
 
         skumasterArrayList_.clear();
         shelf_no_list.clear();
@@ -301,16 +302,19 @@ public class FragmentQuantity extends Fragment {
                 price = batchcode_edt.getText().toString() + ".00";
             }
 
-            for (int i = 0; i < jsonArray.length(); i++) {
+            if (type==0) {
+
+                for (int i = 0; i < jsonArray.length(); i++) {
 
 
-                temp.add(new SKUMASTER(jsonArray.getJSONObject(i)));
+                    temp.add(new SKUMASTER(jsonArray.getJSONObject(i)));
 
-                if (skucode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("skuCode")) && price.equals(jsonArray.getJSONObject(i).getString("mrp"))) {
-                    hasSku = String.valueOf(i);
+
+                    if (skucode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("skuCode")) && price.equals(jsonArray.getJSONObject(i).getString("mrp"))) {
+//                        hasSku = String.valueOf(i);
 //                    Integer.parseInt(jsonArray.getJSONObject(i).getString("bay_shelf_no"))>1
 
-                    shelf_no_list.add(jsonArray.getJSONObject(i).getString("bay_shelf_no"));
+                        shelf_no_list.add(jsonArray.getJSONObject(i).getString("bay_shelf_no"));
 
                     /*if (jsonArray.getJSONObject(i).getJSONArray("jsonArrayQty").length() > 1) {
                         ArrayList<String> listdata = new ArrayList<String>();
@@ -334,26 +338,60 @@ public class FragmentQuantity extends Fragment {
                     }*/
 
 
-                    tv_skuname.setText(jsonArray.getJSONObject(i).getString("skuName"));
-                    qty_edt.setText(jsonArray.getJSONObject(i).getString("physicalQty"));
-                } /*else {
+                        tv_skuname.setText(jsonArray.getJSONObject(i).getString("skuName"));
+//                    qty_edt.setText(jsonArray.getJSONObject(i).getString("physicalQty"));
+                    } /*else {
                     customToast("No details found");
                 }*/
 
 
+                }
+            }
+            else if(type==1){
+                for (int i = 0; i < jsonArray.length(); i++) {
+
+
+                    temp.add(new SKUMASTER(jsonArray.getJSONObject(i)));
+
+
+                    if (skucode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("skuCode")) && price.equals(jsonArray.getJSONObject(i).getString("mrp"))&&shelf_no_tv.getText().toString().equals(jsonArray.getJSONObject(i).getString("bay_shelf_no"))) {
+                        hasSku = String.valueOf(i);
+//                    Integer.parseInt(jsonArray.getJSONObject(i).getString("bay_shelf_no"))>1
+
+//                        shelf_no_list.add(jsonArray.getJSONObject(i).getString("bay_shelf_no"));
+
+                    /*if (jsonArray.getJSONObject(i).getJSONArray("jsonArrayQty").length() > 1) {
+                        ArrayList<String> listdata = new ArrayList<String>();
+                        JSONArray jArray_ = jsonArray.getJSONObject(i).getJSONArray("jsonArrayQty");
+                        if (jArray_ != null) {
+                            for (int j = 0; j < jArray_.length(); j++) {
+//                                listdata.add(jArray_.getString(i));
+
+                                SKUMASTER tempSku = new SKUMASTER(temp.get(i).stockChkNo, temp.get(i).skuLOCNo, temp.get(i).skuCode, temp.get(i).skuName, temp.get(i).deviceNo,
+                                        "", temp.get(i).mrp, "", temp.get(i).jsonArrayQty.get(j).toString(),
+                                        "", temp.get(i).eanCode, temp.get(i).bay_shelf_no, temp.get(i).location_code, temp.get(i).jsonArrayQty);
+*//*                                SKUMASTER tempSku = new SKUMASTER(jsonArray.getJSONObject(i).getString("stockChkNo"), jsonArray.getJSONObject(i).getString("skuLOCNo"), jsonArray.getJSONObject(i).getString("skuCode"), jsonArray.getJSONObject(i).getString("skuName"), jsonArray.getJSONObject(i).getString("deviceNo"),
+                                        "", jsonArray.getJSONObject(i).getString("mrp"), "", jsonArray.getJSONObject(i).getString("physicalQty"),
+                                        "", jsonArray.getJSONObject(i).getString("eanCode"), jsonArray.getJSONObject(i).getString("bay_shelf_no"), jsonArray.getJSONObject(i).getString("location_code"), listdata);*//*
+                                skumasterArrayList_.add(tempSku);
+                                Gson gson = new Gson();
+                                String jsonss = gson.toJson(skumasterArrayList_);
+                                Log.e("jsonss", jsonss);
+                            }
+                        }
+                    }*/
+
+
+//                        tv_skuname.setText(jsonArray.getJSONObject(i).getString("skuName"));
+                    qty_edt.setText(jsonArray.getJSONObject(i).getString("physicalQty"));
+                    } /*else {
+                    customToast("No details found");
+                }*/
+
+
+                }
             }
 
-
-         /*   if (shelf_no_list.size() == 0) {
-                customToast("No details found!");
-                try {
-                    final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-
-            } else*/
 
             if (shelf_no_list.size() == 1) {
                 shelf_no_tv.setText(shelf_no_list.get(0));

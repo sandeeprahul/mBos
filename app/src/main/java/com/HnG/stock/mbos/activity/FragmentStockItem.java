@@ -747,7 +747,7 @@ public class FragmentStockItem extends Fragment {
             progressDialog = ProgressDialog.show(getActivity(), "",
                     "Please wait..", true);
             progressDialog.show();
-            arrayAdapterrStock.notifyDataSetChanged();
+//            arrayAdapterrStock.notifyDataSetChanged();
             location_code_edt.setEnabled(false);
             storestockcheck_edt.setEnabled(false);
             device_no_edt.setEnabled(false);
@@ -1111,38 +1111,6 @@ public class FragmentStockItem extends Fragment {
 
     }
 
-    public void getTotalphyqty() {
-
-        String skuLocalData = getDetails();
-
-        if (skuLocalData != null) {
-            try {
-                JSONArray jsonArray = new JSONArray(skuLocalData);
-                totalsku_tv.setText("Total SKU's: " + jsonArray.length());
-                Log.e("totalsku_tv", "" + jsonArray);
-
-                int totphyqty = 0;
-                for (int i = 0; i < jsonArray.length(); i++) {
-
-                    totphyqty += Integer.parseInt(jsonArray.getJSONObject(i).getString("physicalQty"));
-
-                }
-                totalphyqty_tv.setText("Total Phy Qty: " + totphyqty);
-
-                Log.e("totphysku", "" + jsonArray.length() + "," + totphyqty);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-        } else {
-            totalsku_tv.setText("Total SKU's: 0");
-            totalphyqty_tv.setText("Total Phy Qty: 0");
-
-        }
-
-
-    }
 
 
     public String getDetails() {
@@ -1157,18 +1125,6 @@ public class FragmentStockItem extends Fragment {
 
     }
 
-    public String getDetails_temp() {
-        ArrayList<Object> playerObjects = tinyDB.getListObject("stock", SKUMASTER.class);
-//        ArrayList<Object> playerObjects = tinyDB.getListObject("stockList", SKUMASTER.class);
-        skumasterArrayList = new ArrayList<SKUMASTER>();
-
-        for (Object objs : playerObjects) {
-            skumasterArrayList.add((SKUMASTER) objs);
-        }
-        Gson gson = new Gson();
-
-        return gson.toJson(skumasterArrayList);
-    }
 
 
     private void uploadDetails(String storeip) {
@@ -1431,26 +1387,7 @@ public class FragmentStockItem extends Fragment {
     }
 
 
-    public void searchEan() {
-//        stockData.clear();
-//        stockno_lv.clearChoices();
-        String sku = getDetails();
 
-        try {
-            JSONArray jsonArray = new JSONArray(sku);
-//            Log.e("JALastsku", jsonArray.getJSONObject(0).toString());
-            if (jsonArray.length() != 0) {
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    if (jsonArray.getJSONObject(i).getString("eanCode").equals(eansku_edt.getText().toString())) {
-                        fillSearchData(i);
-                    }
-                }
-//                storedata_popup_ll.setVisibility(View.VISIBLE);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
 
     public void showAlertDialog(final String message) {
@@ -1712,39 +1649,3 @@ public class FragmentStockItem extends Fragment {
 //all st data in this de -> popup alert deletion
 //upload tab
 //compress
-
-   /*       try {
-
-                JSONArray jsonArray = new JSONArray(lastSavedSku);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    skumasters.add(new SKUMASTER(jsonArray.getJSONObject(i)));
-                }
-
-            } catch (JSONException e) {
-                progressDialog.dismiss();
-
-                e.printStackTrace();
-            }
-            skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
-                    "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
-                    "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString()));
-*/
-       /*     Log.e("SavedDataLength", "" + skumasters.size());
-
-            Gson gson = new Gson();
-            String json = gson.toJson(skumasters);
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("stock", "");
-            editor.apply();
-
-
-     */
-            /*       ArrayList<String> objStrings = new ArrayList<String>();
-            for (Object obj : skumasters) {
-                objStrings.add(gson.toJson(obj));
-            }
-            String[] myStringList = objStrings.toArray(new String[objStrings.size()]);*//*
-
-            editor.putString("stock", json);
-            editor.apply();*/
