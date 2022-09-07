@@ -116,13 +116,6 @@ public class FragmentStockItem extends Fragment {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-//        new getpreviousDetails().execute();
-//        new getLocalEanMaster().execute();
-//        new getLocalSkuMaster().execute();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -482,9 +475,14 @@ public class FragmentStockItem extends Fragment {
         storedata_popup_ll.setVisibility(View.GONE);
         stockdetails_ll.setVisibility(View.GONE);
         stockcheck_ll.setVisibility(View.VISIBLE);
+        location_code_edt.getText().clear();
+        storestockcheck_edt.getText().clear();
+        device_no_edt.getText().clear();
         location_code_edt.setEnabled(true);
         storestockcheck_edt.setEnabled(true);
         device_no_edt.setEnabled(true);
+        totalsku_tv.setText("Total SKU's: 0");
+        totalphyqty_tv.setText("Total Phy Qty: 0");
 
 //        new getpreviousDetails().execute();
 //        getpreviousDetails();
@@ -748,7 +746,8 @@ public class FragmentStockItem extends Fragment {
                 e.printStackTrace();
             }
             progressDialog.dismiss();
-        } else {
+        }
+        else {
             progressDialog.dismiss();
 //            getStockDetails(storeip);
             Log.e("findStockNoDetails", "getStockDetails");
@@ -860,7 +859,6 @@ public class FragmentStockItem extends Fragment {
         @Override
         protected void onProgressUpdate(String... values) {
 //            progressDialog.show();
-
             super.onProgressUpdate(values);
 
         }
@@ -1186,6 +1184,8 @@ public class FragmentStockItem extends Fragment {
 
                 }
                 totalphyqty_tv.setText("Total Phy Qty: " + totphyqty);
+                previousSkLD_tv.setText("Stock Check no: " + jsonArray.getJSONObject(0).getString("stockChkNo") + ", Loc: " +jsonArray.getJSONObject(0).getString("location_code")+ ", DeviceId: " +jsonArray.getJSONObject(0).getString("deviceNo"));
+
 
                 Log.e("totphysku", "" + jsonArray.length() + "," + totphyqty);
             } catch (JSONException e) {
@@ -1325,10 +1325,10 @@ public class FragmentStockItem extends Fragment {
                     }
                 }
             };
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+   /*         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
                     6000,
                     3,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));*/
 
             requestQueue.add(stringRequest);
 
@@ -1336,7 +1336,7 @@ public class FragmentStockItem extends Fragment {
             if (progressDialog != null && progressDialog.isShowing())
                 progressDialog.dismiss();
             ex.printStackTrace();
-            Log.e("userLogin", ex.getMessage());
+            Log.e("upload", ex.getMessage());
         }
     }
 
@@ -1496,7 +1496,11 @@ public class FragmentStockItem extends Fragment {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         if (!prefs.getString("stockNo", "").equals("")&&!prefs.getString("DeviceId", "").equals("")&&!prefs.getString("Location", "").equals("")){
             previousSkLD_tv.setText("Stock Check no: " + prefs.getString("stockNo", "") + ", Loc: " + prefs.getString("Location", "") + ", DeviceId: " + prefs.getString("DeviceId", ""));
+            storestockcheck_edt.setText( prefs.getString("stockNo", ""));
+            location_code_edt.setText( prefs.getString("Location", ""));
+            device_no_edt.setText( prefs.getString("DeviceId", ""));
         }
+
     }
 
 
@@ -1699,7 +1703,6 @@ public class FragmentStockItem extends Fragment {
             }*/
 
 
-            progressDialog.dismiss();
             if (prices.size() == 0) {
                 customToast("No details found!");
                 try {
@@ -1727,6 +1730,7 @@ public class FragmentStockItem extends Fragment {
                 prices_lv.setVisibility(View.VISIBLE);
             }
             arrayAdapter.notifyDataSetChanged();
+            progressDialog.dismiss();
 
 
         } catch (JSONException e) {
