@@ -174,7 +174,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/text_box_style"
-                android:focusable="false"
                 android:padding="5dp">
 
                 <TextView
@@ -192,7 +191,6 @@
                     android:layout_alignParentEnd="true"
                     android:layout_weight="1"
                     android:focusable="false"
-                    android:clickable="false"
                     android:spinnerMode="dialog"
                     android:visibility="visible" />
             </RelativeLayout>

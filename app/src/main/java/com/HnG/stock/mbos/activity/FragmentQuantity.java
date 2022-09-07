@@ -49,7 +49,7 @@ public class FragmentQuantity extends Fragment {
     RecyclerView rv_data;
     RelativeLayout shelf_no_rl;
     ListView shelf_no_lv;
-    String code ="";
+    String code = "";
     ArrayAdapter<String> arrayAdapter;
     List<String> shelf_no_list = new ArrayList<String>();
 
@@ -110,9 +110,9 @@ public class FragmentQuantity extends Fragment {
         skucode_edt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if (!b){
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(skucode_edt.getWindowToken(), 0);
+                if (!b) {
+//                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                    imm.hideSoftInputFromWindow(skucode_edt.getWindowToken(), 0);
                     findSkucode();
                 }
             }
@@ -126,8 +126,8 @@ public class FragmentQuantity extends Fragment {
                 } else if (batchcode_edt.getText().toString().equals("")) {
                     customToast("Please enter MRP");
                 } else {
-                    if (!code.equals("")){
-                        Log.e("customToast",code);
+                    if (!code.equals("")) {
+                        Log.e("customToast", code);
                         findDetails(0);
                     }
                 }
@@ -151,8 +151,8 @@ public class FragmentQuantity extends Fragment {
                 } else if (shelfno_edt.getText().toString().equals("Bay/Shelf No")) {
                     customToast("Please select Bay/Shelf No");
                 } else if (physicalqty_edt.getText().toString().equals("")) {
-                    customToast("Please enter Updated Quantity");
-                } else if (physicalqty_edt.getText().toString().equals("0")) {
+                    customToast("Please enter Updated Qty");
+                } else if (physicalqty_edt.getText().toString().equals("0")||physicalqty_edt.getText().toString().equals("00")||physicalqty_edt.getText().toString().equals("000")) {
                     customToast("Please enter Updated qty");
 
                 } else {
@@ -164,7 +164,9 @@ public class FragmentQuantity extends Fragment {
         shelf_no_rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (shelf_no_list.size() > 1) {
+                if (shelf_no_list.size() == 1) {
+                    shelf_no_lv.setVisibility(View.VISIBLE);
+                } else if (shelf_no_list.size() > 1) {
                     shelf_no_lv.setVisibility(View.VISIBLE);
                 }
             }
@@ -177,6 +179,13 @@ public class FragmentQuantity extends Fragment {
                 shelf_no_tv.setText(shelf_no_list.get(position));
                 shelf_no_lv.setVisibility(View.GONE);
                 findDetails(1);
+            }
+        });
+
+        shelf_no_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                shelf_no_rl.performClick();
             }
         });
 
@@ -244,7 +253,7 @@ public class FragmentQuantity extends Fragment {
 
 
     public void findSkucode() {
-        Log.e("findSkucode","findSkucode");
+        Log.e("findSkucode", "findSkucode");
         try {
             String json = getDetails();
             JSONArray jsonArray = new JSONArray(json);
@@ -262,7 +271,7 @@ public class FragmentQuantity extends Fragment {
                     skucode_edt.setText(jsonArray.getJSONObject(i).getString("skuCode"));
                     code = jsonArray.getJSONObject(i).getString("skuCode");
                     sku = false;
-                    Log.e("findSkucode",code);
+                    Log.e("findSkucode", code);
                 } /*else {
                     customToast("No details found");
                 }*/
@@ -287,7 +296,9 @@ public class FragmentQuantity extends Fragment {
     public void findDetails(int type) {
 
         skumasterArrayList_.clear();
-        shelf_no_list.clear();
+
+
+        String phyTemp = "";
 
         Log.e("findDetails", skucode_edt.getText().toString() + ", " + batchcode_edt.getText().toString());
         String json = getDetails();
@@ -302,9 +313,11 @@ public class FragmentQuantity extends Fragment {
                 price = batchcode_edt.getText().toString() + ".00";
             }
 
-            if (type==0) {
-
+            if (type == 0) {
+                shelf_no_list.clear();
                 for (int i = 0; i < jsonArray.length(); i++) {
+                    Log.e("findDetailsArray", jsonArray.toString());
+                    hasSku = String.valueOf(i);
 
 
                     temp.add(new SKUMASTER(jsonArray.getJSONObject(i)));
@@ -340,21 +353,53 @@ public class FragmentQuantity extends Fragment {
 
                         tv_skuname.setText(jsonArray.getJSONObject(i).getString("skuName"));
 //                    qty_edt.setText(jsonArray.getJSONObject(i).getString("physicalQty"));
+                        phyTemp = jsonArray.getJSONObject(i).getString("physicalQty");
                     } /*else {
                     customToast("No details found");
                 }*/
 
 
                 }
-            }
-            else if(type==1){
+
+                if (shelf_no_list.size() == 1) {
+
+                    shelf_no_tv.setText(shelf_no_list.get(0));
+                    qty_edt.setText(phyTemp);
+                    skucode_edt.setEnabled(false);
+                    physicalqty_edt.requestFocus();
+
+                } else if (shelf_no_list.size() > 1) {
+                    skucode_edt.setEnabled(false);
+
+//                shelf_no_list.size();
+                    try {
+                        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                    shelf_no_lv.setVisibility(View.VISIBLE);
+                } else {
+                    customToast("No details found");
+
+                }
+
+
+                arrayAdapter.notifyDataSetChanged();
+                skumasterArrayList = temp;
+
+                quantityHisAdapter = new QuantityHisAdapter(getActivity(), skumasterArrayList_);
+                quantityHisAdapter.notifyDataSetChanged();
+                rv_data.setAdapter(quantityHisAdapter);
+            } else if (type == 1) {
                 for (int i = 0; i < jsonArray.length(); i++) {
 
+                    Log.e("findDetailsArray", jsonArray.toString());
 
                     temp.add(new SKUMASTER(jsonArray.getJSONObject(i)));
 
 
-                    if (skucode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("skuCode")) && price.equals(jsonArray.getJSONObject(i).getString("mrp"))&&shelf_no_tv.getText().toString().equals(jsonArray.getJSONObject(i).getString("bay_shelf_no"))) {
+                    if (skucode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("skuCode")) && price.equals(jsonArray.getJSONObject(i).getString("mrp")) && shelf_no_tv.getText().toString().equals(jsonArray.getJSONObject(i).getString("bay_shelf_no"))) {
                         hasSku = String.valueOf(i);
 //                    Integer.parseInt(jsonArray.getJSONObject(i).getString("bay_shelf_no"))>1
 
@@ -383,7 +428,11 @@ public class FragmentQuantity extends Fragment {
 
 
 //                        tv_skuname.setText(jsonArray.getJSONObject(i).getString("skuName"));
-                    qty_edt.setText(jsonArray.getJSONObject(i).getString("physicalQty"));
+                        qty_edt.setText(jsonArray.getJSONObject(i).getString("physicalQty"));
+                        phyTemp = jsonArray.getJSONObject(i).getString("physicalQty");
+
+                        physicalqty_edt.requestFocus();
+
                     } /*else {
                     customToast("No details found");
                 }*/
@@ -391,28 +440,6 @@ public class FragmentQuantity extends Fragment {
 
                 }
             }
-
-
-            if (shelf_no_list.size() == 1) {
-                shelf_no_tv.setText(shelf_no_list.get(0));
-            } else if (shelf_no_list.size() > 1) {
-//                shelf_no_list.size();
-                try {
-                    final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-                shelf_no_lv.setVisibility(View.VISIBLE);
-            }
-
-
-            arrayAdapter.notifyDataSetChanged();
-            skumasterArrayList = temp;
-
-            quantityHisAdapter = new QuantityHisAdapter(getActivity(), skumasterArrayList_);
-            quantityHisAdapter.notifyDataSetChanged();
-            rv_data.setAdapter(quantityHisAdapter);
 
 
         } catch (JSONException e) {
@@ -445,7 +472,6 @@ public class FragmentQuantity extends Fragment {
     }
 
     public void updatePhyQty() {
-
 
 
         ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "",
@@ -537,9 +563,10 @@ public class FragmentQuantity extends Fragment {
         tv_skuname.setText("");
         physicalqty_edt.getText().clear();
         qty_edt.getText().clear();
+        skucode_edt.setEnabled(true);
         skucode_edt.requestFocus();
         shelf_no_tv.setText("Bay/Shelf No: ");
-
+        shelf_no_lv.setVisibility(View.GONE);
     }
 
 

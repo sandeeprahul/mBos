@@ -281,7 +281,7 @@ public class FragmentStockItem extends Fragment {
 
                 } else {
                     if (physicalqty_edt.getText().length() != 0) {
-                        if (physicalqty_edt.getText().toString().equals("0")) {
+                        if (physicalqty_edt.getText().toString().equals("0")||physicalqty_edt.getText().toString().equals("00")||physicalqty_edt.getText().toString().equals("000")) {
                             customToast("Please enter valid quantity");
 
                         } else if (Integer.parseInt(physicalqty_edt.getText().toString()) > 999) {
@@ -359,7 +359,7 @@ public class FragmentStockItem extends Fragment {
         lastsku_ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setLastSkuData();
+//                setLastSkuData();
             }
         });
 
@@ -367,7 +367,7 @@ public class FragmentStockItem extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 //                getLastsku();
-                setLastSkuData();
+//                setLastSkuData();
             }
         });
 
@@ -480,11 +480,14 @@ public class FragmentStockItem extends Fragment {
         editor.apply();
         showAlertDialog("Previous data cleared");
         storedata_popup_ll.setVisibility(View.GONE);
+        stockdetails_ll.setVisibility(View.GONE);
+        stockcheck_ll.setVisibility(View.VISIBLE);
         location_code_edt.setEnabled(true);
         storestockcheck_edt.setEnabled(true);
         device_no_edt.setEnabled(true);
 
-        new getpreviousDetails().execute();
+//        new getpreviousDetails().execute();
+//        getpreviousDetails();
     }
 
 
@@ -675,6 +678,7 @@ public class FragmentStockItem extends Fragment {
         MRP = "";
         REF_BATCH = "";
         MRP = "";
+        prices_lv.setVisibility(View.GONE);
 
       /*  try {
             final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -683,10 +687,87 @@ public class FragmentStockItem extends Fragment {
             e.printStackTrace();
         }*/
 
+        eansku_edt.setEnabled(true);
+
         eansku_edt.requestFocus();
 
 //        lastsku_ll.setVisibility(View.GONE);
 
+
+    }
+
+
+    public void getpreviousDetails_temp(){
+        location_code_edt.setEnabled(false);
+        storestockcheck_edt.setEnabled(false);
+        device_no_edt.setEnabled(false);
+
+        progressDialog = ProgressDialog.show(getActivity(), "",
+                "Please wait..", true);
+        progressDialog.show();
+
+
+        String hasJson = "0";
+//            findStockNoDetails();
+        stockData.clear();
+
+        stockno_lv.clearChoices();
+        if (getDetails() != null && !getDetails().equals("")) {
+
+            String sku = getDetails();
+            try {
+                JSONArray jsonArray = new JSONArray(sku);
+                Log.e("JALastsku", jsonArray.getJSONObject(0).toString());
+                if (jsonArray.length() != 0) {
+                    stockData.add("StockCheck no: " +
+                            jsonArray.getJSONObject(0).getString("stockChkNo") + ",Loc: " + jsonArray.getJSONObject(0).getString("location_code") + ",DeviceId: " + jsonArray.getJSONObject(0).getString("deviceNo"));
+
+                        /*for (int i = 0; i < jsonArray.length(); i++) {
+                            stockData.add("StockCheck no: " +
+                                    jsonArray.getJSONObject(i).getString("stockChkNo") + ",Loc code: " + jsonArray.getJSONObject(i).getString("location_code") + ",DeviceId: " + jsonArray.getJSONObject(i).getString("deviceNo"));
+                        }*/
+
+//                    storedata_popup_ll.setVisibility(View.VISIBLE);
+//                    stockno_lv.setVisibility(View.VISIBLE);
+
+                }
+                arrayAdapterrStock.notifyDataSetChanged();
+
+
+                if (stockData.size() > 0) {
+//                        storedata_popup_ll.setVisibility(View.VISIBLE);
+                    hasJson = "1";
+
+//                    stockno_lv.setVisibility(View.VISIBLE);
+                } /*else {
+                    Log.e("findStockNoDetails", "stockData.size()<0");
+
+                }*/
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            progressDialog.dismiss();
+        } else {
+            progressDialog.dismiss();
+//            getStockDetails(storeip);
+            Log.e("findStockNoDetails", "getStockDetails");
+
+        }
+
+        if (hasJson.equals("1")) {
+            storedata_popup_ll.setVisibility(View.VISIBLE);
+
+        } else {
+            location_code_edt.setEnabled(true);
+            storestockcheck_edt.setEnabled(true);
+            device_no_edt.setEnabled(true);
+
+        }
+//            getTotalphyqty();
+        getTotalphyqty_temp();
+
+//        progressDialog.dismiss();
 
     }
 
@@ -719,6 +800,8 @@ public class FragmentStockItem extends Fragment {
 //                    stockno_lv.setVisibility(View.VISIBLE);
 
                     }
+                                arrayAdapterrStock.notifyDataSetChanged();
+
 
                     if (stockData.size() > 0) {
 //                        storedata_popup_ll.setVisibility(View.VISIBLE);
@@ -766,6 +849,7 @@ public class FragmentStockItem extends Fragment {
                 device_no_edt.setEnabled(true);
 
             }
+            getStockCheckNum();
 //            getTotalphyqty();
             getTotalphyqty_temp();
 
@@ -811,6 +895,12 @@ public class FragmentStockItem extends Fragment {
         protected void onPostExecute(String s) {
             localEanData = s;
 
+            if (!s.equals("")) {
+//                storedata_popup_ll.setVisibility(View.VISIBLE);
+                stockcheck_ll.setVisibility(View.GONE);
+                stockdetails_ll.setVisibility(View.VISIBLE);
+
+            }
 //            getTotalphyqty_temp();
 //            getTotalphyqty();
 
@@ -852,6 +942,7 @@ public class FragmentStockItem extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             localSkuData = s;
+
 
             super.onPostExecute(s);
         }
@@ -1361,6 +1452,7 @@ public class FragmentStockItem extends Fragment {
                                 storestockcheck_edt.setEnabled(false);
                                 device_no_edt.setEnabled(false);
 //                                findStockNoDetails();
+                                saveStockCheckNum();
                                 new getLocalEanMaster().execute();
                                 new getLocalSkuMaster().execute();
                             } else {
@@ -1386,8 +1478,26 @@ public class FragmentStockItem extends Fragment {
         );
     }
 
+    public void saveStockCheckNum() {
+        String stockno = storestockcheck_edt.getText().toString();
+        String locationCode = location_code_edt.getText().toString();
+        String deviceID = device_no_edt.getText().toString();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("stockNo", stockno);
+        editor.putString("DeviceId", locationCode);
+        editor.putString("Location", deviceID);
+        editor.apply();
+        getStockCheckNum();
 
+    }
 
+    public void getStockCheckNum(){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        if (!prefs.getString("stockNo", "").equals("")&&!prefs.getString("DeviceId", "").equals("")&&!prefs.getString("Location", "").equals("")){
+            previousSkLD_tv.setText("Stock Check no: " + prefs.getString("stockNo", "") + ", Loc: " + prefs.getString("Location", "") + ", DeviceId: " + prefs.getString("DeviceId", ""));
+        }
+    }
 
 
     public void showAlertDialog(final String message) {
@@ -1600,10 +1710,13 @@ public class FragmentStockItem extends Fragment {
                 }
 
             } else if (prices.size() == 1) {
+                eansku_edt.setEnabled(false);
                 price_tv.setText(prices.get(0));
 //                physicalqty_edt.requestFocus();
 //                physicalqty_edt.requestFocus();
             } else {
+                eansku_edt.setEnabled(false);
+
                 prices.size();
                 try {
                     final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
