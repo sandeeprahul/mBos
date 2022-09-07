@@ -1485,8 +1485,8 @@ public class FragmentStockItem extends Fragment {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("stockNo", stockno);
-        editor.putString("DeviceId", locationCode);
-        editor.putString("Location", deviceID);
+        editor.putString("DeviceId", deviceID);
+        editor.putString("Location", locationCode);
         editor.apply();
         getStockCheckNum();
 
