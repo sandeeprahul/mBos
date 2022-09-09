@@ -1288,6 +1288,7 @@ public class FragmentStockItem extends Fragment {
                         }
                         if (progressDialog != null && progressDialog.isShowing())
                             progressDialog.dismiss();
+                        upload_btn.setEnabled(true);
 
                     } catch (Exception e) {
 
@@ -1296,6 +1297,7 @@ public class FragmentStockItem extends Fragment {
                         if (progressDialog != null && progressDialog.isShowing())
                             progressDialog.dismiss();
                         showAlertDialog(e.toString());
+                        upload_btn.setEnabled(true);
 
                     }
                 }
@@ -1307,6 +1309,7 @@ public class FragmentStockItem extends Fragment {
 //                    volleyError(error);
                     Log.e("onErrorResponse", error.toString());
                     showAlertDialog(error.toString());
+                    upload_btn.setEnabled(true);
 
                 }
             }) {
@@ -1336,6 +1339,8 @@ public class FragmentStockItem extends Fragment {
             if (progressDialog != null && progressDialog.isShowing())
                 progressDialog.dismiss();
             ex.printStackTrace();
+            upload_btn.setEnabled(true);
+
             Log.e("upload", ex.getMessage());
         }
     }
@@ -1637,6 +1642,7 @@ public class FragmentStockItem extends Fragment {
                         .setPositiveButton("Upload", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.dismiss();
+                                upload_btn.setEnabled(false);
                                 uploadDetails(storeip);
 
 
