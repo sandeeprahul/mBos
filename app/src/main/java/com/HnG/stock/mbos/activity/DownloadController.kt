@@ -1,3 +1,4 @@
+/*
 package com.HnG.stock.mbos.activity
 
 import android.app.DownloadManager
@@ -94,4 +95,4 @@ class DownloadController(private val context: Context, private val url: String) 
         }
         context.registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
     }
-}
+}*/

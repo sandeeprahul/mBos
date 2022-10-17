@@ -99,6 +99,8 @@ public class FragmentStockItem extends Fragment {
     ArrayAdapter<String> arrayAdapterLastSku;
     ArrayAdapter<String> arrayAdapter;
     TinyDB tinyDB;
+    SharedPreferences prefs;
+
 
     public static FragmentStockItem newInstance(int someInt) {
         FragmentStockItem myFragment = new FragmentStockItem();
@@ -122,6 +124,8 @@ public class FragmentStockItem extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.stocktake_item, container, false);
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         tinyDB = new TinyDB(getContext());
         prices_lv = (ListView) view.findViewById(R.id.prices_lv);
@@ -189,6 +193,13 @@ public class FragmentStockItem extends Fragment {
 
 //        prices.add("Price");
 
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        if (prefs.getString("uploaded", "").equals("1")) {
+            Log.e("uploaded", prefs.getString("uploaded", ""));
+            save_btn.setEnabled(false);
+        }
+
+
         UserDB userDb = new UserDB(getActivity());
         userDb.open();
         HashMap<String, String> dataexist = userDb.getUserIP("");
@@ -208,9 +219,13 @@ public class FragmentStockItem extends Fragment {
             }
         }, 2000);*/
 
-        new getpreviousDetails().execute();
-        new getLocalEanMaster().execute();
-        new getLocalSkuMaster().execute();
+
+        if (prefs.getString("stock", "") != null && !prefs.getString("stock", "").equals("")) {
+            new getpreviousDetails().execute();
+            new getLocalEanMaster().execute();
+            new getLocalSkuMaster().execute();
+
+        }
 
 
         storedata_popup_ll.setOnClickListener(new View.OnClickListener() {
@@ -274,7 +289,7 @@ public class FragmentStockItem extends Fragment {
 
                 } else {
                     if (physicalqty_edt.getText().length() != 0) {
-                        if (physicalqty_edt.getText().toString().equals("0")||physicalqty_edt.getText().toString().equals("00")||physicalqty_edt.getText().toString().equals("000")) {
+                        if (physicalqty_edt.getText().toString().equals("0") || physicalqty_edt.getText().toString().equals("00") || physicalqty_edt.getText().toString().equals("000")) {
                             customToast("Please enter valid quantity");
 
                         } else if (Integer.parseInt(physicalqty_edt.getText().toString()) > 999) {
@@ -330,7 +345,11 @@ public class FragmentStockItem extends Fragment {
                     Toast.makeText(getActivity(), "Please wait..", Toast.LENGTH_SHORT).show();
 
 //                    findStockNoDetails();
-                    getStockDetails(storeip);
+//                    getStockDetails(storeip);
+
+                    getStatusValidation(storeip);
+//                    getStockDetails(storeip);
+
                     String stockno = storestockcheck_edt.getText().toString();
                     String locationCode = location_code_edt.getText().toString();
                     String deviceID = device_no_edt.getText().toString();
@@ -470,6 +489,7 @@ public class FragmentStockItem extends Fragment {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 //        editor.putString("stock", "");
         editor.putString("stock", "");
+        editor.putString("uploaded", "0");
         editor.apply();
         showAlertDialog("Previous data cleared");
         storedata_popup_ll.setVisibility(View.GONE);
@@ -695,7 +715,7 @@ public class FragmentStockItem extends Fragment {
     }
 
 
-    public void getpreviousDetails_temp(){
+    public void getpreviousDetails_temp() {
         location_code_edt.setEnabled(false);
         storestockcheck_edt.setEnabled(false);
         device_no_edt.setEnabled(false);
@@ -746,8 +766,7 @@ public class FragmentStockItem extends Fragment {
                 e.printStackTrace();
             }
             progressDialog.dismiss();
-        }
-        else {
+        } else {
             progressDialog.dismiss();
 //            getStockDetails(storeip);
             Log.e("findStockNoDetails", "getStockDetails");
@@ -799,7 +818,7 @@ public class FragmentStockItem extends Fragment {
 //                    stockno_lv.setVisibility(View.VISIBLE);
 
                     }
-                                arrayAdapterrStock.notifyDataSetChanged();
+                    arrayAdapterrStock.notifyDataSetChanged();
 
 
                     if (stockData.size() > 0) {
@@ -869,7 +888,7 @@ public class FragmentStockItem extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
 
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String value = "";
             if (prefs.getString("eanmaster", "") != null || !prefs.getString("eanmaster", "").equals("")) {
                 value = prefs.getString("eanmaster", "");
@@ -918,7 +937,7 @@ public class FragmentStockItem extends Fragment {
         protected String doInBackground(String... strings) {
 
 
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String value = "";
             if (prefs.getString("skumaster", "") != null || !prefs.getString("skumaster", "").equals("")) {
                 value = prefs.getString("skumaster", "");
@@ -970,10 +989,9 @@ public class FragmentStockItem extends Fragment {
             jsonArray.put(qtyList);
 
 
-
             skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
                     "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
-                    "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString(),qtyList));
+                    "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString(), qtyList));
 
             Gson gson = new Gson();
             String json = gson.toJson(skumasters);
@@ -985,10 +1003,9 @@ public class FragmentStockItem extends Fragment {
             editor.putString("stock", json);
             editor.apply();
 //            progressDialog.dismiss();
-            setLastSKu(shelfno_edt.getText().toString(),eansku_edt.getText().toString(),price_tv.getText().toString(),physicalqty_edt.getText().toString());
+            setLastSKu(shelfno_edt.getText().toString(), eansku_edt.getText().toString(), price_tv.getText().toString(), physicalqty_edt.getText().toString());
 
-        }
-        else {
+        } else {
 
             try {
                 JSONArray jsonArray = new JSONArray(lastSavedSku);
@@ -1011,10 +1028,9 @@ public class FragmentStockItem extends Fragment {
                     qtyList.add(physicalqty_edt.getText().toString());
 
 
-
                     skumasters.add(new SKUMASTER(storestockcheck_edt.getText().toString(), SKU_LOC_NO, SKU_CODE, SKU_NAME, device_no_edt.getText().toString(),
                             "", price_tv.getText().toString(), "", physicalqty_edt.getText().toString(),
-                            "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString(),qtyList));
+                            "", EAN_CODE, shelfno_edt.getText().toString(), location_code_edt.getText().toString(), qtyList));
 
 //                    }
                     Gson gson = new Gson();
@@ -1028,7 +1044,7 @@ public class FragmentStockItem extends Fragment {
                     editor.putString("stock", json);
                     editor.apply();
 
-                    setLastSKu(shelfno_edt.getText().toString(),eansku_edt.getText().toString(),price_tv.getText().toString(),physicalqty_edt.getText().toString());
+                    setLastSKu(shelfno_edt.getText().toString(), eansku_edt.getText().toString(), price_tv.getText().toString(), physicalqty_edt.getText().toString());
 
                 } else {
 
@@ -1049,23 +1065,21 @@ public class FragmentStockItem extends Fragment {
                     String sPhyqty = String.valueOf(phyqty);
 
 
-
                     ArrayList<String> listdata = new ArrayList<String>();
-                    JSONArray jArray =  jsonArray.getJSONObject(position).getJSONArray("jsonArrayQty");
+                    JSONArray jArray = jsonArray.getJSONObject(position).getJSONArray("jsonArrayQty");
                     if (jArray != null) {
-                        for (int i=0;i<jArray.length();i++){
+                        for (int i = 0; i < jArray.length(); i++) {
                             listdata.add(jArray.getString(i));
                         }
                     }
 
 
-                    skumasters.set(position, new SKUMASTER(jsonArray.getJSONObject(position).getString("stockChkNo"), jsonArray.getJSONObject(position).getString("skuLOCNo"),jsonArray.getJSONObject(position).getString("skuCode"), jsonArray.getJSONObject(position).getString("skuName"), jsonArray.getJSONObject(position).getString("deviceNo"),
+                    skumasters.set(position, new SKUMASTER(jsonArray.getJSONObject(position).getString("stockChkNo"), jsonArray.getJSONObject(position).getString("skuLOCNo"), jsonArray.getJSONObject(position).getString("skuCode"), jsonArray.getJSONObject(position).getString("skuName"), jsonArray.getJSONObject(position).getString("deviceNo"),
                             "", jsonArray.getJSONObject(position).getString("mrp"), "", sPhyqty,
-                            "",jsonArray.getJSONObject(position).getString("eanCode"), jsonArray.getJSONObject(position).getString("bay_shelf_no"),jsonArray.getJSONObject(position).getString("location_code"),listdata));
+                            "", jsonArray.getJSONObject(position).getString("eanCode"), jsonArray.getJSONObject(position).getString("bay_shelf_no"), jsonArray.getJSONObject(position).getString("location_code"), listdata));
               /*      skumasters.set(position, new SKUMASTER(temp.get(position).stockChkNo, temp.get(position).skuLOCNo,temp.get(position).skuCode,temp.get(position).skuName,temp.get(position).deviceNo,
                             "",temp.get(position).mrp, "", sPhyqty,
                             "",temp.get(position).eanCode,temp.get(position).bay_shelf_no,temp.get(position).location_code,temp.get(position).jsonArrayQty));*/
-
 
 
                     Gson gson = new Gson();
@@ -1079,7 +1093,7 @@ public class FragmentStockItem extends Fragment {
                     editor.apply();
                     editor.putString("stock", json);
                     editor.apply();
-                    setLastSKu(shelfno_edt.getText().toString(),eansku_edt.getText().toString(),price_tv.getText().toString(),physicalqty_edt.getText().toString());
+                    setLastSKu(shelfno_edt.getText().toString(), eansku_edt.getText().toString(), price_tv.getText().toString(), physicalqty_edt.getText().toString());
 //                    setLastSKu(  jsonArray.getJSONObject(position).getString("bay_shelf_no"), jsonArray.getJSONObject(position).getString("skuCode"),price_tv.getText().toString(),physicalqty_edt.getText().toString());
 
                 }
@@ -1088,12 +1102,9 @@ public class FragmentStockItem extends Fragment {
                 Log.e("SavedDataLength", "" + skumasters.size());
 
 
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-
 
 
 //            progressDialog.dismiss();
@@ -1122,13 +1133,12 @@ public class FragmentStockItem extends Fragment {
             ArrayList<SKUMASTER> temp = new ArrayList<>();
             String phyqty_ = "";
 
-            for (int i =0;i<jsonArray.length();i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 temp.add(new SKUMASTER(jsonArray.getJSONObject(i)));
-                if (temp.get(i).skuCode.equals(skuCode)&&temp.get(i).mrp.equals(mrp)){
+                if (temp.get(i).skuCode.equals(skuCode) && temp.get(i).mrp.equals(mrp)) {
                     phyqty_ = temp.get(i).physicalQty;
                 }
             }
-
 
 
             lastShelf_tv.setText(bay_shelf_no);
@@ -1154,7 +1164,7 @@ public class FragmentStockItem extends Fragment {
             for (int j = 0; j < jsonArray.length(); j++) {
                 temp.add(new SKUMASTER(jsonArray.getJSONObject(j)));
 
-                if (temp.get(j).skuCode.equals(eansku_edt.getText().toString()) &&temp.get(j).bay_shelf_no.equals(shelfno_edt.getText().toString()) &&temp.get(j).mrp.equals(price_tv.getText().toString())) {
+                if (temp.get(j).skuCode.equals(eansku_edt.getText().toString()) && temp.get(j).bay_shelf_no.equals(shelfno_edt.getText().toString()) && temp.get(j).mrp.equals(price_tv.getText().toString())) {
                     hasSku = String.valueOf(j);
                 }
             }
@@ -1171,7 +1181,7 @@ public class FragmentStockItem extends Fragment {
     public void getTotalphyqty_temp() {
 
         String skuLocalData = getDetails();
-        if (!skuLocalData.equals("")&& skuLocalData != null ) {
+        if (!skuLocalData.equals("") && skuLocalData != null) {
             try {
                 JSONArray jsonArray = new JSONArray(skuLocalData);
                 totalsku_tv.setText("Total SKU's: " + jsonArray.length());
@@ -1184,7 +1194,7 @@ public class FragmentStockItem extends Fragment {
 
                 }
                 totalphyqty_tv.setText("Total Phy Qty: " + totphyqty);
-                previousSkLD_tv.setText("Stock Check no: " + jsonArray.getJSONObject(0).getString("stockChkNo") + ", Loc: " +jsonArray.getJSONObject(0).getString("location_code")+ ", DeviceId: " +jsonArray.getJSONObject(0).getString("deviceNo"));
+                previousSkLD_tv.setText("Stock Check no: " + jsonArray.getJSONObject(0).getString("stockChkNo") + ", Loc: " + jsonArray.getJSONObject(0).getString("location_code") + ", DeviceId: " + jsonArray.getJSONObject(0).getString("deviceNo"));
 
 
                 Log.e("totphysku", "" + jsonArray.length() + "," + totphyqty);
@@ -1203,9 +1213,8 @@ public class FragmentStockItem extends Fragment {
     }
 
 
-
     public String getDetails() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         json = prefs.getString("stock", "");
         /*Type type = new TypeToken<ArrayList<SKUMASTER>>() {
@@ -1216,6 +1225,204 @@ public class FragmentStockItem extends Fragment {
 
     }
 
+
+    private void getStatusValidation(String storeip) {
+
+//        http://36.255.252.199:3375/StockCheck/ValidateStockCheck?StockChkNo=41&DeviceNo=1&LocationCode=120&FormMode=D
+        progressDialog = ProgressDialog.show(getContext(), "",
+                "Please wait ..", true);
+        progressDialog.show();
+//        dowloadpopup_ll.setVisibility(View.VISIBLE);
+//        txtstatus.setText("Downloading EanMaster details");
+
+        String apiUrl = storeip + "/StockCheck/ValidateStockCheck?StockChkNo=" + storestockcheck_edt.getText().toString() +
+                "&DeviceNo=" + device_no_edt.getText().toString() +
+                "&LocationCode=" + location_code_edt.getText().toString() + "&FormMode=L";
+//        Log.d("getStockDetails: ", apiUrl);
+        ApiCall.make(getActivity(), apiUrl, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("getStatusValidation: ", response);
+
+                        progressDialog.dismiss();
+
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (jsonObject.getString("errorCode").equals("ERR00")) {
+
+                               /* SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("uploaded", "0");
+                                editor.apply();*/
+                                checkDataDownloaded(storeip);
+
+                            } else if (jsonObject.getString("errorCode").equals("ERR01")) {
+                                showAlertDialog("Location Code Not Matching");
+
+                            } else if (jsonObject.getString("errorCode").equals("ERR02")) {
+                                showAlertDialog("Stock Check No Not Matching");
+
+                            } else if (jsonObject.getString("errorCode").equals("ERR03")) {
+                                showAlertDialog("Device No Not Matching");
+
+                            } else if (jsonObject.getString("errorCode").equals("ERR04")) {
+                                showAlertDialog("Downloaded already");
+
+                            }
+
+                        } catch (JSONException e) {
+                            progressDialog.dismiss();
+//                            dowloadpopup_ll.setVisibility(View.GONE);
+                            showAlertDialog(e.getMessage());
+                            Log.d("getStatusValidation: ", e.getMessage());
+
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("getStatusValidation: ", error.toString());
+                        progressDialog.dismiss();
+
+//                        showAlertDialog(error.getMessage());
+//                        dowloadpopup_ll.setVisibility(View.GONE);/
+                        Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+    }
+
+    private void checkDataDownloaded(String storeip) {
+
+//        http://36.255.252.199:3375/StockCheck/ValidateStockCheck?StockChkNo=41&DeviceNo=1&LocationCode=120&FormMode=D
+        progressDialog = ProgressDialog.show(getContext(), "",
+                "Please wait ..", true);
+        progressDialog.show();
+//        dowloadpopup_ll.setVisibility(View.VISIBLE);
+//        txtstatus.setText("Downloading EanMaster details");
+
+        String apiUrl = storeip + "/StockCheck/ValidateStockCheck?StockChkNo=" + storestockcheck_edt.getText().toString() +
+                "&DeviceNo=" + device_no_edt.getText().toString() +
+                "&LocationCode=" + location_code_edt.getText().toString() + "&FormMode=D";
+        ApiCall.make(getActivity(), apiUrl, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        progressDialog.dismiss();
+
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (jsonObject.getString("errorCode").equals("ERR00")) {
+                                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("uploaded", "0");
+                                editor.apply();
+                                getStockDetails(storeip);
+
+                            } else if (jsonObject.getString("errorCode").equals("ERR01")) {
+                                showAlertDialog("Location Code Not Matching");
+
+                            } else if (jsonObject.getString("errorCode").equals("ERR02")) {
+                                showAlertDialog("Stock Check No Not Matching");
+
+                            } else if (jsonObject.getString("errorCode").equals("ERR03")) {
+                                showAlertDialog("Device No Not Matching");
+
+                            } else if (jsonObject.getString("errorCode").equals("ERR04")) {
+                                showAlertDialog("Master Data already downloaded from this Device: " + device_no_edt.getText().toString());
+
+                            }
+
+                        } catch (JSONException e) {
+                            progressDialog.dismiss();
+//                            dowloadpopup_ll.setVisibility(View.GONE);
+                            showAlertDialog(e.getMessage());
+                            Log.d("getStatusValidation: ", e.getMessage());
+
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("getStatusValidation: ", error.toString());
+                        progressDialog.dismiss();
+
+//                        showAlertDialog(error.getMessage());
+//                        dowloadpopup_ll.setVisibility(View.GONE);/
+                        Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+    }
+
+    private void checkDataUploaded(String storeip) {
+
+//        http://36.255.252.199:3375/StockCheck/ValidateStockCheck?StockChkNo=41&DeviceNo=1&LocationCode=120&FormMode=D
+        progressDialog = ProgressDialog.show(getContext(), "",
+                "Please wait ..", true);
+        progressDialog.show();
+//        dowloadpopup_ll.setVisibility(View.VISIBLE);
+//        txtstatus.setText("Downloading EanMaster details");
+
+        String apiUrl = storeip + "/StockCheck/ValidateStockCheck?StockChkNo=" + storestockcheck_edt.getText().toString() +
+                "&DeviceNo=" + device_no_edt.getText().toString() +
+                "&LocationCode=" + location_code_edt.getText().toString() + "&FormMode=U";
+        ApiCall.make(getActivity(), apiUrl, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        progressDialog.dismiss();
+
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (jsonObject.getString("errorCode").equals("ERR00")) {
+
+//                                getStockDetails(storeip);
+                                uploadDetails(storeip);
+                            } else if (jsonObject.getString("errorCode").equals("ERR01")) {
+                                showAlertDialog("Location Code Not Matching");
+
+                            } else if (jsonObject.getString("errorCode").equals("ERR02")) {
+                                showAlertDialog("Stock Check No Not Matching");
+
+                            } else if (jsonObject.getString("errorCode").equals("ERR03")) {
+                                showAlertDialog("Device No Not Matching");
+
+                            } else if (jsonObject.getString("errorCode").equals("ERR04")) {
+                                showAlertDialog("SKU details uploaded already from this Device: " + device_no_edt.getText().toString());
+
+                            }
+
+                        } catch (JSONException e) {
+                            progressDialog.dismiss();
+//                            dowloadpopup_ll.setVisibility(View.GONE);
+                            showAlertDialog(e.getMessage());
+                            Log.d("getStatusValidation: ", e.getMessage());
+
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("getStatusValidation: ", error.toString());
+                        progressDialog.dismiss();
+
+//                        showAlertDialog(error.getMessage());
+//                        dowloadpopup_ll.setVisibility(View.GONE);/
+                        Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+    }
 
 
     private void uploadDetails(String storeip) {
@@ -1283,6 +1490,11 @@ public class FragmentStockItem extends Fragment {
                             Toast.makeText(getActivity(), Jsonobj.getString("message"), Toast.LENGTH_LONG).show();
 //                        clearFields();
                             showAlertDialogWithClosebtn(Jsonobj.getString("message"));
+                            save_btn.setEnabled(false);
+                            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("uploaded", "1");
+                            editor.apply();
                         } else {
                             showAlertDialog(Jsonobj.getString("message"));
                         }
@@ -1371,6 +1583,7 @@ public class FragmentStockItem extends Fragment {
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.getString("result").equals("Success")) {
                                 submit_btn.setVisibility(View.GONE);
+                                save_btn.setEnabled(true);
 
                                 Toast.makeText(getActivity(), "Please wait..\nDownloading SkuMaster details", Toast.LENGTH_SHORT).show();
                                 //showAlert(jsonObject.getString("Message"));
@@ -1497,13 +1710,13 @@ public class FragmentStockItem extends Fragment {
 
     }
 
-    public void getStockCheckNum(){
+    public void getStockCheckNum() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        if (!prefs.getString("stockNo", "").equals("")&&!prefs.getString("DeviceId", "").equals("")&&!prefs.getString("Location", "").equals("")){
+        if (!prefs.getString("stockNo", "").equals("") && !prefs.getString("DeviceId", "").equals("") && !prefs.getString("Location", "").equals("")) {
             previousSkLD_tv.setText("Stock Check no: " + prefs.getString("stockNo", "") + ", Loc: " + prefs.getString("Location", "") + ", DeviceId: " + prefs.getString("DeviceId", ""));
-            storestockcheck_edt.setText( prefs.getString("stockNo", ""));
-            location_code_edt.setText( prefs.getString("Location", ""));
-            device_no_edt.setText( prefs.getString("DeviceId", ""));
+            storestockcheck_edt.setText(prefs.getString("stockNo", ""));
+            location_code_edt.setText(prefs.getString("Location", ""));
+            device_no_edt.setText(prefs.getString("DeviceId", ""));
         }
 
     }
@@ -1643,7 +1856,8 @@ public class FragmentStockItem extends Fragment {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.dismiss();
                                 upload_btn.setEnabled(false);
-                                uploadDetails(storeip);
+                                checkDataUploaded(storeip);
+//                                uploadDetails(storeip);
 
 
                             }
@@ -1772,3 +1986,7 @@ public class FragmentStockItem extends Fragment {
 //all st data in this de -> popup alert deletion
 //upload tab
 //compress
+
+//L- at stock checj//
+//d- download
+//u upload

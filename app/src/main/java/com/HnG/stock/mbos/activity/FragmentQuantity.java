@@ -317,14 +317,14 @@ public class FragmentQuantity extends Fragment {
                 shelf_no_list.clear();
                 for (int i = 0; i < jsonArray.length(); i++) {
                     Log.e("findDetailsArray", jsonArray.toString());
-                    hasSku = String.valueOf(i);
+//                    hasSku = String.valueOf(i);
 
 
                     temp.add(new SKUMASTER(jsonArray.getJSONObject(i)));
 
 
                     if (skucode_edt.getText().toString().equals(jsonArray.getJSONObject(i).getString("skuCode")) && price.equals(jsonArray.getJSONObject(i).getString("mrp"))) {
-//                        hasSku = String.valueOf(i);
+                        hasSku = String.valueOf(i);
 //                    Integer.parseInt(jsonArray.getJSONObject(i).getString("bay_shelf_no"))>1
 
                         shelf_no_list.add(jsonArray.getJSONObject(i).getString("bay_shelf_no"));
