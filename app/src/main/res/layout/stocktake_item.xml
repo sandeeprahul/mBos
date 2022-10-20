@@ -419,14 +419,15 @@
                                 android:textSize="13sp" />
 
                             <Button
-                                android:id="@+id/upload_btn"
+                                android:id="@+id/lastsku_btn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="3dp"
-                                android:background="#FA8C01"
 
-                                android:text="Upload"
+                                android:background="#FA8C01"
+                                android:text="Last Sku"
                                 android:textSize="13sp" />
+
                         </LinearLayout>
 
 
@@ -439,13 +440,13 @@
                             android:orientation="vertical">
 
                             <Button
-                                android:id="@+id/lastsku_btn"
+                                android:id="@+id/upload_btn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="3dp"
-
                                 android:background="#FA8C01"
-                                android:text="Last Sku"
+
+                                android:text="Upload"
                                 android:textSize="13sp" />
 
                             <Button
